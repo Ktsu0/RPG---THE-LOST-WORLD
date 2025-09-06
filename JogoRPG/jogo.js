@@ -1,10 +1,10 @@
 import { criarPersonagem } from "./personagem/criacaoPersonagem.js";
 import {
-  status,
-  checarLevelUp,
-  danoDoJogador,
-  calcularDefesaTotal,
-  equiparItem,
+    status,
+    checarLevelUp,
+    danoDoJogador,
+    calcularDefesaTotal,
+    equiparItem,
 } from "./personagem/status.js";
 import { menuAmuleto } from "./itens/amuleto.js";
 import promptSync from "prompt-sync";
@@ -13,7 +13,7 @@ const prompt = promptSync({ sigint: true });
 
 // --- Utilitários ---
 export function rand(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // --- Inicialização ---
@@ -23,421 +23,422 @@ export const ARMOR_SLOTS = ["head", "chest", "hands", "legs", "feet"];
 
 // Inicializa equipamentos caso ainda não exista
 jogador.equipamentos = jogador.equipamentos || {
-  head: null,
-  chest: null,
-  hands: null,
-  legs: null,
-  feet: null,
+    head: null,
+    chest: null,
+    hands: null,
+    legs: null,
+    feet: null,
 };
 
 export function aplicarBonusDeConjunto() {
-  // Reseta bônus antes de aplicar
-  jogador.bonusEsquiva = 0;
-  jogador.bonusCritico = 0;
-  jogador.bonusBloqueio = 0;
-  jogador.bonusHP = 0;
-  jogador.bonusAtk = 0;
+    // Reseta bônus antes de aplicar
+    jogador.bonusEsquiva = 0;
+    jogador.bonusCritico = 0;
+    jogador.bonusBloqueio = 0;
+    jogador.bonusHP = 0;
+    jogador.bonusAtk = 0;
 
-  const setsEquipados = {};
-  for (const slot in jogador.equipamentos) {
-    const item = jogador.equipamentos[slot];
-    if (item && item.set) {
-      setsEquipados[item.set] = (setsEquipados[item.set] || 0) + 1;
+    const setsEquipados = {};
+    for (const slot in jogador.equipamentos) {
+        const item = jogador.equipamentos[slot];
+        if (item && item.set) {
+            setsEquipados[item.set] = (setsEquipados[item.set] || 0) + 1;
+        }
     }
-  }
 
-  for (const set in setsEquipados) {
-    if (setsEquipados[set] === 5) {
-      // Full set
-      switch (set) {
-        case "Ferro":
-          console.log(
-            "✅ Bônus de conjunto Ferro: +10% chance de bloquear ataque!"
-          );
-          jogador.bonusBloqueio += 10;
-          break;
+    for (const set in setsEquipados) {
+        if (setsEquipados[set] === 5) {
+            // Full set
+            switch (set) {
+                case "Ferro":
+                    console.log(
+                        "✅ Bônus de conjunto Ferro: +10% chance de bloquear ataque!"
+                    );
+                    jogador.bonusBloqueio += 10;
+                    break;
 
-        case "Ligeiro":
-          console.log("✅ Bônus de conjunto Ligeiro: +15% esquiva!");
-          jogador.bonusEsquiva += 15;
-          break;
+                case "Ligeiro":
+                    console.log("✅ Bônus de conjunto Ligeiro: +15% esquiva!");
+                    jogador.bonusEsquiva += 15;
+                    break;
 
-        case "Sombra":
-          console.log(
-            "✅ Bônus de conjunto Sombra: +10% crítico e +10% esquiva!"
-          );
-          jogador.bonusEsquiva += 10;
-          jogador.bonusCritico += 10;
-          break;
+                case "Sombra":
+                    console.log(
+                        "✅ Bônus de conjunto Sombra: +10% crítico e +10% esquiva!"
+                    );
+                    jogador.bonusEsquiva += 10;
+                    jogador.bonusCritico += 10;
+                    break;
 
-        case "Dragão":
-          console.log("✅ Bônus de conjunto Dragão: +20% HP e +20% ATK!");
-          jogador.bonusHP += 0.2;
-          jogador.bonusAtk += 0.2;
-          break;
-      }
+                case "Dragão":
+                    console.log("✅ Bônus de conjunto Dragão: +20% HP e +20% ATK!");
+                    jogador.bonusHP += 0.2;
+                    jogador.bonusAtk += 0.2;
+                    break;
+            }
+        }
     }
-  }
 
-  // ✅ Aplica bônus dinâmicos sem sobrescrever base
-  jogador.hpMaxFinal = Math.floor(jogador.hpMax * (1 + jogador.bonusHP));
-  jogador.ataqueFinal = Math.floor(jogador.ataque * (1 + jogador.bonusAtk));
+    // ✅ Aplica bônus dinâmicos sem sobrescrever base
+    jogador.hpMaxFinal = Math.floor(jogador.hpMax * (1 + jogador.bonusHP));
+    jogador.ataqueFinal = Math.floor(jogador.ataque * (1 + jogador.bonusAtk));
 }
 
 const loja = [
-  // --- Conjunto Ferro (Defesa Pura) ---
-  {
-    id: 1,
-    nome: "Elmo de Ferro",
-    slot: "head",
-    defesa: 6,
-    atkBonus: 0,
-    preco: 1050,
-    set: "Ferro",
-    raridade: "comum",
-  },
-  {
-    id: 2,
-    nome: "Peitoral de Ferro",
-    slot: "chest",
-    defesa: 12,
-    atkBonus: 0,
-    preco: 1500,
-    set: "Ferro",
-    raridade: "comum",
-  },
-  {
-    id: 3,
-    nome: "Manoplas de Ferro",
-    slot: "hands",
-    defesa: 5,
-    atkBonus: 1,
-    preco: 890,
-    set: "Ferro",
-    raridade: "comum",
-  },
-  {
-    id: 4,
-    nome: "Grevas de Ferro",
-    slot: "legs",
-    defesa: 7,
-    atkBonus: 0,
-    preco: 1050,
-    set: "Ferro",
-    raridade: "comum",
-  },
-  {
-    id: 5,
-    nome: "Botas de Ferro",
-    slot: "feet",
-    defesa: 4,
-    atkBonus: 0,
-    preco: 650,
-    set: "Ferro",
-    raridade: "comum",
-  },
+    // --- Conjunto Ferro (Defesa Pura) ---
+    {
+        id: 1,
+        nome: "Elmo de Ferro",
+        slot: "head",
+        defesa: 6,
+        atkBonus: 0,
+        preco: 1050,
+        set: "Ferro",
+        raridade: "comum",
+    },
+    {
+        id: 2,
+        nome: "Peitoral de Ferro",
+        slot: "chest",
+        defesa: 12,
+        atkBonus: 0,
+        preco: 1500,
+        set: "Ferro",
+        raridade: "comum",
+    },
+    {
+        id: 3,
+        nome: "Manoplas de Ferro",
+        slot: "hands",
+        defesa: 5,
+        atkBonus: 1,
+        preco: 890,
+        set: "Ferro",
+        raridade: "comum",
+    },
+    {
+        id: 4,
+        nome: "Grevas de Ferro",
+        slot: "legs",
+        defesa: 7,
+        atkBonus: 0,
+        preco: 1050,
+        set: "Ferro",
+        raridade: "comum",
+    },
+    {
+        id: 5,
+        nome: "Botas de Ferro",
+        slot: "feet",
+        defesa: 4,
+        atkBonus: 0,
+        preco: 650,
+        set: "Ferro",
+        raridade: "comum",
+    },
 
-  // --- Conjunto Ligeiro (Velocidade e Crítico) ---
-  {
-    id: 6,
-    nome: "Capuz de Velo",
-    slot: "head",
-    defesa: 3,
-    atkBonus: 1,
-    preco: 670,
-    set: "Ligeiro",
-    raridade: "comum",
-  },
-  {
-    id: 7,
-    nome: "Túnica Ligeira",
-    slot: "chest",
-    defesa: 6,
-    atkBonus: 2,
-    preco: 890,
-    set: "Ligeiro",
-    raridade: "raro",
-  },
-  {
-    id: 8,
-    nome: "Luvas Leves",
-    slot: "hands",
-    defesa: 2,
-    atkBonus: 2,
-    preco: 550,
-    set: "Ligeiro",
-    raridade: "comum",
-  },
-  {
-    id: 9,
-    nome: "Calças Ligeiras",
-    slot: "legs",
-    defesa: 4,
-    atkBonus: 1,
-    preco: 710,
-    set: "Ligeiro",
-    raridade: "comum",
-  },
-  {
-    id: 10,
-    nome: "Botas Ágeis",
-    slot: "feet",
-    defesa: 3,
-    atkBonus: 1,
-    preco: 610,
-    set: "Ligeiro",
-    raridade: "comum",
-  },
+    // --- Conjunto Ligeiro (Velocidade e Crítico) ---
+    {
+        id: 6,
+        nome: "Capuz de Velo",
+        slot: "head",
+        defesa: 3,
+        atkBonus: 1,
+        preco: 670,
+        set: "Ligeiro",
+        raridade: "comum",
+    },
+    {
+        id: 7,
+        nome: "Túnica Ligeira",
+        slot: "chest",
+        defesa: 6,
+        atkBonus: 2,
+        preco: 890,
+        set: "Ligeiro",
+        raridade: "raro",
+    },
+    {
+        id: 8,
+        nome: "Luvas Leves",
+        slot: "hands",
+        defesa: 2,
+        atkBonus: 2,
+        preco: 550,
+        set: "Ligeiro",
+        raridade: "comum",
+    },
+    {
+        id: 9,
+        nome: "Calças Ligeiras",
+        slot: "legs",
+        defesa: 4,
+        atkBonus: 1,
+        preco: 710,
+        set: "Ligeiro",
+        raridade: "comum",
+    },
+    {
+        id: 10,
+        nome: "Botas Ágeis",
+        slot: "feet",
+        defesa: 3,
+        atkBonus: 1,
+        preco: 610,
+        set: "Ligeiro",
+        raridade: "comum",
+    },
 
-  // --- Conjunto Sombra (Crítico e Evasão) ---
-  {
-    id: 11,
-    nome: "Máscara das Sombras",
-    slot: "head",
-    defesa: 4,
-    atkBonus: 2,
-    preco: 1300,
-    set: "Sombra",
-    raridade: "raro",
-  },
-  {
-    id: 12,
-    nome: "Peitoral das Sombras",
-    slot: "chest",
-    defesa: 8,
-    atkBonus: 3,
-    preco: 1800,
-    set: "Sombra",
-    raridade: "raro",
-  },
-  {
-    id: 13,
-    nome: "Luvas das Sombras",
-    slot: "hands",
-    defesa: 3,
-    atkBonus: 2,
-    preco: 950,
-    set: "Sombra",
-    raridade: "raro",
-  },
-  {
-    id: 14,
-    nome: "Calças das Sombras",
-    slot: "legs",
-    defesa: 5,
-    atkBonus: 2,
-    preco: 1200,
-    set: "Sombra",
-    raridade: "raro",
-  },
-  {
-    id: 15,
-    nome: "Botas das Sombras",
-    slot: "feet",
-    defesa: 4,
-    atkBonus: 2,
-    preco: 980,
-    set: "Sombra",
-    raridade: "raro",
-  },
+    // --- Conjunto Sombra (Crítico e Evasão) ---
+    {
+        id: 11,
+        nome: "Máscara das Sombras",
+        slot: "head",
+        defesa: 4,
+        atkBonus: 2,
+        preco: 1300,
+        set: "Sombra",
+        raridade: "raro",
+    },
+    {
+        id: 12,
+        nome: "Peitoral das Sombras",
+        slot: "chest",
+        defesa: 8,
+        atkBonus: 3,
+        preco: 1800,
+        set: "Sombra",
+        raridade: "raro",
+    },
+    {
+        id: 13,
+        nome: "Luvas das Sombras",
+        slot: "hands",
+        defesa: 3,
+        atkBonus: 2,
+        preco: 950,
+        set: "Sombra",
+        raridade: "raro",
+    },
+    {
+        id: 14,
+        nome: "Calças das Sombras",
+        slot: "legs",
+        defesa: 5,
+        atkBonus: 2,
+        preco: 1200,
+        set: "Sombra",
+        raridade: "raro",
+    },
+    {
+        id: 15,
+        nome: "Botas das Sombras",
+        slot: "feet",
+        defesa: 4,
+        atkBonus: 2,
+        preco: 980,
+        set: "Sombra",
+        raridade: "raro",
+    },
 
-  // --- Conjunto Dragão (Poder Extremo) ---
-  {
-    id: 16,
-    nome: "Elmo do Dragão",
-    slot: "head",
-    defesa: 12,
-    atkBonus: 5,
-    preco: 15500,
-    set: "Dragão",
-    raridade: "lendário",
-  },
-  {
-    id: 17,
-    nome: "Peitoral do Dragão",
-    slot: "chest",
-    defesa: 20,
-    atkBonus: 7,
-    preco: 17000,
-    set: "Dragão",
-    raridade: "lendário",
-  },
-  {
-    id: 18,
-    nome: "Manoplas do Dragão",
-    slot: "hands",
-    defesa: 8,
-    atkBonus: 4,
-    preco: 10200,
-    set: "Dragão",
-    raridade: "lendário",
-  },
-  {
-    id: 19,
-    nome: "Grevas do Dragão",
-    slot: "legs",
-    defesa: 12,
-    atkBonus: 4,
-    preco: 12800,
-    set: "Dragão",
-    raridade: "lendário",
-  },
-  {
-    id: 20,
-    nome: "Botas do Dragão",
-    slot: "feet",
-    defesa: 10,
-    atkBonus: 3,
-    preco: 10100,
-    set: "Dragão",
-    raridade: "lendário",
-  },
+    // --- Conjunto Dragão (Poder Extremo) ---
+    {
+        id: 16,
+        nome: "Elmo do Dragão",
+        slot: "head",
+        defesa: 12,
+        atkBonus: 5,
+        preco: 15500,
+        set: "Dragão",
+        raridade: "lendário",
+    },
+    {
+        id: 17,
+        nome: "Peitoral do Dragão",
+        slot: "chest",
+        defesa: 20,
+        atkBonus: 7,
+        preco: 17000,
+        set: "Dragão",
+        raridade: "lendário",
+    },
+    {
+        id: 18,
+        nome: "Manoplas do Dragão",
+        slot: "hands",
+        defesa: 8,
+        atkBonus: 4,
+        preco: 10200,
+        set: "Dragão",
+        raridade: "lendário",
+    },
+    {
+        id: 19,
+        nome: "Grevas do Dragão",
+        slot: "legs",
+        defesa: 12,
+        atkBonus: 4,
+        preco: 12800,
+        set: "Dragão",
+        raridade: "lendário",
+    },
+    {
+        id: 20,
+        nome: "Botas do Dragão",
+        slot: "feet",
+        defesa: 10,
+        atkBonus: 3,
+        preco: 10100,
+        set: "Dragão",
+        raridade: "lendário",
+    },
 
-  // Consumíveis
-  {
-    id: 21,
-    nome: "Poção de Cura",
-    slot: "consumable",
-    defesa: 0,
-    atkBonus: 0,
-    preco: 100,
-    set: null,
-    raridade: "comum",
-  },
+    // Consumíveis
+    {
+        id: 21,
+        nome: "Poção de Cura",
+        slot: "consumable",
+        defesa: 0,
+        atkBonus: 0,
+        preco: 100,
+        set: null,
+        raridade: "comum",
+    },
 ];
 
 // === Armas Disponíveis ===
 const armasDisponiveis = [
-  { nome: "Espada Longa", preco: 500, atk: 5, efeito: null, raridade: "comum" },
-  {
-    nome: "Arco Elfico",
-    preco: 620,
-    atk: 4,
-    efeito: "esquiva",
-    raridade: "raro",
-  },
-  {
-    nome: "Adaga Sombria",
-    preco: 790,
-    atk: 6,
-    efeito: "sangramento",
-    raridade: "raro",
-  },
-  {
-    nome: "Martelo de Guerra",
-    preco: 910,
-    atk: 8,
-    efeito: "bloqueio",
-    raridade: "raro",
-  },
-  {
-    nome: "Lança Sagrada",
-    preco: 1050,
-    atk: 10,
-    efeito: "critico",
-    raridade: "lendario",
-  },
+    { nome: "Espada Longa", preco: 500, atk: 5, efeito: null, raridade: "comum" },
+    {
+        nome: "Arco Elfico",
+        preco: 620,
+        atk: 4,
+        efeito: "esquiva",
+        raridade: "raro",
+    },
+    {
+        nome: "Adaga Sombria",
+        preco: 790,
+        atk: 6,
+        efeito: "sangramento",
+        raridade: "raro",
+    },
+    {
+        nome: "Martelo de Guerra",
+        preco: 910,
+        atk: 8,
+        efeito: "bloqueio",
+        raridade: "raro",
+    },
+    {
+        nome: "Lança Sagrada",
+        preco: 1050,
+        atk: 10,
+        efeito: "critico",
+        raridade: "lendario",
+    },
 ];
 
 function abrirLoja() {
-  let sairLoja = false;
+    let sairLoja = false;
 
-  while (!sairLoja) {
-    console.log("\n🏪 Bem-vindo à Loja!");
-    console.log(`Você tem ${jogador.ouro} de ouro`);
-    console.log("O que deseja comprar?");
-    console.log("[1] Armaduras");
-    console.log("[2] Armas");
-    console.log("[0] Sair");
+    while (!sairLoja) {
+        console.log("\n🏪 Bem-vindo à Loja!");
+        console.log(`Você tem ${jogador.ouro} de ouro`);
+        console.log("O que deseja comprar?");
+        console.log("[1] Armaduras");
+        console.log("[2] Armas");
+        console.log("[0] Sair");
 
-    const escolha = prompt("Escolha: ");
+        const escolha = prompt("Escolha: ");
 
-    if (escolha === "1") {
-      // --- Armaduras ---
-      let voltarConjuntos = false;
-      while (!voltarConjuntos) {
-        const conjuntos = [
-          ...new Set(
-            loja.filter((i) => i.slot !== "consumable").map((i) => i.set)
-          ),
-        ];
+        if (escolha === "1") {
+            // --- Armaduras ---
+            let voltarConjuntos = false;
+            while (!voltarConjuntos) {
+                const conjuntos = [
+                    ...new Set(
+                        loja.filter((i) => i.slot !== "consumable").map((i) => i.set)
+                    ),
+                ];
 
-        console.log("\nConjuntos disponíveis:");
-        conjuntos.forEach((set, i) => console.log(`[${i + 1}] ${set}`));
-        console.log("[0] Voltar");
+                console.log(`Você tem ${jogador.ouro} de ouro`);
+                console.log("\nConjuntos disponíveis:");
+                conjuntos.forEach((set, i) => console.log(`[${i + 1}] ${set}`));
+                console.log("[0] Voltar");
 
-        const setEscolhaRaw = prompt(
-          "Escolha o conjunto pelo número ou digite o nome: "
-        );
-        const setEscolhaNum = parseInt(setEscolhaRaw);
-        let setNome;
+                const setEscolhaRaw = prompt(
+                    "Escolha o conjunto pelo número ou digite o nome: "
+                );
+                const setEscolhaNum = parseInt(setEscolhaRaw);
+                let setNome;
 
-        if (
-          !isNaN(setEscolhaNum) &&
-          setEscolhaNum > 0 &&
-          setEscolhaNum <= conjuntos.length
-        ) {
-          setNome = conjuntos[setEscolhaNum - 1];
-        } else if (setEscolhaRaw === "0") {
-          voltarConjuntos = true; // volta para o menu principal
-          continue;
-        } else {
-          setNome = setEscolhaRaw;
-        }
+                if (!isNaN(setEscolhaNum) &&
+                    setEscolhaNum > 0 &&
+                    setEscolhaNum <= conjuntos.length
+                ) {
+                    setNome = conjuntos[setEscolhaNum - 1];
+                } else if (setEscolhaRaw === "0") {
+                    voltarConjuntos = true; // volta para o menu principal
+                    continue;
+                } else {
+                    setNome = setEscolhaRaw;
+                }
 
-        const pecas = loja.filter(
-          (i) => i.set === setNome && i.slot !== "consumable"
-        );
-        if (pecas.length === 0) {
-          console.log("Conjunto inválido!");
-          continue;
-        }
+                const pecas = loja.filter(
+                    (i) => i.set === setNome && i.slot !== "consumable"
+                );
+                if (pecas.length === 0) {
+                    console.log("Conjunto inválido!");
+                    continue;
+                }
 
-        // --- Menu das peças ---
-        let voltarPecas = false;
-        while (!voltarPecas) {
-          console.log(`\nPeças disponíveis do conjunto ${setNome}:`);
-          pecas.forEach((p, i) => {
-            console.log(
-              `[${i + 1}] ${p.slot.toUpperCase()}: ${p.nome} (+${
+                // --- Menu das peças ---
+                let voltarPecas = false;
+                while (!voltarPecas) {
+                    console.log(`Você tem ${jogador.ouro} de ouro`);
+                    console.log(`\nPeças disponíveis do conjunto ${setNome}:`);
+                    pecas.forEach((p, i) => {
+                        console.log(
+                            `[${i + 1}] ${p.slot.toUpperCase()}: ${p.nome} (+${
                 p.defesa
               } DEF, +${p.atkBonus} ATK) - ${p.preco} ouro`
-            );
-          });
-          console.log("[0] Voltar");
+                        );
+                    });
+                    console.log("[0] Voltar");
 
-          const pecaEscolhaRaw = prompt("Escolha a peça pelo número: ");
-          const pecaEscolha = parseInt(pecaEscolhaRaw);
+                    const pecaEscolhaRaw = prompt("Escolha a peça pelo número: ");
+                    const pecaEscolha = parseInt(pecaEscolhaRaw);
 
-          if (pecaEscolha === 0) {
-            voltarPecas = true; // volta para menu de conjuntos
-            continue;
-          }
+                    if (pecaEscolha === 0) {
+                        voltarPecas = true; // volta para menu de conjuntos
+                        continue;
+                    }
 
-          const itemEscolhido = pecas[pecaEscolha - 1];
-          if (!itemEscolhido) {
-            console.log("Peça inválida!");
-            continue;
-          }
+                    const itemEscolhido = pecas[pecaEscolha - 1];
+                    if (!itemEscolhido) {
+                        console.log("Peça inválida!");
+                        continue;
+                    }
 
-          if (jogador.ouro >= itemEscolhido.preco) {
-            jogador.ouro -= itemEscolhido.preco;
-            jogador.equipamentos[itemEscolhido.slot] = itemEscolhido;
-            console.log(`✅ Você comprou e equipou: ${itemEscolhido.nome}`);
-          } else {
-            console.log("Ouro insuficiente!");
-          }
-        } // fim do menu peças
-      } // fim do menu conjuntos
-    } else if (escolha === "2") {
-      // --- Armas ---
-      let voltarArmas = false;
-      while (!voltarArmas) {
-        console.log(`\nVocê tem ${jogador.ouro} de ouro`);
-        console.log("⚔ Armas disponíveis:");
-        armasDisponiveis.forEach((arma, i) => {
-          console.log(
-            `[${i + 1}] ${arma.nome} (+${arma.atk} ATK) ${
+                    if (jogador.ouro >= itemEscolhido.preco) {
+                        jogador.ouro -= itemEscolhido.preco;
+                        jogador.equipamentos[itemEscolhido.slot] = itemEscolhido;
+                        console.log(`✅ Você comprou e equipou: ${itemEscolhido.nome}`);
+                    } else {
+                        console.log("Ouro insuficiente!");
+                    }
+                } // fim do menu peças
+            } // fim do menu conjuntos
+        } else if (escolha === "2") {
+            // --- Armas ---
+            let voltarArmas = false;
+            while (!voltarArmas) {
+                console.log(`\nVocê tem ${jogador.ouro} de ouro`);
+                console.log("⚔ Armas disponíveis:");
+                armasDisponiveis.forEach((arma, i) => {
+                            console.log(
+                                    `[${i + 1}] ${arma.nome} (+${arma.atk} ATK) ${
               arma.efeito ? `(Efeito: ${arma.efeito})` : ""
             } - ${arma.preco} ouro`
           );
