@@ -131,3 +131,53 @@ function gerenciarArmas() {
 
     console.log(`✅ Equipou: ${armaEscolhida.nome}`);
 }
+
+export function aplicarBonusDeConjunto() {
+    // Reseta bônus antes de aplicar
+    jogador.bonusEsquiva = 0;
+    jogador.bonusCritico = 0;
+    jogador.bonusBloqueio = 0;
+    jogador.bonusHP = 0;
+    jogador.bonusAtk = 0;
+
+    const setsEquipados = {};
+    for (const slot in jogador.equipamentos) {
+        const item = jogador.equipamentos[slot];
+        if (item && item.set) {
+            setsEquipados[item.set] = (setsEquipados[item.set] || 0) + 1;
+        }
+    }
+
+    for (const set in setsEquipados) {
+        if (setsEquipados[set] === 5) {
+            let bonusMensagem = "";
+            switch (set) {
+                case "Ferro":
+                    bonusMensagem = "+10% chance de bloquear ataque!";
+                    jogador.bonusBloqueio += 10;
+                    break;
+                case "Ligeiro":
+                    bonusMensagem = "+15% esquiva!";
+                    jogador.bonusEsquiva += 15;
+                    break;
+                case "Sombra":
+                    bonusMensagem = "+10% crítico e +10% esquiva!";
+                    jogador.bonusEsquiva += 10;
+                    jogador.bonusCritico += 10;
+                    break;
+                case "Dragão":
+                    bonusMensagem = "+20% HP e +20% ATK!";
+                    jogador.bonusHP += 0.2;
+                    jogador.bonusAtk += 0.2;
+                    break;
+            }
+
+            console.log(`✅ Você equipou todo o conjunto ${set}!`);
+            console.log(`🎁 Bônus aplicado: ${bonusMensagem}`);
+        }
+    }
+
+    // ✅ Aplica bônus dinâmicos sem sobrescrever base
+    jogador.hpMaxFinal = Math.floor(jogador.hpMax * (1 + jogador.bonusHP));
+    jogador.ataqueFinal = Math.floor(jogador.ataque * (1 + jogador.bonusAtk));
+}
