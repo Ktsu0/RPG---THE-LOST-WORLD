@@ -1,72 +1,100 @@
-import { rand, ARMOR_SLOTS } from "./../jogo.js";
+import { ARMOR_SLOTS } from "./../jogo.js";
+import { colors, rand } from "./../utilitarios.js"; // Importa as cores
 import {
-    gerenciarEquipamentos,
-    aplicarBonusDeConjunto,
+  gerenciarEquipamentos,
+  aplicarBonusDeConjunto,
 } from "./../itens/gerenciarEquipamentos.js";
+import { getRaridadeCor } from "./../itens/loja/itensLoja.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync();
 
 // --- Função auxiliar: formata itens para exibição ---
 function formatarItens(array) {
-    if (!array || array.length === 0) return "Nenhum";
-    const contagem = array.reduce((acc, item) => {
-        const nome = item.nome || item; // caso seja string ou objeto
-        acc[nome] = (acc[nome] || 0) + 1;
-        return acc;
-    }, {});
-    return Object.entries(contagem)
-        .map(([nome, qtd]) => `${qtd}x ${nome}`)
-        .join(", ");
+  if (!array || array.length === 0)
+    return `${colors.gray}Nenhum${colors.reset}`;
+  const contagem = array.reduce((acc, item) => {
+    const nome = item.nome || item; // caso seja string ou objeto
+    acc[nome] = (acc[nome] || 0) + 1;
+    return acc;
+  }, {});
+  return Object.entries(contagem)
+    .map(([nome, qtd]) => `${qtd}x ${nome}`)
+    .join(", ");
 }
 
 // --- Função auxiliar: verifica se todos os slots têm set completo ---
 function temSetCompleto(equipamentos) {
-    const itens = Object.values(equipamentos).filter((it) => it && it.set);
-    return (
-        itens.length === ARMOR_SLOTS.length &&
-        itens.every((it) => it.set === itens[0].set)
-    );
+  const itens = Object.values(equipamentos).filter((it) => it && it.set);
+  return (
+    itens.length === ARMOR_SLOTS.length &&
+    itens.every((it) => it.set === itens[0].set)
+  );
 }
 
 // --- Exibir status ---
 export function status(jogador) {
-    console.log("\n--- STATUS ---");
-    console.log(`Nome: ${jogador.nome}`);
-    console.log(
-        `Nível: ${jogador.nivel} | XP: ${jogador.xp}/${xpParaProximoNivel(jogador)}`
-    );
-    console.log(`HP: ${jogador.hp}/${jogador.hpMax}`);
-    console.log(`Atk atual: ${calcularAtaque(jogador)}`);
-    console.log(`Ouro: ${jogador.ouro}`);
-    console.log(`Consumíveis: ${formatarItens(jogador.itens)}`);
-    console.log(`Inventário: ${formatarItens(jogador.inventario)}`);
+  console.log(`\n${colors.bright}--- STATUS ---${colors.reset}`);
+  console.log(`${colors.cyan}Nome: ${colors.reset}${jogador.nome}`);
+  console.log(
+    `${colors.cyan}Nível:${colors.reset} ${jogador.nivel} | ${colors.green}XP:${
+      colors.reset
+    } ${jogador.xp}/${xpParaProximoNivel(jogador)}`
+  );
+  console.log(
+    `${colors.green}HP:${colors.reset} ${jogador.hp}/${jogador.hpMax}`
+  );
+  console.log(
+    `${colors.red}Atk atual:${colors.reset} ${calcularAtaque(jogador)}`
+  );
+  console.log(`${colors.yellow}Ouro:${colors.reset} ${jogador.ouro}`);
+  console.log(
+    `${colors.magenta}Consumíveis:${colors.reset} ${formatarItens(
+      jogador.itens
+    )}`
+  );
+  console.log(
+    `${colors.magenta}Inventário:${colors.reset} ${formatarItens(
+      jogador.inventario
+    )}`
+  );
 
-    console.log("Equipamentos:");
-    for (const s of ARMOR_SLOTS) {
-        const it = jogador.equipamentos[s];
-        console.log(
-                ` - ${s}: ${
+  console.log(`\n${colors.bright}Equipamentos:${colors.reset}`);
+  for (const s of ARMOR_SLOTS) {
+    const it = jogador.equipamentos[s];
+    const cor = it ? getRaridadeCor(it.raridade) : colors.gray; // Pega a cor pela raridade
+    console.log(
+      ` - ${s.toUpperCase()}: ${
         it
-          ? `${it.nome} (Def:${it.defesa} ATK+:${it.atkBonus} Set:${
-              it.set || "Nenhum"
-            })`
-          : "Nenhum"
+          ? `${cor}${it.nome}${colors.reset} (Def:${it.defesa} ATK+:${
+              it.atkBonus
+            } Set:${it.set || "Nenhum"})`
+          : `${colors.gray}Nenhum${colors.reset}`
       }`
     );
   }
-  console.log(`Defesa total: ${calcularDefesaTotal(jogador)}`);
   console.log(
-    `Arma equipada: ${
-      jogador.armaEquipada ? jogador.armaEquipada.nome : "Nenhuma"
+    `${colors.blue}Defesa total:${colors.reset} ${calcularDefesaTotal(jogador)}`
+  );
+  console.log(
+    `${colors.red}Arma equipada:${colors.reset} ${
+      jogador.armaEquipada
+        ? `${getRaridadeCor(jogador.armaEquipada.raridade)}${
+            jogador.armaEquipada.nome
+          }${colors.reset}`
+        : `${colors.gray}Nenhuma${colors.reset}`
     }`
   );
 
-  const opcao = prompt("[M] Gerenciar Equipamentos/Armas ou Enter para sair: ");
+  const opcao = prompt(
+    `\n${colors.bright}[M] Gerenciar Equipamentos/Armas${colors.reset} ou ${colors.dim}Enter para sair:${colors.reset} `
+  );
   if (opcao.toLowerCase() === "m") {
     gerenciarEquipamentos(jogador);
   }
-  console.log("---------------\n");
+  console.log(`${colors.dim}---------------${colors.reset}\n`);
 }
+
+// --- As outras funções (equiparItem, calcularAtaque, etc.) continuam as mesmas ---
 
 // --- Equipar item ---
 export function equiparItem(jogador, item) {
@@ -76,13 +104,17 @@ export function equiparItem(jogador, item) {
   }
 
   if (jogador.restricoes.semArmadura) {
-    console.log("❌ Sua raça não pode equipar armaduras!");
+    console.log(
+      `${colors.red}❌ Sua raça não pode equipar armaduras!${colors.reset}`
+    );
     return;
   }
 
   jogador.equipamentos[item.slot] = item;
   aplicarBonusDeConjunto(jogador);
-  console.log(`✅ ${item.nome} equipado no slot ${item.slot}.`);
+  console.log(
+    `${colors.green}✅ ${item.nome} equipado no slot ${item.slot}.${colors.reset}`
+  );
 }
 
 // --- Calcular ataque ---
@@ -146,7 +178,7 @@ export function checarLevelUp(jogador) {
     jogador.hpMax += 15;
     jogador.hp = jogador.hpMax;
     console.log(
-      `\n🎉 Parabéns! Você subiu para o nível ${jogador.nivel}! HP restaurado para ${jogador.hpMax}.\n`
+      `\n🎉 ${colors.bright}Parabéns!${colors.reset} Você subiu para o nível ${jogador.nivel}! HP restaurado para ${jogador.hpMax}.\n`
     );
   }
 }
@@ -155,7 +187,9 @@ export function checarLevelUp(jogador) {
 export function aplicarFuria(jogador, dano) {
   // Verifica se o jogador é Bárbaro e está com <= 30% de HP
   if (jogador.classe === "Bárbaro" && jogador.hp <= jogador.hpMax * 0.3) {
-    console.log("🔥 Fúria do Bárbaro ativada! Dano aumentado em 50%!");
+    console.log(
+      `${colors.bright}${colors.red}🔥 Fúria do Bárbaro ativada!${colors.reset} Dano aumentado em 50%!`
+    );
     return Math.floor(dano * 1.5);
   }
   // Caso contrário, retorna o dano normal

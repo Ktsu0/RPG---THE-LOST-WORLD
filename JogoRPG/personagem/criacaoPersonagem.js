@@ -1,197 +1,185 @@
-// --- Criação de Personagem Colorida ---
+import { colors } from "./../utilitarios.js";
+
 import promptSync from "prompt-sync";
 const prompt = promptSync({ sigint: true });
 
-// Cores ANSI para o console
-export const colors = {
-    reset: "\x1b[0m",
-    bright: "\x1b[1m",
-    red: "\x1b[31m",
-    green: "\x1b[32m",
-    yellow: "\x1b[33m",
-    blue: "\x1b[34m",
-    magenta: "\x1b[35m",
-    cyan: "\x1b[36m",
-    white: "\x1b[37m",
-};
-
 export function criarPersonagem() {
-    console.log(
-        `${colors.bright}${colors.cyan}🎭 Escolha sua RAÇA:${colors.reset}`
-    );
-    console.log(
-        `[1] ${colors.yellow}Anão${colors.reset} (${colors.green}+10 DEF${colors.reset}, ${colors.red}-5 ATK${colors.reset})`
-    );
-    console.log(
-        `[2] ${colors.yellow}Elfo${colors.reset} (${colors.green}+20 HP${colors.reset}, ${colors.red}-2 ATK${colors.reset})`
-    );
-    console.log(
-        `[3] ${colors.yellow}Humano${colors.reset} (${colors.white}Balanceado${colors.reset})`
-    );
-    console.log(
-        `[4] ${colors.yellow}Morto-vivo${colors.reset} (${colors.green}+5 ATK${colors.reset}, ${colors.red}-10 HP${colors.reset})`
-    );
-    console.log(
-        `[5] ${colors.yellow}Orc${colors.reset} (${colors.green}+8 ATK${colors.reset}, ${colors.red}-10 DEF${colors.reset})`
-    );
-    console.log(
-        `[6] ${colors.yellow}Drow${colors.reset} (${colors.green}+10% Crítico${colors.reset}, ${colors.red}-10 HP${colors.reset})`
-    );
-    console.log(
-        `[7] ${colors.yellow}Dragãoide${colors.reset} (${colors.green}+20 HP, +10 ATK${colors.reset}, ${colors.red}não pode usar armaduras${colors.reset})`
-    );
+  console.log(
+    `${colors.bright}${colors.cyan}🎭 Escolha sua RAÇA:${colors.reset}`
+  );
+  console.log(
+    `[1] ${colors.magenta}Anão${colors.reset} (${colors.green}+10 DEF${colors.reset}, ${colors.red}-5 ATK${colors.reset})`
+  );
+  console.log(
+    `[2] ${colors.magenta}Elfo${colors.reset} (${colors.green}+20 HP${colors.reset}, ${colors.red}-2 ATK${colors.reset})`
+  );
+  console.log(
+    `[3] ${colors.magenta}Humano${colors.reset} (${colors.white}Balanceado${colors.reset})`
+  );
+  console.log(
+    `[4] ${colors.magenta}Morto-vivo${colors.reset} (${colors.green}+5 ATK${colors.reset}, ${colors.red}-10 HP${colors.reset})`
+  );
+  console.log(
+    `[5] ${colors.magenta}Orc${colors.reset} (${colors.green}+8 ATK${colors.reset}, ${colors.red}-10 DEF${colors.reset})`
+  );
+  console.log(
+    `[6] ${colors.magenta}Drow${colors.reset} (${colors.green}+10% Crítico${colors.reset}, ${colors.red}-10 HP${colors.reset})`
+  );
+  console.log(
+    `[7] ${colors.magenta}Dragãoide${colors.reset} (${colors.green}+20 HP, +10 ATK${colors.reset}, ${colors.red}não pode usar armaduras${colors.reset})`
+  );
 
-    let racaEscolha;
-    do {
-        racaEscolha = prompt("Escolha sua raça (1-7): ");
-    } while (!["1", "2", "3", "4", "5", "6", "7"].includes(racaEscolha));
+  let racaEscolha;
+  do {
+    racaEscolha = prompt("Escolha sua raça (1-7): ");
+  } while (!["1", "2", "3", "4", "5", "6", "7"].includes(racaEscolha));
 
-    let raca = "",
-        bonusRaca = { hp: 0, atk: 0, def: 0, critChance: 0 },
-        restricoes = {};
+  let raca = "",
+    bonusRaca = { hp: 0, atk: 0, def: 0, critChance: 0 },
+    restricoes = {};
 
-    switch (racaEscolha) {
-        case "1":
-            raca = "Anão";
-            bonusRaca.def = 10;
-            bonusRaca.atk = -5;
-            break;
-        case "2":
-            raca = "Elfo";
-            bonusRaca.hp = 20;
-            bonusRaca.atk = -2;
-            break;
-        case "3":
-            raca = "Humano";
-            break;
-        case "4":
-            raca = "Morto-vivo";
-            bonusRaca.atk = 5;
-            bonusRaca.hp = -10;
-            break;
-        case "5":
-            raca = "Orc";
-            bonusRaca.atk = 8;
-            bonusRaca.def = -10;
-            break;
-        case "6":
-            raca = "Drow";
-            bonusRaca.critChance = 10;
-            bonusRaca.hp = -10;
-            break;
-        case "7":
-            raca = "Dragãoide";
-            bonusRaca.hp = 20;
-            bonusRaca.atk = 10;
-            restricoes.semArmadura = true;
-            break;
-    }
+  switch (racaEscolha) {
+    case "1":
+      raca = "Anão";
+      bonusRaca.def = 10;
+      bonusRaca.atk = -5;
+      break;
+    case "2":
+      raca = "Elfo";
+      bonusRaca.hp = 20;
+      bonusRaca.atk = -2;
+      break;
+    case "3":
+      raca = "Humano";
+      break;
+    case "4":
+      raca = "Morto-vivo";
+      bonusRaca.atk = 5;
+      bonusRaca.hp = -10;
+      break;
+    case "5":
+      raca = "Orc";
+      bonusRaca.atk = 8;
+      bonusRaca.def = -10;
+      break;
+    case "6":
+      raca = "Drow";
+      bonusRaca.critChance = 10;
+      bonusRaca.hp = -10;
+      break;
+    case "7":
+      raca = "Dragãoide";
+      bonusRaca.hp = 20;
+      bonusRaca.atk = 10;
+      restricoes.semArmadura = true;
+      break;
+  }
 
-    console.log(
-        `\n${colors.bright}${colors.cyan}⚔ Agora escolha sua CLASSE:${colors.reset}`
-    );
-    console.log(
-        `[1] ${colors.magenta}Arqueiro${colors.reset} (Esquiva + bônus drop de ouro)`
-    );
-    console.log(
-        `[2] ${colors.magenta}Paladino${colors.reset} (Crítico + chance de bloquear ataques)`
-    );
-    console.log(
-        `[3] ${colors.magenta}Assassino${colors.reset} (Sangramento + bônus drop de itens)`
-    );
-    console.log(
-        `[4] ${colors.magenta}Bárbaro${colors.reset} (Fúria quando HP baixo)`
-    );
-    console.log(
-        `[5] ${colors.magenta}Necromante${colors.reset} (Invocar esqueleto aliado)`
-    );
-    console.log(
-        `[6] ${colors.magenta}Suporte${colors.reset} (Cura 10% HP por turno + bônus esquiva)`
-    );
+  console.log(
+    `\n${colors.bright}${colors.cyan}⚔ Agora escolha sua CLASSE:${colors.reset}`
+  );
+  console.log(
+    `[1] ${colors.magenta}Arqueiro${colors.reset} (${colors.yellow}Esquiva + bônus drop de ouro${colors.reset})`
+  );
+  console.log(
+    `[2] ${colors.magenta}Paladino${colors.reset} (${colors.yellow}Crítico + chance de bloquear ataques${colors.reset})`
+  );
+  console.log(
+    `[3] ${colors.magenta}Assassino${colors.reset} (${colors.yellow}Sangramento + bônus drop de itens${colors.reset})`
+  );
+  console.log(
+    `[4] ${colors.magenta}Bárbaro${colors.reset} (${colors.yellow}Fúria quando HP baixo${colors.reset})`
+  );
+  console.log(
+    `[5] ${colors.magenta}Necromante${colors.reset} (${colors.yellow}Invocar esqueleto aliado${colors.reset})`
+  );
+  console.log(
+    `[6] ${colors.magenta}Suporte${colors.reset} (${colors.yellow}Cura 10% HP por turno + bônus esquiva${colors.reset})`
+  );
 
-    let classeEscolha;
-    do {
-        classeEscolha = prompt("Escolha sua classe (1-6): ");
-    } while (!["1", "2", "3", "4", "5", "6"].includes(classeEscolha));
+  let classeEscolha;
+  do {
+    classeEscolha = prompt("Escolha sua classe (1-6): ");
+  } while (!["1", "2", "3", "4", "5", "6"].includes(classeEscolha));
 
-    let classe = "",
-        habilidadeClasse = "",
-        bonusClasse = {
-            atk: 0,
-            def: 0,
-            dropOuro: 0,
-            dropItem: 0,
-            critChance: 0,
-            esquiva: 0,
-        };
-
-    switch (classeEscolha) {
-        case "1":
-            classe = "Arqueiro";
-            habilidadeClasse = "esquiva";
-            bonusClasse.dropOuro = 10;
-            bonusClasse.esquiva = 10;
-            break;
-        case "2":
-            classe = "Paladino";
-            habilidadeClasse = "bloqueio";
-            bonusClasse.critChance = 20;
-            break;
-        case "3":
-            classe = "Assassino";
-            habilidadeClasse = "sangramento";
-            bonusClasse.dropItem = 10;
-            break;
-        case "4":
-            classe = "Bárbaro";
-            habilidadeClasse = "furia";
-            bonusClasse.atk = 8;
-            break;
-        case "5":
-            classe = "Necromante";
-            habilidadeClasse = "invocacao";
-            bonusClasse.atk = 5;
-            break;
-        case "6":
-            classe = "Suporte";
-            habilidadeClasse = "cura";
-            bonusClasse.esquiva = 15;
-            break;
-    }
-
-    let nome;
-    do {
-        nome = prompt("Digite o nome do seu personagem: ").trim();
-    } while (!nome);
-
-    let jogador = {
-        nome,
-        raca,
-        classe,
-        habilidadeClasse,
-        bonusClasse,
-        hp: 90 + bonusRaca.hp,
-        hpMax: 90 + bonusRaca.hp,
-        nivel: 1,
-        xp: 0,
-        ouro: 0,
-        ataque: 5 + bonusRaca.atk + bonusClasse.atk,
-        defesa: 2 + bonusRaca.def + bonusClasse.def,
-        criticoExtra: bonusRaca.critChance || 0,
-        restricoes,
-        equipamentos: {
-            head: null,
-            chest: null,
-            hands: null,
-            legs: null,
-            feet: null,
-        },
-        itens: [],
-        inventario: [],
-        armas: [],
-        armaEquipada: null,
-        amuletoEquipado: false,
+  let classe = "",
+    habilidadeClasse = "",
+    bonusClasse = {
+      atk: 0,
+      def: 0,
+      dropOuro: 0,
+      dropItem: 0,
+      critChance: 0,
+      esquiva: 0,
     };
 
-    return jogador;
+  switch (classeEscolha) {
+    case "1":
+      classe = "Arqueiro";
+      habilidadeClasse = "esquiva";
+      bonusClasse.dropOuro = 10;
+      bonusClasse.esquiva = 10;
+      break;
+    case "2":
+      classe = "Paladino";
+      habilidadeClasse = "bloqueio";
+      bonusClasse.critChance = 20;
+      break;
+    case "3":
+      classe = "Assassino";
+      habilidadeClasse = "sangramento";
+      bonusClasse.dropItem = 10;
+      break;
+    case "4":
+      classe = "Bárbaro";
+      habilidadeClasse = "furia";
+      bonusClasse.atk = 8;
+      break;
+    case "5":
+      classe = "Necromante";
+      habilidadeClasse = "invocacao";
+      bonusClasse.atk = 5;
+      break;
+    case "6":
+      classe = "Suporte";
+      habilidadeClasse = "cura";
+      bonusClasse.esquiva = 15;
+      break;
+  }
+
+  let nome;
+  do {
+    nome = prompt("Digite o nome do seu personagem: ").trim();
+  } while (!nome);
+
+  let jogador = {
+    nome,
+    raca,
+    classe,
+    habilidadeClasse,
+    bonusClasse,
+    hp: 90 + bonusRaca.hp,
+    hpMax: 90 + bonusRaca.hp,
+    nivel: 1,
+    xp: 0,
+    ouro: 0,
+    ataque: 5 + bonusRaca.atk + bonusClasse.atk,
+    defesa: 2 + bonusRaca.def + bonusClasse.def,
+    criticoExtra: bonusRaca.critChance || 0,
+    restricoes,
+    equipamentos: {
+      head: null,
+      chest: null,
+      hands: null,
+      legs: null,
+      feet: null,
+    },
+    itens: [],
+    inventario: [],
+    armas: [],
+    armaEquipada: null,
+    amuletoEquipado: false,
+  };
+
+  return jogador;
 }
