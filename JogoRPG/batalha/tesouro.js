@@ -1,4 +1,4 @@
-import { rand } from "./../utilitarios.js";
+import { colors, rand } from "./../utilitarios.js";
 // --- Função para encontrar um baú de tesouro ---
 export function encontrarTesouro(jogador) {
   console.log(

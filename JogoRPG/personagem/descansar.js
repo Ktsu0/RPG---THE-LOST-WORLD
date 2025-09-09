@@ -1,4 +1,6 @@
 import { rand } from "./../utilitarios.js";
+import { batalha } from "../batalha/batalha.js";
+import { criarInimigo } from "../inimigos/monstros.js";
 // --- Descansar ---
 export function descansar(jogador) {
   const cura = Math.min(jogador.hpMax - jogador.hp, rand(15, 30));

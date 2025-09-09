@@ -12,97 +12,101 @@ const prompt = promptSync({ sigint: true });
 export const torreBosses = [
   {
     nome: "Guardião de Pedra",
-    hpBase: 80,
-    atkBase: 12,
-    defBase: 6,
+    hpBase: 120,
+    atkBase: 15,
+    defBase: 8,
     xpBase: 50,
     ouroBase: 30,
-    habilidades: { blockChance: 20 },
+    habilidades: { blockChance: 25 },
   },
   {
     nome: "Sentinela de Ferro",
-    hpBase: 100,
-    atkBase: 14,
-    defBase: 8,
+    hpBase: 150,
+    atkBase: 18,
+    defBase: 12,
     xpBase: 70,
     ouroBase: 40,
-    habilidades: { defBoostEveryTurns: { every: 2, amount: 4 } },
+    habilidades: { defBoostEveryTurns: { every: 2, amount: 6 } },
   },
   {
     nome: "Mago Sombrio",
-    hpBase: 120,
-    atkBase: 16,
+    hpBase: 180,
+    atkBase: 20,
     defBase: 10,
     xpBase: 90,
     ouroBase: 50,
-    habilidades: { invisívelChance: 25 },
+    habilidades: { invisívelChance: 30 },
   },
   {
     nome: "Lobo Alfa",
-    hpBase: 140,
-    atkBase: 18,
+    hpBase: 200,
+    atkBase: 22,
     defBase: 12,
     xpBase: 110,
     ouroBase: 60,
-    habilidades: { critChanceBonus: 25 },
+    habilidades: { critChanceBonus: 30 },
   },
   {
     nome: "Cavaleiro Sombrio",
-    hpBase: 160,
-    atkBase: 20,
-    defBase: 14,
+    hpBase: 230,
+    atkBase: 25,
+    defBase: 15,
     xpBase: 130,
     ouroBase: 70,
     habilidades: { blockChance: 20, critChanceBonus: 15 },
   },
   {
     nome: "Hidra das Sombras",
-    hpBase: 180,
-    atkBase: 22,
+    hpBase: 250,
+    atkBase: 28,
     defBase: 16,
     xpBase: 150,
     ouroBase: 80,
-    habilidades: { petrificarChance: 12, petrificarTurns: 2 },
+    habilidades: { petrificarChance: 15, petrificarTurns: 2 },
   },
   {
     nome: "Golem Titânico",
-    hpBase: 200,
-    atkBase: 24,
-    defBase: 18,
+    hpBase: 280,
+    atkBase: 30,
+    defBase: 20,
     xpBase: 170,
     ouroBase: 90,
-    habilidades: { defIncreasePerTurn: 2, breakEquipChance: 10 },
+    habilidades: { defIncreasePerTurn: 3, breakEquipChance: 8 },
   },
   {
     nome: "Senhor dos Mortos",
-    hpBase: 220,
-    atkBase: 26,
+    hpBase: 300,
+    atkBase: 32,
     defBase: 20,
     xpBase: 190,
     ouroBase: 100,
     habilidades: {
       summonSkeletonsEveryTurns: 2,
-      summonedSkeletonHp: 12,
-      summonedSkeletonDmgBase: 3,
+      summonedSkeletonHp: 15,
+      summonedSkeletonDmgBase: 5,
     },
   },
   {
     nome: "Dragão Negro",
-    hpBase: 250,
-    atkBase: 30,
-    defBase: 22,
+    hpBase: 350,
+    atkBase: 38,
+    defBase: 25,
     xpBase: 220,
     ouroBase: 120,
-    habilidades: { highDef: true, dragonBreathChance: 18 },
+    habilidades: { highDef: true, dragonBreathChance: 20 },
   },
   {
     nome: "Lorde do Caos",
-    hpBase: 300,
-    atkBase: 35,
-    defBase: 25,
+    hpBase: 400,
+    atkBase: 45,
+    defBase: 30,
     xpBase: 300,
     ouroBase: 200,
-    habilidades: { canSummonMiniBoss: true, onDeathResurrect: true },
+    habilidades: {
+      canSummonMiniBoss: true,
+      summonMiniBossChance: 12,
+      onDeathResurrect: true,
+    },
   },
 ];
 // aplica checagens ANTES do jogador atacar (block / invisibilidade)
@@ -288,10 +292,10 @@ function bossOnDeath(boss, jogador) {
 
 export function criarBossTorre(indice, jogador) {
   const base = torreBosses[indice];
-  const hp = base.hpBase + Math.floor(jogador.nivel * 5) + rand(-10, 10);
-  const atk = base.atkBase + Math.floor(jogador.nivel * 1.5) + rand(0, 3);
-  const def = base.defBase + Math.floor(jogador.nivel * 1);
-  const xp = Math.floor(hp / 2);
+  const hp = base.hpBase + Math.floor(jogador.nivel * 7) + rand(-10, 10);
+  const atk = base.atkBase + Math.floor(jogador.nivel * 2.2) + rand(0, 4);
+  const def = base.defBase + Math.floor(jogador.nivel * 1.5) + rand(0, 2);
+  const xp = Math.floor(hp / 2.5);
   const ouro = Math.floor(hp / 3);
 
   return {
@@ -334,7 +338,7 @@ export function batalhaBossTorre(boss, jogador) {
       if (escolha === "1") {
         const preAttack = bossPreAttackChecagens(boss, jogador);
 
-        if (preAttack.invisivel && rand(1, 100) <= 25) {
+        if (preAttack.invisivel && rand(1, 100) <= preAttack.invisivel) {
           console.log(
             `${colors.gray}👻 O Mago Sombrio está invisível e você errou o ataque!${colors.reset}`
           );
@@ -361,10 +365,12 @@ export function batalhaBossTorre(boss, jogador) {
               );
               dano *= 2;
             }
-            boss.hp -= dano;
+            // Dano do jogador
+            let danoFinal = Math.max(0, dano - boss.def);
+            boss.hp -= danoFinal;
             boss.hp = Math.max(0, boss.hp);
             console.log(
-              `${colors.bright}Você causou ${dano} de dano ao ${boss.nome}.${colors.reset}`
+              `${colors.bright}Você causou ${danoFinal} de dano ao ${boss.nome}.${colors.reset}`
             );
           }
         }
@@ -382,7 +388,11 @@ export function batalhaBossTorre(boss, jogador) {
       }
     }
 
-    boss.status.forEach((efeito, idx) => {});
+    // Aplica o dano de status
+    inimigo.status = inimigo.status.filter((status) => {
+      // ... (Seu código de aplicação de status)
+      return status.duracao > 0;
+    });
 
     if (boss.hp > 0) {
       const resultadoHabilidade = bossExecutarTurno(
@@ -401,29 +411,33 @@ export function batalhaBossTorre(boss, jogador) {
           }
         });
       }
+      if (boss.estado.summonedMiniBoss) {
+        console.log(
+          `${colors.yellow}Você deve derrotar o mini-boss antes de continuar!${colors.reset}`
+        );
+        if (!resultadoHabilidade) {
+          bossAtaca(boss, jogador);
+        }
+      }
 
-      if (!resultadoHabilidade) {
-        bossAtaca(boss, jogador);
+      if (boss.hp <= 0) {
+        if (bossOnDeath(boss, jogador)) {
+          continue;
+        }
+        console.log(
+          `${colors.green}✅ Você derrotou ${boss.nome}!${colors.reset}`
+        );
+        return true;
+      }
+
+      if (jogador.hp <= 0) {
+        console.log(
+          `${colors.red}\n💀 Você foi derrotado... Fim de jogo.${colors.reset}`
+        );
+        return false;
       }
     }
 
-    if (boss.hp <= 0) {
-      if (bossOnDeath(boss, jogador)) {
-        continue;
-      }
-      console.log(
-        `${colors.green}✅ Você derrotou ${boss.nome}!${colors.reset}`
-      );
-      return true;
-    }
-
-    if (jogador.hp <= 0) {
-      console.log(
-        `${colors.red}\n💀 Você foi derrotado... Fim de jogo.${colors.reset}`
-      );
-      return false;
-    }
+    return true;
   }
-
-  return true;
 }

@@ -7,7 +7,7 @@ import { batalha } from "./../batalha/batalha.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync({ sigint: true });
 
-// --- Missões ---
+// === Missões ===
 export const missoes = [
   {
     descricao: "Desafio da Arena Amaldiçoada",
@@ -16,12 +16,13 @@ export const missoes = [
     tipo: "lendario",
     nivelMinimo: 5,
     chanceSucesso: 100,
-    xp: 50,
-    ouro: 100,
+    // Recompensas escalam com o nível do jogador
+    xp: (nivel) => 50 + nivel * 5,
+    ouro: (nivel) => 100 + nivel * 10,
     item: { nome: "Fragmento Antigo", raridade: "lendario" },
-    chanceMiniBoss: 0,
-    chanceMissaoExtra: 5,
-    chanceMasmorra: 2,
+    chanceMiniBoss: 1,
+    chanceMissaoExtra: 15,
+    chanceMasmorra: 5,
     falha: { tipo: "hp", percentual: 50 },
     tipoBatalha: "ondas",
     recompensaOndas: {
@@ -38,25 +39,12 @@ export const missoes = [
     tipo: "comum",
     nivelMinimo: 1,
     chanceSucesso: 85,
-    xp: 15,
-    ouro: 10,
-    chanceMiniBoss: 1,
-    chanceMissaoExtra: 2,
-    chanceMasmorra: 0.1,
-    falha: { tipo: "hp", percentual: 10 },
-  },
-  {
-    descricao: "Escoltar um mercador até a cidade",
-    historia:
-      "O mercador teme bandidos na estrada. Sua escolta é discreta, mas precisa ser rápida e firme.",
-    tipo: "comum",
-    nivelMinimo: 1,
-    chanceSucesso: 85,
-    xp: 15,
-    ouro: 10,
-    chanceMiniBoss: 1,
-    chanceMissaoExtra: 2,
-    chanceMasmorra: 0.1,
+    // Recompensas escalam
+    xp: (nivel) => 15 + nivel * 1,
+    ouro: (nivel) => 10 + nivel * 1,
+    chanceMiniBoss: 5, // Padronizado
+    chanceMissaoExtra: 5, // Padronizado
+    chanceMasmorra: 1, // Padronizado
     falha: { tipo: "hp", percentual: 10 },
   },
   {
@@ -66,11 +54,11 @@ export const missoes = [
     tipo: "comum",
     nivelMinimo: 1,
     chanceSucesso: 65,
-    xp: 25,
-    ouro: 20,
-    chanceMiniBoss: 1,
-    chanceMissaoExtra: 2,
-    chanceMasmorra: 0.1,
+    xp: (nivel) => 25 + nivel * 2,
+    ouro: (nivel) => 20 + nivel * 2,
+    chanceMiniBoss: 5, // Padronizado
+    chanceMissaoExtra: 5, // Padronizado
+    chanceMasmorra: 1, // Padronizado
     falha: { tipo: "hp", percentual: 10 },
   },
   {
@@ -80,11 +68,11 @@ export const missoes = [
     tipo: "comum",
     nivelMinimo: 1,
     chanceSucesso: 90,
-    xp: 10,
-    ouro: 8,
-    chanceMiniBoss: 1,
-    chanceMissaoExtra: 2,
-    chanceMasmorra: 0.1,
+    xp: (nivel) => 10 + nivel * 1,
+    ouro: (nivel) => 8 + nivel * 1,
+    chanceMiniBoss: 5, // Padronizado
+    chanceMissaoExtra: 5, // Padronizado
+    chanceMasmorra: 1, // Padronizado
     falha: { tipo: "hp", percentual: 10 },
   },
   {
@@ -94,8 +82,8 @@ export const missoes = [
     tipo: "comum",
     nivelMinimo: 2,
     chanceSucesso: 85,
-    xp: 18,
-    ouro: 12,
+    xp: (nivel) => 18 + nivel * 1.5,
+    ouro: (nivel) => 12 + nivel * 1.5,
     item: { nome: "Pena do Corvo Sombrio", raridade: "comum" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -109,12 +97,12 @@ export const missoes = [
     tipo: "lendario",
     nivelMinimo: 8,
     chanceSucesso: 60,
-    xp: 40,
-    ouro: 35,
+    xp: (nivel) => 40 + nivel * 4,
+    ouro: (nivel) => 35 + nivel * 3,
     item: { nome: "Gema da Escuridão", raridade: "lendario" },
     chanceMiniBoss: 10,
-    chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMissaoExtra: 15,
+    chanceMasmorra: 2,
     falha: { tipo: "item", chancePerdaItemPercent: 2 },
   },
   {
@@ -124,8 +112,8 @@ export const missoes = [
     tipo: "raro",
     nivelMinimo: 4,
     chanceSucesso: 70,
-    xp: 30,
-    ouro: 25,
+    xp: (nivel) => 30 + nivel * 3,
+    ouro: (nivel) => 25 + nivel * 2.5,
     item: { nome: "Essência da Noite", raridade: "raro" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -139,8 +127,8 @@ export const missoes = [
     tipo: "lendario",
     nivelMinimo: 8,
     chanceSucesso: 55,
-    xp: 50,
-    ouro: 40,
+    xp: (nivel) => 50 + nivel * 5,
+    ouro: (nivel) => 40 + nivel * 4,
     item: { nome: "Escama de Dragão Azul", raridade: "lendario" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -154,8 +142,8 @@ export const missoes = [
     tipo: "raro",
     nivelMinimo: 4,
     chanceSucesso: 50,
-    xp: 45,
-    ouro: 38,
+    xp: (nivel) => 45 + nivel * 4,
+    ouro: (nivel) => 38 + nivel * 3.5,
     item: { nome: "Relíquia Brilhante", raridade: "raro" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -169,8 +157,8 @@ export const missoes = [
     tipo: "comum",
     nivelMinimo: 2,
     chanceSucesso: 65,
-    xp: 28,
-    ouro: 18,
+    xp: (nivel) => 28 + nivel * 2,
+    ouro: (nivel) => 18 + nivel * 1.8,
     item: { nome: "Pergaminho Arcano", raridade: "comum" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -184,8 +172,8 @@ export const missoes = [
     tipo: "raro",
     nivelMinimo: 4,
     chanceSucesso: 55,
-    xp: 42,
-    ouro: 32,
+    xp: (nivel) => 42 + nivel * 3.5,
+    ouro: (nivel) => 32 + nivel * 3,
     item: { nome: "Página Amaldiçoada", raridade: "raro" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -199,8 +187,8 @@ export const missoes = [
     tipo: "lendario",
     nivelMinimo: 8,
     chanceSucesso: 45,
-    xp: 55,
-    ouro: 50,
+    xp: (nivel) => 55 + nivel * 5,
+    ouro: (nivel) => 50 + nivel * 4.5,
     item: { nome: "Coração de Magma", raridade: "lendario" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -214,8 +202,8 @@ export const missoes = [
     tipo: "raro",
     nivelMinimo: 4,
     chanceSucesso: 60,
-    xp: 38,
-    ouro: 28,
+    xp: (nivel) => 38 + nivel * 3,
+    ouro: (nivel) => 28 + nivel * 2.8,
     item: { nome: "Máscara Sombria", raridade: "raro" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -229,8 +217,8 @@ export const missoes = [
     tipo: "comum",
     nivelMinimo: 2,
     chanceSucesso: 85,
-    xp: 20,
-    ouro: 15,
+    xp: (nivel) => 20 + nivel * 1.8,
+    ouro: (nivel) => 15 + nivel * 1.5,
     item: { nome: "Flor da Aurora", raridade: "comum" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
@@ -267,8 +255,11 @@ export function fazerMissao(jogador) {
 
   console.log(`\n📜 Missão: ${missao.descricao}`);
   console.log(`📖 ${missao.historia}`);
-
-  let recompensaTexto = `Chance de sucesso: ${missao.chanceSucesso}% | Recompensa: ${missao.xp} XP e ${missao.ouro} ouro`;
+  let recompensaTexto = `Chance de sucesso: ${
+    missao.chanceSucesso
+  }% | Recompensa: ${missao.xp(jogador.nivel)} XP e ${missao.ouro(
+    jogador.nivel
+  )} ouro`;
   if (missao.item) {
     if (typeof missao.item === "string") {
       recompensaTexto += ` + item (${missao.item})`;
@@ -289,8 +280,22 @@ export function fazerMissao(jogador) {
     console.log(
       "⚠ Você encontrou uma MASMORRA SECRETA! Prepare-se para um desafio insano!"
     );
-    // Aqui você pode chamar uma função especial para masmorra
-    return;
+    // 1. Escolhe um template de masmorra aleatório
+    const templateId = rand(0, DUNGEON_TEMPLATES.length - 1);
+
+    // 2. Gera a masmorra
+    const masmorraGerada = gerarMasmorra(templateId);
+    console.log(`Você entrou em: ${masmorraGerada.template.nome}`);
+
+    // 3. Inicia a sessão de exploração
+    // Este objeto precisa ser armazenado em um estado global do jogador ou do jogo
+    jogador.masmorraAtual = enterDungeon(masmorraGerada, jogador);
+
+    // Agora você precisa entrar em um novo loop de jogo para a exploração da masmorra
+    // A lógica do jogo principal precisará ser ajustada para permitir
+    // comandos como "mover", "investigar" etc.
+
+    return; // Sai da função fazerMissao()
   }
 
   // 🔥 10% de chance de miniboss (balanceado por tipo da missão)
@@ -299,13 +304,25 @@ export function fazerMissao(jogador) {
     console.log(
       `⚠ Um MiniBoss apareceu: ${miniboss.nome} (HP: ${miniboss.hp}, ATK: ${miniboss.atk})`
     );
-    // Aqui você pode chamar uma função para lutar com miniboss
+    // --- LÓGICA DA BATALHA DO MINIBOSS ---
+    const venceuBatalha = batalha(miniboss, jogador);
+
+    if (!venceuBatalha) {
+      console.log(`❌ Você foi derrotado pelo mini-boss! A missão falhou.`);
+      aplicarPenalidade(missao.falha.tipo, jogador);
+      return; // Sai da função, pois o jogador falhou na missão
+    }
   }
 
   // 🎲 Resultado da missão
   const resultado = rand(1, 100);
   if (resultado <= missao.chanceSucesso) {
     console.log("✅ Missão completada com sucesso!");
+    console.log(
+      `Você recebeu ${missao.xp(jogador.nivel)} XP e ${missao.ouro(
+        jogador.nivel
+      )} ouro`
+    );
     jogador.xp += missao.xp;
     jogador.ouro += missao.ouro;
 
@@ -347,7 +364,7 @@ export function fazerMissao(jogador) {
     // Chance de missão extra
     if (rand(1, 100) <= missao.chanceMissaoExtra) {
       console.log("🔥 Uma missão extra apareceu! Continue sua aventura...");
-      // Aqui pode chamar fazerMissao() novamente ou outra função
+      fazerMissao(jogador);
     }
 
     checarLevelUp(jogador);
@@ -362,27 +379,16 @@ export function batalhaOndas(jogador) {
   console.log(
     `${colors.bright}Você entrou na Arena Amaldiçoada! Prepare-se para o desafio!${colors.reset}`
   );
-
-  // Alerta o jogador que não pode fugir
   console.log(
     `${colors.red}⚠️ Aviso: Não é possível fugir deste desafio! A derrota significa uma grande perda.${colors.reset}`
   );
 
-  // Loop para as 10 ondas
   for (let onda = 1; onda <= 10; onda++) {
     console.log(`\n--- Onda ${onda} de 10 ---`);
-
     const inimigo = criarInimigo(jogador);
-
-    // Use a sua função 'batalha' existente, mas modifique-a para não ter a opção de fugir
-    // ou crie uma versão específica para esta missão.
-    // Por agora, vamos assumir que a sua `batalha()` lida com a fuga.
-    // Se a sua função de batalha não tiver um parâmetro de fuga, precisaremos de um ajuste nela.
-
-    const venceuOnda = batalha(inimigo, jogador, false); // O `false` indica que não pode fugir
+    const venceuOnda = batalha(inimigo, jogador, false);
 
     if (venceuOnda) {
-      // Drop de fragmento por onda (5% de chance)
       if (rand(1, 100) <= 5) {
         console.log(
           `${colors.green}🎉 Você encontrou um ${colors.bright}Fragmento Antigo${colors.reset}${colors.green} durante a batalha!${colors.reset}`
@@ -390,30 +396,24 @@ export function batalhaOndas(jogador) {
         jogador.inventario.push("Fragmento Antigo");
       }
     } else {
-      // O jogador foi derrotado.
       console.log(
         `${colors.red}❌ Você foi derrotado na Onda ${onda}! A missão falhou.${colors.reset}`
       );
-      // Aplique a penalidade alta de HP aqui, ou faça a chamada para a função de penalidade
-      jogador.hp = Math.floor(jogador.hpMax / 2); // Exemplo: perde 50% de HP
-      return false; // Retorna falso para indicar falha
+      jogador.hp = Math.floor(jogador.hpMax / 2);
+      return false;
     }
   }
 
-  // --- Batalha do Miniboss (após 10 ondas) ---
   console.log(
     `\n${colors.bright}${colors.red}O portal se fecha e um MiniBoss lendário surge!${colors.reset}`
   );
-  const miniboss = criarMiniBoss(jogador); // Cria um miniboss de acordo com o nível do jogador
-
-  const venceuBoss = batalha(miniboss, jogador, false); // Batalha final
+  const miniboss = criarMiniBoss(jogador);
+  const venceuBoss = batalha(miniboss, jogador, false);
 
   if (venceuBoss) {
     console.log(
       `${colors.green}🎉 Vitória! O MiniBoss foi derrotado!${colors.reset}`
     );
-
-    // Drop final do fragmento (20% de chance)
     if (rand(1, 100) <= 20) {
       console.log(
         `${colors.green}🎁 A sua perseverança foi recompensada! Você obteve o ${colors.bright}Fragmento Antigo${colors.reset}${colors.green} do MiniBoss!${colors.reset}`
@@ -423,19 +423,23 @@ export function batalhaOndas(jogador) {
       console.log("O MiniBoss não deixou cair o Fragmento Antigo.");
     }
 
-    // Recompensa fixa da missão
-    jogador.ouro += 100;
-    jogador.xp += 50;
+    // Recompensa final escalada com o nível
+    const ouroFinal = 100 + jogador.nivel * 10;
+    const xpFinal = 50 + jogador.nivel * 5;
+
+    jogador.ouro += ouroFinal;
+    jogador.xp += xpFinal;
     console.log(
-      `${colors.yellow}Você ganhou 100 de ouro e 50 XP como recompensa final!${colors.reset}`
+      `${colors.yellow}Você ganhou ${ouroFinal} de ouro e ${xpFinal} XP como recompensa final!${colors.reset}`
     );
+
     checarLevelUp(jogador);
     return true;
   } else {
     console.log(
       `${colors.red}❌ Você foi derrotado pelo MiniBoss! A missão falhou.${colors.reset}`
     );
-    jogador.hp = Math.floor(jogador.hpMax / 2); // Penalidade por falhar
+    jogador.hp = Math.floor(jogador.hpMax / 2);
     return false;
   }
 }

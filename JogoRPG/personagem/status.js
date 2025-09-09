@@ -86,7 +86,7 @@ export function status(jogador) {
   );
 
   const opcao = prompt(
-    `\n${colors.bright}[M] Gerenciar Equipamentos/Armas${colors.reset} ou ${colors.dim}Enter para sair:${colors.reset} `
+    `\n${colors.bright}[M] Gerenciar Equipamentos/Armas${colors.reset} ou ${colors.white}Enter para sair:${colors.reset} `
   );
   if (opcao.toLowerCase() === "m") {
     gerenciarEquipamentos(jogador);
@@ -176,6 +176,8 @@ export function checarLevelUp(jogador) {
     jogador.xp -= xpParaProximoNivel(jogador);
     jogador.nivel += 1;
     jogador.hpMax += 15;
+    jogador.ataque += 2;
+    jogador.defesa += 1;
     jogador.hp = jogador.hpMax;
     console.log(
       `\n🎉 ${colors.bright}Parabéns!${colors.reset} Você subiu para o nível ${jogador.nivel}! HP restaurado para ${jogador.hpMax}.\n`
@@ -185,8 +187,8 @@ export function checarLevelUp(jogador) {
 
 // --- Aplica Fúria do Bárbaro ---
 export function aplicarFuria(jogador, dano) {
-  // Verifica se o jogador é Bárbaro e está com <= 30% de HP
-  if (jogador.classe === "Bárbaro" && jogador.hp <= jogador.hpMax * 0.3) {
+  // Verifica se o jogador é Bárbaro e está com <= 40% de HP
+  if (jogador.classe === "Bárbaro" && jogador.hp <= jogador.hpMax * 0.4) {
     console.log(
       `${colors.bright}${colors.red}🔥 Fúria do Bárbaro ativada!${colors.reset} Dano aumentado em 50%!`
     );

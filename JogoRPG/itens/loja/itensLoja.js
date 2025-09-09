@@ -168,7 +168,7 @@ export const loja = [
     atkBonus: 5,
     preco: 15510,
     set: "Dragão",
-    raridade: "lendário",
+    raridade: "lendario",
   },
   {
     id: 17,
@@ -178,7 +178,7 @@ export const loja = [
     atkBonus: 7,
     preco: 17510,
     set: "Dragão",
-    raridade: "lendário",
+    raridade: "lendario",
   },
   {
     id: 18,
@@ -188,7 +188,7 @@ export const loja = [
     atkBonus: 4,
     preco: 14950,
     set: "Dragão",
-    raridade: "lendário",
+    raridade: "lendario",
   },
   {
     id: 19,
@@ -198,7 +198,7 @@ export const loja = [
     atkBonus: 4,
     preco: 15810,
     set: "Dragão",
-    raridade: "lendário",
+    raridade: "lendario",
   },
   {
     id: 20,
@@ -208,7 +208,7 @@ export const loja = [
     atkBonus: 3,
     preco: 14900,
     set: "Dragão",
-    raridade: "lendário",
+    raridade: "lendario",
   },
 
   // Consumíveis
@@ -225,7 +225,7 @@ export const loja = [
 ];
 
 // === Armas Disponíveis ===
-const armasDisponiveis = [
+export const armasDisponiveis = [
   {
     id: 1,
     nome: "Espada Longa",
@@ -269,7 +269,7 @@ const armasDisponiveis = [
     atk: 8,
     efeito: {
       tipo: "bloqueio",
-      chance: 15,
+      chance: 20,
     },
     raridade: "raro",
   },
@@ -354,7 +354,7 @@ const armasDisponiveis = [
 function mostrarBonusDoSet(set) {
   switch (set) {
     case "Ferro":
-      return "+10% chance de bloquear ataque!";
+      return "+15% chance de bloquear ataque!";
     case "Ligeiro":
       return "+15% esquiva!";
     case "Sombra":
@@ -370,11 +370,11 @@ function mostrarBonusDoSet(set) {
 export function getRaridadeCor(raridade) {
   switch (raridade) {
     case "comum":
-      return colors.gray; // Cinza para itens comuns
+      return colors.green; // Cinza para itens comuns
     case "raro":
       return colors.blue; // Azul para itens raros
     case "lendario":
-      return colors.yellow; // Amarelo para itens lendários
+      return colors.yellow; // Amarelo para itens lendarios
     default:
       return colors.reset; // Cor padrão
   }
@@ -390,8 +390,8 @@ export function abrirLoja(jogador) {
     );
     console.log("O que deseja comprar?");
     console.log(`${colors.cyan}[1] Armaduras`);
-    console.log(`${colors.red}[2] Armas`);
-    console.log(`🚪 [0] Sair`);
+    console.log(`${colors.cyan}[2] Armas`);
+    console.log(`🚪 ${colors.red}[0] Sair${colors.reset}`);
 
     const escolha = prompt("Escolha: ");
 
@@ -465,9 +465,9 @@ export function abrirLoja(jogador) {
             console.log(
               `[${i + 1}] ${cor}${p.slot.toUpperCase()}: ${p.nome}${
                 colors.reset
-              } (+${p.defesa} DEF, +${p.atkBonus} ATK) - ${colors.yellow}${
-                p.preco
-              }${colors.reset} ouro`
+              } (${colors.magenta}+${p.defesa} DEF, +${p.atkBonus} ATK) - ${
+                colors.yellow
+              }${p.preco}${colors.reset} ouro`
             );
           });
           console.log("[0] Voltar");
@@ -506,8 +506,10 @@ export function abrirLoja(jogador) {
         armasDisponiveis.forEach((arma, i) => {
           const cor = getRaridadeCor(arma.raridade);
           console.log(
-            `[${i + 1}] ${cor}${arma.nome}${colors.reset} (+${arma.atk} ATK) ${
-              arma.efeito ? `(Efeito: ${arma.efeito})` : ""
+            `[${i + 1}] ${cor}${arma.nome}${colors.reset} (${colors.magenta}+${
+              arma.atk
+            } ATK) ${colors.cyan}${
+              arma.efeito ? `(Efeito: ${arma.efeito.tipo})` : ""
             } - ${colors.yellow}${arma.preco}${colors.reset} ouro`
           );
         });

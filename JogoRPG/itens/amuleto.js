@@ -54,7 +54,7 @@ export function menuAmuletoSupremo(jogador) {
   });
 
   console.log(
-    `\n${colors.yellow}Bônus do Amuleto Supremo: +5% ATK e +10% VIDA${colors.reset}`
+    `\n${colors.magenta}Bônus do Amuleto Supremo: +5% ATK e +10% VIDA${colors.reset}`
   );
 
   const opcao = prompt(
@@ -64,7 +64,7 @@ export function menuAmuletoSupremo(jogador) {
     const possuiTodos = itensNecessarios.every((item) => item.qtd >= item.max);
     if (possuiTodos) {
       console.log(
-        `${colors.green}✅ Você criou o Amuleto Supremo!${colors.reset}`
+        `${colors.green}Você criou o Amuleto Supremo!${colors.reset}`
       );
       gerenciarAmuleto(jogador);
       // Remove os itens usados

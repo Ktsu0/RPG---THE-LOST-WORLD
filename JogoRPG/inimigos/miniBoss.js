@@ -5,16 +5,16 @@ const prompt = promptSync();
 export function criarMiniBoss(tipo, nivelJogador) {
   const minibosses = {
     comum: [
-      { nome: "Capitão Sombrio", baseHp: 100, baseAtk: 10 },
-      { nome: "Sentinela Perdido", baseHp: 110, baseAtk: 12 },
+      { nome: "Capitão Sombrio", baseHp: 120, baseAtk: 12 },
+      { nome: "Sentinela Perdido", baseHp: 130, baseAtk: 15 },
     ],
     raro: [
-      { nome: "Guardião de Ruínas", baseHp: 140, baseAtk: 16 },
-      { nome: "Assassino das Sombras", baseHp: 150, baseAtk: 18 },
+      { nome: "Guardião de Ruínas", baseHp: 160, baseAtk: 18 },
+      { nome: "Assassino das Sombras", baseHp: 170, baseAtk: 20 },
     ],
     lendario: [
-      { nome: "Feiticeiro Caído", baseHp: 200, baseAtk: 22 },
-      { nome: "Dragão Corrompido", baseHp: 220, baseAtk: 24 },
+      { nome: "Feiticeiro Caído", baseHp: 220, baseAtk: 25 },
+      { nome: "Dragão Corrompido", baseHp: 250, baseAtk: 28 },
     ],
   };
 
@@ -23,13 +23,13 @@ export function criarMiniBoss(tipo, nivelJogador) {
   const hp =
     m.baseHp +
     Math.floor(
-      nivelJogador * (tipo === "lendario" ? 12 : tipo === "raro" ? 9 : 6)
+      nivelJogador * (tipo === "lendario" ? 12 : tipo === "raro" ? 12 : 8)
     ) +
     rand(-15, 15);
   const atk =
     m.baseAtk +
     Math.floor(
-      nivelJogador * (tipo === "lendario" ? 2.5 : tipo === "raro" ? 1.8 : 1.2)
+      nivelJogador * (tipo === "lendario" ? 2.5 : tipo === "raro" ? 2.2 : 1.5)
     ) +
     rand(0, 4);
   const xp = Math.max(25, Math.round(hp / 2.0));

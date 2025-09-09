@@ -8,7 +8,7 @@ export function criarPersonagem() {
     `${colors.bright}${colors.cyan}🎭 Escolha sua RAÇA:${colors.reset}`
   );
   console.log(
-    `[1] ${colors.magenta}Anão${colors.reset} (${colors.green}+10 DEF${colors.reset}, ${colors.red}-5 ATK${colors.reset})`
+    `[1] ${colors.magenta}Anão${colors.reset} (${colors.green}+15 DEF${colors.reset}, ${colors.red}-3 ATK${colors.reset})`
   );
   console.log(
     `[2] ${colors.magenta}Elfo${colors.reset} (${colors.green}+20 HP${colors.reset}, ${colors.red}-2 ATK${colors.reset})`
@@ -20,13 +20,13 @@ export function criarPersonagem() {
     `[4] ${colors.magenta}Morto-vivo${colors.reset} (${colors.green}+5 ATK${colors.reset}, ${colors.red}-10 HP${colors.reset})`
   );
   console.log(
-    `[5] ${colors.magenta}Orc${colors.reset} (${colors.green}+8 ATK${colors.reset}, ${colors.red}-10 DEF${colors.reset})`
+    `[5] ${colors.magenta}Orc${colors.reset} (${colors.green}+8 ATK${colors.reset}, ${colors.red}-5 DEF${colors.reset})`
   );
   console.log(
     `[6] ${colors.magenta}Drow${colors.reset} (${colors.green}+10% Crítico${colors.reset}, ${colors.red}-10 HP${colors.reset})`
   );
   console.log(
-    `[7] ${colors.magenta}Dragãoide${colors.reset} (${colors.green}+20 HP, +10 ATK${colors.reset}, ${colors.red}não pode usar armaduras${colors.reset})`
+    `[7] ${colors.magenta}Dragãoide${colors.reset} (${colors.green}+15 HP, +5 ATK${colors.reset}, ${colors.red}não pode usar armaduras${colors.reset})`
   );
 
   let racaEscolha;
@@ -41,8 +41,8 @@ export function criarPersonagem() {
   switch (racaEscolha) {
     case "1":
       raca = "Anão";
-      bonusRaca.def = 10;
-      bonusRaca.atk = -5;
+      bonusRaca.def = 15;
+      bonusRaca.atk = -3;
       break;
     case "2":
       raca = "Elfo";
@@ -60,7 +60,7 @@ export function criarPersonagem() {
     case "5":
       raca = "Orc";
       bonusRaca.atk = 8;
-      bonusRaca.def = -10;
+      bonusRaca.def = -5;
       break;
     case "6":
       raca = "Drow";
@@ -69,8 +69,8 @@ export function criarPersonagem() {
       break;
     case "7":
       raca = "Dragãoide";
-      bonusRaca.hp = 20;
-      bonusRaca.atk = 10;
+      bonusRaca.hp = 15;
+      bonusRaca.atk = 5;
       restricoes.semArmadura = true;
       break;
   }
@@ -94,7 +94,7 @@ export function criarPersonagem() {
     `[5] ${colors.magenta}Necromante${colors.reset} (${colors.yellow}Invocar esqueleto aliado${colors.reset})`
   );
   console.log(
-    `[6] ${colors.magenta}Suporte${colors.reset} (${colors.yellow}Cura 10% HP por turno + bônus esquiva${colors.reset})`
+    `[6] ${colors.magenta}Druida${colors.reset} (${colors.yellow}Cura 10% HP por turno + bônus esquiva${colors.reset})`
   );
 
   let classeEscolha;
@@ -124,6 +124,7 @@ export function criarPersonagem() {
       classe = "Paladino";
       habilidadeClasse = "bloqueio";
       bonusClasse.critChance = 20;
+      bonusClasse.def = 5;
       break;
     case "3":
       classe = "Assassino";
@@ -141,7 +142,7 @@ export function criarPersonagem() {
       bonusClasse.atk = 5;
       break;
     case "6":
-      classe = "Suporte";
+      classe = "Druida";
       habilidadeClasse = "cura";
       bonusClasse.esquiva = 15;
       break;
@@ -158,13 +159,13 @@ export function criarPersonagem() {
     classe,
     habilidadeClasse,
     bonusClasse,
-    hp: 90 + bonusRaca.hp,
-    hpMax: 90 + bonusRaca.hp,
+    hp: 1000 + bonusRaca.hp,
+    hpMax: 1000 + bonusRaca.hp,
     nivel: 1,
     xp: 0,
     ouro: 0,
-    ataque: 5 + bonusRaca.atk + bonusClasse.atk,
-    defesa: 2 + bonusRaca.def + bonusClasse.def,
+    ataque: 80 + bonusRaca.atk + bonusClasse.atk,
+    defesa: 5 + bonusRaca.def + bonusClasse.def,
     criticoExtra: bonusRaca.critChance || 0,
     restricoes,
     equipamentos: {
