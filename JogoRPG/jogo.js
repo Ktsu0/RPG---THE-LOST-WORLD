@@ -34,7 +34,6 @@ jogador.equipamentos = jogador.equipamentos || {
 };
 
 // --- Jogo principal ---
-// --- Jogo principal ---
 function iniciarJogo(jogador) {
   console.clear();
   console.log("=== RPG - THE LOST WORLD ===");
@@ -47,6 +46,7 @@ function iniciarJogo(jogador) {
   console.log(
     `${colors.green}HP:${colors.reset} ${jogador.hp} | ${colors.green}ATK:${colors.reset} ${jogador.ataque} | ${colors.green}DEF:${colors.reset} ${jogador.defesa}`
   );
+
   let jogoAtivo = true;
 
   while (jogoAtivo) {
@@ -55,10 +55,8 @@ function iniciarJogo(jogador) {
       break;
     }
 
-    // --- LÓGICA DE CONTROLE DO ESTADO DO JOGO ---
+    // --- Jogador dentro de masmorra ---
     if (jogador.masmorraAtual) {
-      // O jogador está em uma masmorra
-      // Exibe as opções específicas da masmorra
       console.log(
         `\n${colors.bright}Você está em uma masmorra! O que deseja fazer?${colors.reset}`
       );
@@ -68,9 +66,9 @@ function iniciarJogo(jogador) {
       const escolhaMasmorra = prompt("Escolha: ");
 
       switch (escolhaMasmorra) {
-        case "1":
+        case "1": // mover
           console.log(
-            "Para onde? ([01]Norte / [02]Sul / [03]Leste / [04]Oeste"
+            "Para onde? ([01]Norte / [02]Sul / [03]Leste / [04]Oeste)"
           );
           const direcaoEscolhida = prompt(">> ");
           let direcaoConvertida;
@@ -93,28 +91,33 @@ function iniciarJogo(jogador) {
               break;
           }
 
-          // O seu movimento já é lidado aqui
           const resultado = jogador.masmorraAtual.move(direcaoConvertida);
           console.log(resultado.msg);
 
+          // Chama interação se for batalha, tesouro, trap, etc.
+          interagirComSala(jogador);
           break;
-        case "2":
+
+        case "2": // olhar
           console.log(jogador.masmorraAtual.look());
           break;
-        case "3":
+
+        case "3": // investigar
           const resultadoInvestigacao = jogador.masmorraAtual.investigate();
           console.log(resultadoInvestigacao.msg);
           break;
-        case "0":
-          jogador.masmorraAtual = null; // Remove o estado da masmorra
+
+        case "0": // sair da masmorra
+          jogador.masmorraAtual = null;
           console.log("Você saiu da masmorra.");
           break;
+
         default:
           console.log("Comando inválido. Tente novamente.");
           break;
       }
     } else {
-      // O jogador está no menu principal
+      // --- Menu principal ---
       console.log(`\n${colors.bright}O que deseja fazer agora?${colors.reset}`);
       console.log(`🌳 [1] Explorar`);
       console.log(`📝 [2] Fazer uma missão`);
@@ -128,9 +131,11 @@ function iniciarJogo(jogador) {
       const escolha = prompt("Escolha: ");
 
       switch (escolha) {
-        case "1":
-          // Lógica de exploração
-          if (rand(1, 100) <= 100) {
+        case "1": // explorar
+          const chance = rand(1, 100);
+
+          if (chance <= 10) {
+            // 10% chance de masmorra
             console.log(
               `\n${colors.red}⚠ Durante sua exploração, você encontrou a entrada de uma MASMORRA!${colors.reset}`
             );
@@ -138,23 +143,25 @@ function iniciarJogo(jogador) {
             const masmorraGerada = gerarMasmorra(jogador, templateId);
             console.log(`Você entra em: ${masmorraGerada.template.nome}`);
 
-            // 1. O jogador entra na masmorra e o estado dela é definido.
             jogador.masmorraAtual = enterDungeon(masmorraGerada, jogador);
-            jogador.posicao = { x: 0, y: 0 };
-            // 3. A função interagirComSala pode ser chamada com segurança.
+            jogador.posicao = { ...jogador.masmorraAtual.state.start };
+
+            // Interage automaticamente com a sala de entrada
             interagirComSala(jogador);
-          } else if (rand(1, 100) <= 90) {
+          } else if (chance <= 70) {
+            // 60% chance de encontrar inimigo/miniboss fora da masmorra
             if (rand(1, 100) <= 10) {
               const miniboss = criarMiniBoss(null, jogador.nivel);
               console.log(
                 `\n${colors.red}⚠️ Atenção! Um MINI-BOSS apareceu!${colors.reset}`
               );
-              batalha(miniboss, jogador);
+              batalha(jogador, miniboss);
             } else {
               let inimigo = criarInimigo(jogador);
-              batalha(inimigo, jogador);
+              batalha(jogador, inimigo);
             }
           } else {
+            // 30% chance de nada ou tesouro
             if (rand(1, 100) <= 50) {
               encontrarTesouro(jogador);
             } else {
@@ -202,7 +209,7 @@ function iniciarJogo(jogador) {
       // Recuperação passiva
       if (jogador.hp > 0 && rand(1, 100) <= 25) {
         const regen = rand(2, 6);
-        jogador.hp = Math.min(jogador.hp + regen, jogador.hpMax);
+        jogador.hp = Math.min(jogador.hp + regen, jogador.hpMax || jogador.hp);
         console.log(
           `\n💚 Recuperação passiva: +${regen} HP (HP: ${jogador.hp}/${jogador.hpMax})`
         );
@@ -211,5 +218,6 @@ function iniciarJogo(jogador) {
   }
   console.log("\n--- JOGO ENCERRADO ---");
 }
+
 // Inicia o jogo
 iniciarJogo(jogador);

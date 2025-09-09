@@ -565,11 +565,18 @@ function enterDungeon(dungeon, jogador, callbacks) {
         msg: secretMessages[rand(0, secretMessages.length - 1)],
         type: "segredo",
       };
-    } else {
+    } else if (cell.roomType === "entrada") {
       return {
-        msg: "Você se moveu, a sala está vazia.",
-        type: "movimento",
+        msg: "Você está na entrada da masmorra. O ar é pesado e misterioso...",
+        type: "entrada",
       };
+    } else {
+      {
+        return {
+          msg: "Você se moveu, a sala está vazia.",
+          type: "movimento",
+        };
+      }
     }
   }
 
