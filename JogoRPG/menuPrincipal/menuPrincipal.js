@@ -34,7 +34,7 @@ export function menuPrincipal(jogador) {
 
   switch (escolha) {
     case "1": // explorar
-      const chance = rand(1, 100);
+      const chance = rand(1, 10);
 
       if (chance <= 100) {
         console.log(

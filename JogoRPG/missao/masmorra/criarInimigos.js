@@ -5,11 +5,11 @@ export function criarInimigoMasmorra(nome, dificuldade) {
   let inimigoBase;
 
   switch (nome) {
-    // --- Monstros (Mobs) ---
+    // === TIER 1: INIMIGOS FRÁGEIS ===
     case "Esqueleto Errante":
       inimigoBase = {
         nome: "Esqueleto Errante",
-        hp: 15,
+        hp: 12,
         atk: 4,
         tipo: "monstro",
       };
@@ -17,7 +17,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
     case "Zumbi Corrompido":
       inimigoBase = {
         nome: "Zumbi Corrompido",
-        hp: 20,
+        hp: 15,
         atk: 5,
         tipo: "monstro",
       };
@@ -26,15 +26,15 @@ export function criarInimigoMasmorra(nome, dificuldade) {
       inimigoBase = { nome: "Rato Gigante", hp: 10, atk: 3, tipo: "monstro" };
       break;
     case "Sombra Menor":
-      inimigoBase = { nome: "Sombra Menor", hp: 12, atk: 5, tipo: "monstro" };
+      inimigoBase = { nome: "Sombra Menor", hp: 13, atk: 6, tipo: "monstro" };
       break;
     case "Lobo Selvagem":
-      inimigoBase = { nome: "Lobo Selvagem", hp: 25, atk: 7, tipo: "monstro" };
+      inimigoBase = { nome: "Lobo Selvagem", hp: 18, atk: 7, tipo: "monstro" };
       break;
     case "Aranha Venenosa":
       inimigoBase = {
         nome: "Aranha Venenosa",
-        hp: 18,
+        hp: 16,
         atk: 6,
         tipo: "monstro",
       };
@@ -42,7 +42,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
     case "Bandido da Selva":
       inimigoBase = {
         nome: "Bandido da Selva",
-        hp: 30,
+        hp: 20,
         atk: 8,
         tipo: "monstro",
       };
@@ -50,107 +50,111 @@ export function criarInimigoMasmorra(nome, dificuldade) {
     case "Guerreiro Congelado":
       inimigoBase = {
         nome: "Guerreiro Congelado",
-        hp: 35,
+        hp: 25,
         atk: 9,
         tipo: "monstro",
       };
       break;
     case "Harpia Gelada":
-      inimigoBase = { nome: "Harpia Gelada", hp: 25, atk: 10, tipo: "monstro" };
+      inimigoBase = { nome: "Harpia Gelada", hp: 22, atk: 10, tipo: "monstro" };
       break;
+
+    // === TIER 2: INIMIGOS PADRÕES ===
     case "Caranguejo de Cristal":
       inimigoBase = {
         nome: "Caranguejo de Cristal",
-        hp: 40,
-        atk: 8,
+        hp: 30,
+        atk: 9,
         tipo: "monstro",
       };
       break;
     case "Lacaio de Fogo":
       inimigoBase = {
         nome: "Lacaio de Fogo",
-        hp: 30,
-        atk: 12,
+        hp: 28,
+        atk: 11,
         tipo: "monstro",
       };
       break;
     case "Golem de Lava":
-      inimigoBase = { nome: "Golem de Lava", hp: 50, atk: 15, tipo: "monstro" };
+      inimigoBase = { nome: "Golem de Lava", hp: 35, atk: 12, tipo: "monstro" };
       break;
     case "Escorpião Flamejante":
       inimigoBase = {
         nome: "Escorpião Flamejante",
-        hp: 28,
-        atk: 14,
+        hp: 32,
+        atk: 13,
         tipo: "monstro",
       };
       break;
     case "Acólito Corrompido":
       inimigoBase = {
         nome: "Acólito Corrompido",
-        hp: 22,
+        hp: 25,
         atk: 10,
         tipo: "monstro",
       };
       break;
     case "Livro Animado":
-      inimigoBase = { nome: "Livro Animado", hp: 15, atk: 7, tipo: "monstro" };
+      inimigoBase = { nome: "Livro Animado", hp: 20, atk: 8, tipo: "monstro" };
       break;
     case "Gárgula de Pedra":
       inimigoBase = {
         nome: "Gárgula de Pedra",
-        hp: 45,
-        atk: 13,
+        hp: 40,
+        atk: 14,
         tipo: "monstro",
       };
       break;
     case "Rato do Subsolo":
       inimigoBase = {
         nome: "Rato do Subsolo",
-        hp: 12,
-        atk: 4,
+        hp: 15,
+        atk: 6,
         tipo: "monstro",
       };
       break;
     case "Bandido Mineiro":
       inimigoBase = {
         nome: "Bandido Mineiro",
-        hp: 30,
-        atk: 9,
+        hp: 35,
+        atk: 11,
         tipo: "monstro",
       };
       break;
+
+    // === TIER 3: INIMIGOS AVANÇADOS ===
     case "Autômato Danificado":
       inimigoBase = {
         nome: "Autômato Danificado",
-        hp: 40,
-        atk: 11,
+        hp: 45,
+        atk: 12,
         tipo: "monstro",
       };
       break;
     case "Répteis do Lodo":
       inimigoBase = {
         nome: "Répteis do Lodo",
-        hp: 28,
-        atk: 8,
+        hp: 38,
+        atk: 10,
         tipo: "monstro",
       };
       break;
     case "Híbrido Putrefato":
       inimigoBase = {
         nome: "Híbrido Putrefato",
-        hp: 35,
-        atk: 10,
+        hp: 42,
+        atk: 13,
         tipo: "monstro",
       };
       break;
     case "Mosca Gigante":
-      inimigoBase = { nome: "Mosca Gigante", hp: 20, atk: 9, tipo: "monstro" };
+      inimigoBase = { nome: "Mosca Gigante", hp: 30, atk: 11, tipo: "monstro" };
       break;
     case "Sentinela Obscura":
       inimigoBase = {
         nome: "Sentinela Obscura",
-        hp: 50,
+        hp: 55,
         atk: 18,
         tipo: "monstro",
       };
@@ -158,7 +162,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
     case "Acólito Maldito":
       inimigoBase = {
         nome: "Acólito Maldito",
-        hp: 35,
+        hp: 40,
         atk: 15,
         tipo: "monstro",
       };
@@ -166,27 +170,27 @@ export function criarInimigoMasmorra(nome, dificuldade) {
     case "Neófito Sombrio":
       inimigoBase = {
         nome: "Neófito Sombrio",
-        hp: 40,
+        hp: 48,
         atk: 16,
         tipo: "monstro",
       };
       break;
     case "Faísca Viva":
-      inimigoBase = { nome: "Faísca Viva", hp: 25, atk: 14, tipo: "monstro" };
+      inimigoBase = { nome: "Faísca Viva", hp: 30, atk: 14, tipo: "monstro" };
       break;
     case "Metalúnculo":
-      inimigoBase = { nome: "Metalúnculo", hp: 45, atk: 15, tipo: "monstro" };
+      inimigoBase = { nome: "Metalúnculo", hp: 50, atk: 15, tipo: "monstro" };
       break;
     case "Operário Enlouquecido":
       inimigoBase = {
         nome: "Operário Enlouquecido",
-        hp: 38,
+        hp: 45,
         atk: 12,
         tipo: "monstro",
       };
       break;
     case "Eco Errante":
-      inimigoBase = { nome: "Eco Errante", hp: 30, atk: 17, tipo: "monstro" };
+      inimigoBase = { nome: "Eco Errante", hp: 40, atk: 17, tipo: "monstro" };
       break;
     case "Guardião de Pedra":
       inimigoBase = {
@@ -199,12 +203,13 @@ export function criarInimigoMasmorra(nome, dificuldade) {
     case "Magus Errático":
       inimigoBase = {
         nome: "Magus Errático",
-        hp: 40,
+        hp: 50,
         atk: 19,
         tipo: "monstro",
       };
       break;
-    // --- Mini-Chefes ---
+
+    // --- MINI-CHEFE: ATRIBUTOS ELEVADOS ---
     case "Coveiro Errante":
       inimigoBase = {
         nome: "Coveiro Errante",
@@ -440,7 +445,8 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         tipo: "miniboss",
       };
       break;
-    // --- Chefes (Bosses) ---
+
+    // === CHEFE: ATRIBUTOS MÁXIMOS ===
     case "Kaelthos, Mestre das Catacumbas":
       inimigoBase = {
         nome: "Kaelthos, Mestre das Catacumbas",

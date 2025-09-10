@@ -273,7 +273,7 @@ function gerarMasmorra(jogador, templateId, options) {
     tpl.boss.nome,
     dificuldade
   );
-  const chanceDeDrop = 100 * dificuldade;
+  const chanceDeDrop = 0.15 * dificuldade;
   if (Math.random() < chanceDeDrop / 100) {
     const orbe = itens.find((item) => item.nome === "Orbe da Fênix Flamejante");
     grid[bossCellCoord.y][bossCellCoord.x].content.recompensa = orbe;
