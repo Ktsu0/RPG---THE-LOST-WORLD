@@ -79,9 +79,9 @@ export function aplicarEfeitoArma(jogador, inimigo) {
   }
 }
 
-export function aplicarStatusPorTurno(jogador, inimigo) {
+export function aplicarStatusPorTurno(inimigo) {
   // Aplica o dano de status
-  inimigo.status = inimigo.status.filter((status) => {
+  inimigo.status = (inimigo.status || []).filter((status) => {
     switch (status.tipo) {
       case "sangramento":
         inimigo.hp -= status.dano;

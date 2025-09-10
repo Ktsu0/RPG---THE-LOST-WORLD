@@ -323,8 +323,8 @@ export function fazerMissao(jogador) {
         jogador.nivel
       )} ouro`
     );
-    jogador.xp += missao.xp;
-    jogador.ouro += missao.ouro;
+    jogador.xp += missao.xp(jogador.nivel);
+    jogador.ouro += missao.ouro(jogador.nivel);
 
     // Entregar item (com chance por raridade)
     if (missao.item && typeof missao.item === "object") {

@@ -1,3 +1,5 @@
+import { colors } from "./../utilitarios.js";
+
 export function verificarMorte(jogador) {
   // Passo 1: Verifica se a vida do jogador chegou a 0 ou menos.
   if (jogador.hp <= 0) {

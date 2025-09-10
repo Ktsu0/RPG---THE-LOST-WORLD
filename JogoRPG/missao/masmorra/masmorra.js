@@ -1,5 +1,5 @@
 import { colors } from "./../../utilitarios.js";
-
+import { criarInimigoMasmorra } from "./criarInimigos.js";
 // ---------- Helpers ----------
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -79,7 +79,10 @@ let DUNGEON_TEMPLATES = [
     dificuldade: 5,
     mobs: ["Lacaio de Fogo", "Golem de Lava", "Escorpião Flamejante"],
     minibosses: ["Forjador Ardente", "Senhor das Brasas", "Ancião de Magma"],
-    boss: { nome: "Ignarok, Senhor das Chamas Eternas", poder: "Erupção" },
+    boss: {
+      nome: "Ignarok, Senhor das Chamas Eternas",
+      poder: "Erupção Infernal",
+    },
     trapChance: 25,
     secretChance: 10,
     treasureMultiplier: 1.4,
@@ -125,7 +128,7 @@ let DUNGEON_TEMPLATES = [
     dificuldade: 3,
     mobs: ["Répteis do Lodo", "Híbrido Putrefato", "Mosca Gigante"],
     minibosses: ["Xamã Venenoso", "Feiticeira do Brejo", "Monstro da Lama"],
-    boss: { nome: "Morghul, o Decompositor", poder: "Praga" },
+    boss: { nome: "Morghul, o Decompositor", poder: "Praga da Corrupção" },
     trapChance: 22,
     secretChance: 16,
     treasureMultiplier: 0.9,
@@ -258,23 +261,18 @@ function gerarMasmorra(jogador, templateId, options) {
         candidates.push({ x: x, y: y });
     }
   }
-  shuffle(candidates); // Embaralha todos os candidatos
+  shuffle(candidates); // Embaralha todos os candidatos // A lógica de BOSS deve ser a mesma
 
-  // A lógica de BOSS deve ser a mesma
   let candidatesForBoss = [...candidates];
   candidatesForBoss.sort(function (a, b) {
     return manhattan(b, entrance) - manhattan(a, entrance);
   });
   let bossCellCoord = candidatesForBoss[0];
-  grid[bossCellCoord.y][bossCellCoord.x].roomType = "boss";
-  grid[bossCellCoord.y][bossCellCoord.x].content = {
-    tipo: "boss",
-    nome: tpl.boss.nome,
-    poder: tpl.boss.poder,
-    hp: rand(150, 300) * dificuldade,
-    atk: rand(25, 45) * dificuldade,
-    def: rand(15, 30) * dificuldade,
-  };
+  grid[bossCellCoord.y][bossCellCoord.x].roomType = "boss"; // === ALTERAÇÃO AQUI: Usa a nova função para criar o chefe ===
+  grid[bossCellCoord.y][bossCellCoord.x].content = criarInimigoMasmorra(
+    tpl.boss.nome,
+    dificuldade
+  );
   const chanceDeDrop = 100 * dificuldade;
   if (Math.random() < chanceDeDrop / 100) {
     const orbe = itens.find((item) => item.nome === "Orbe da Fênix Flamejante");
@@ -283,25 +281,20 @@ function gerarMasmorra(jogador, templateId, options) {
       `${colors.cyan}O chefe esconde um tesouro lendário...${colors.reset}`
     );
   }
-  bossPlaced = true;
-  // Remova o chefe da lista de candidatos para outras salas
+  bossPlaced = true; // Remova o chefe da lista de candidatos para outras salas
   candidates = candidates.filter(
     (c) => c.x !== bossCellCoord.x || c.y !== bossCellCoord.y
-  );
+  ); // NOVO: Coloque os mini-chefes em salas aleatórias, sem ordenação
 
-  // NOVO: Coloque os mini-chefes em salas aleatórias, sem ordenação
   let placedMinis = [];
   for (let i = 0; i < minibossCount && candidates.length > 0; i++) {
     let coord = candidates.shift();
     grid[coord.y][coord.x].roomType = "miniboss";
-    const nomeMiniboss = tpl.minibosses[rand(0, tpl.minibosses.length - 1)];
-    grid[coord.y][coord.x].content = {
-      tipo: "miniboss",
-      nome: nomeMiniboss,
-      hp: rand(40, 80) * dificuldade,
-      atk: rand(10, 20) * dificuldade,
-      def: rand(5, 15) * dificuldade,
-    };
+    const nomeMiniboss = tpl.minibosses[rand(0, tpl.minibosses.length - 1)]; // === ALTERAÇÃO AQUI: Usa a nova função para criar o mini-chefe ===
+    grid[coord.y][coord.x].content = criarInimigoMasmorra(
+      nomeMiniboss,
+      dificuldade
+    );
     placedMinis.push(coord);
   }
 
@@ -322,12 +315,8 @@ function gerarMasmorra(jogador, templateId, options) {
     let quantidade = rand(1, 3);
     let mobs = [];
     for (let k = 0; k < quantidade; k++) {
-      mobs.push({
-        nome: mobName,
-        hp: Math.floor(Math.max(6, rand(6, 20) + rand(-2, 4)) * dificuldade),
-        atk: Math.floor(rand(5, 10) * dificuldade),
-        def: Math.floor(rand(1, 5) * dificuldade),
-      });
+      // === ALTERAÇÃO AQUI: Usa a nova função para criar os monstros ===
+      mobs.push(criarInimigoMasmorra(mobName, dificuldade));
     }
     grid[c.y][c.x].content = { tipo: "mobs", mobs: mobs };
     placedMobs++;
@@ -411,6 +400,122 @@ function gerarMasmorra(jogador, templateId, options) {
   return dungeon;
 }
 
+// --- Importante: Adicione esta função auxiliar ---
+// Essa função deve ser chamada sempre que o jogador entrar em uma nova sala
+// Por exemplo, na sua função 'move()'
+function marcarSalaComoVisitada(jogador, masmorra) {
+  if (masmorra && jogador.posicao) {
+    const salaAtual = masmorra.grid[jogador.posicao.y][jogador.posicao.x];
+    if (salaAtual) {
+      salaAtual.visited = true;
+    }
+  }
+}
+
+// --- Função auxiliar para centralizar o texto da célula ---
+function centerText(text, width) {
+  // Caso o texto já seja a largura máxima, não adicione padding
+  if (text.length >= width) {
+    return text;
+  }
+  const padding = width - text.length;
+  const padStart = Math.floor(padding / 2);
+  const padEnd = padding - padStart;
+  return " ".repeat(padStart) + text + " ".repeat(padEnd);
+}
+
+// --- Nova Função 'look()' ---
+export function look(state) {
+  let mapLines = [];
+  const grid = state.dungeon.grid;
+  const mapWidth = grid[0].length;
+  const mapHeight = grid.length;
+
+  const cellWidth = 3;
+
+  for (let y = 0; y < mapHeight; y++) {
+    let topRow = "";
+    let midRow = "";
+
+    for (let x = 0; x < mapWidth; x++) {
+      let cell = grid[y][x];
+
+      // Adiciona uma verificação para a célula e a propriedade 'saida'
+      const northCell = y > 0 ? grid[y - 1][x] : null;
+      const hasNorthPath =
+        northCell &&
+        northCell.visited &&
+        northCell.saida &&
+        northCell.saida.includes("sul");
+
+      topRow += "+";
+      topRow += hasNorthPath ? "   " : "---";
+
+      // Adiciona uma verificação para a célula e a propriedade 'saida'
+      const westCell = x > 0 ? grid[y][x - 1] : null;
+      const hasWestPath =
+        westCell &&
+        westCell.visited &&
+        westCell.saida &&
+        westCell.saida.includes("leste");
+
+      midRow += hasWestPath ? " " : "|";
+
+      if (state.x === x && state.y === y) {
+        midRow += centerText("👤", cellWidth);
+      } else if (cell.visited) {
+        let content;
+        switch (cell.roomType) {
+          case "entrada":
+            content = "E";
+            break;
+          case "saida":
+            content = "S";
+            break;
+          case "inimigo":
+            content = "M";
+            break;
+          case "miniboss":
+            content = "M B";
+          case "boss":
+            content = "B";
+            break;
+          case "armadilha":
+            content = "T";
+            break;
+          case "tesouro":
+            content = "$";
+            break;
+          case "vazio":
+            content = ".";
+            break;
+          default:
+            content = " ";
+            break;
+        }
+        midRow += centerText(content, cellWidth);
+      } else {
+        midRow += centerText("???", cellWidth);
+      }
+    }
+
+    topRow += "+";
+    midRow += "|";
+    mapLines.push(topRow);
+    mapLines.push(midRow);
+  }
+
+  // Desenha a última linha inferior
+  let lastRow = "";
+  for (let x = 0; x < mapWidth; x++) {
+    lastRow += "+---";
+  }
+  lastRow += "+";
+  mapLines.push(lastRow);
+
+  return mapLines.join("\n");
+}
+
 // ---------- API de exploração (estado da masmorra durante exploração) ----------
 function enterDungeon(dungeon, jogador, callbacks) {
   callbacks = callbacks || {};
@@ -424,7 +529,7 @@ function enterDungeon(dungeon, jogador, callbacks) {
     discoveries: [],
     cleared: false,
   };
-  jogador.masmorraAtual = state.dungeon;
+  console.log(look(state));
 
   function inBounds(x, y) {
     return x >= 0 && y >= 0 && x < dungeon.size && y < dungeon.size;
@@ -434,36 +539,8 @@ function enterDungeon(dungeon, jogador, callbacks) {
     return dungeon.grid[y][x];
   }
 
-  function look() {
-    let cell = cellAt(state.x, state.y);
-    let desc = [];
-    desc.push(
-      "Você está na sala (" +
-        state.x +
-        "," +
-        state.y +
-        ") - tipo: " +
-        cell.roomType
-    );
-    let dirs = [
-      { dx: 0, dy: -1, name: "norte" },
-      { dx: 0, dy: 1, name: "sul" },
-      { dx: 1, dy: 0, name: "leste" },
-      { dx: -1, dy: 0, name: "oeste" },
-    ];
-    for (let i = 0; i < dirs.length; i++) {
-      let nx = state.x + dirs[i].dx;
-      let ny = state.y + dirs[i].dy;
-      if (inBounds(nx, ny)) {
-        let c = cellAt(nx, ny);
-        let summary = "(" + nx + "," + ny + "): " + c.roomType;
-        desc.push("Ao " + dirs[i].name + " você vê: " + summary);
-      }
-    }
-    return desc.join("\n");
-  }
-
   function move(dir) {
+    marcarSalaComoVisitada();
     let realDir = dir;
     let mapping = {
       norte: { dx: 0, dy: -1 },
@@ -515,8 +592,8 @@ function enterDungeon(dungeon, jogador, callbacks) {
     state.steps += 1;
 
     let cell = cellAt(nx, ny);
-    if (!cell.explored) {
-      cell.explored = true;
+    if (!cell.visited) {
+      cell.visited = true;
       state.discoveries.push({ x: nx, y: ny, tipo: cell.roomType });
     }
 
@@ -524,31 +601,31 @@ function enterDungeon(dungeon, jogador, callbacks) {
       const monstroEscolhido =
         cell.content.mobs[rand(0, cell.content.mobs.length - 1)];
       return {
-        msg: `Um ${monstroEscolhido.nome} apareceu! Prepare-se para a batalha.`,
+        msg: `${colors.white}Um ${monstroEscolhido.nome} apareceu! Prepare-se para a batalha.${colors.reset}`,
         type: "batalha",
         inimigo: monstroEscolhido,
       };
     } else if (cell.roomType === "miniboss") {
       return {
-        msg: `Você encontrou o mini-chefe da masmorra, ${cell.content.nome}!`,
+        msg: `${colors.cyan}Você encontrou o mini-chefe da masmorra, ${cell.content.nome}!${colors.reset}`,
         type: "miniboss",
         inimigo: cell.content,
       };
     } else if (cell.roomType === "boss") {
       return {
-        msg: `O Guardião da Masmorra, ${cell.content.nome}, se levanta para te enfrentar!`,
+        msg: `${colors.red}O Guardião da Masmorra, ${cell.content.nome}, se levanta para te enfrentar!${colors.reset}`,
         type: "boss",
         inimigo: cell.content,
       };
     } else if (cell.roomType === "trap") {
       return {
-        msg: "Você caiu em uma armadilha! Tome cuidado ao andar.",
+        msg: `${colors.yellow}Você caiu em uma armadilha! Tome cuidado ao andar.${colors.reset}`,
         type: "armadilha",
         dano: cell.content.dano,
       };
     } else if (cell.roomType === "treasure") {
       return {
-        msg: "Você encontrou um tesouro!",
+        msg: `${colors.yellow}Você encontrou um Tesouro!${colors.reset}`,
         type: "tesouro",
         item: cell.content.item,
         ouro: cell.content.ouro,
@@ -561,13 +638,15 @@ function enterDungeon(dungeon, jogador, callbacks) {
         "Você sente uma aura mística emanando de um símbolo no chão.",
         "Uma pequena fresta na parede revela um vislumbre de ouro.",
       ];
+      const mensagemSecreta =
+        secretMessages[rand(0, secretMessages.length - 1)];
       return {
-        msg: secretMessages[rand(0, secretMessages.length - 1)],
+        msg: `${colors.gray}${mensagemSecreta}${colors.reset}`,
         type: "segredo",
       };
     } else if (cell.roomType === "entrada") {
       return {
-        msg: "Você está na entrada da masmorra. O ar é pesado e misterioso...",
+        msg: `${colors.white}Você está na entrada da masmorra. O ar é pesado e misterioso...${colors.reset}`,
         type: "entrada",
       };
     } else {
@@ -582,24 +661,28 @@ function enterDungeon(dungeon, jogador, callbacks) {
 
   function investigate() {
     let cell = cellAt(state.x, state.y);
+
     if (cell.roomType === "trap") {
       let chance =
-        50 +
+        30 +
         (state.jogador && state.jogador.bonusDesarme
           ? state.jogador.bonusDesarme
           : 0);
+
       if (rand(1, 100) <= chance) {
-        let dmgAvoided = true;
-        cell.roomType = "vazio";
+        // SUCESSO: Armadilha desarmada
         let msg = "Você desarmou a armadilha com sucesso!";
+        // Apenas aqui a sala é limpa
+        cell.roomType = "vazio";
+        cell.content = null;
         return { ok: true, result: "disarmed", msg: msg };
       } else {
+        // FALHA: Armadilha ativada
         let dano =
           cell.content && cell.content.dano ? cell.content.dano : rand(5, 15);
         state.jogador.hp -= dano;
         let msg2 = "Você acionou a armadilha e levou " + dano + " de dano!";
-        cell.roomType = "vazio";
-        cell.content = null;
+        // A sala NÃO é limpa. O jogador pode voltar e tentar novamente.
         return { ok: true, result: "triggered", dano: dano, msg: msg2 };
       }
     } else if (cell.roomType === "treasure") {
@@ -611,6 +694,11 @@ function enterDungeon(dungeon, jogador, callbacks) {
         cell.content.ouro = 0;
         cell.content.msg = "Vazio — saqueado";
         state.jogador.ouro = (state.jogador.ouro || 0) + gold;
+
+        // Limpa a sala após o baú ser saqueado
+        cell.roomType = "vazio";
+        cell.content = null;
+
         return {
           ok: true,
           result: "treasure",
@@ -626,6 +714,7 @@ function enterDungeon(dungeon, jogador, callbacks) {
         };
       }
     } else if (cell.roomType === "secret") {
+      // A lógica de "secret" já limpa a sala, então está correta
       if (rand(1, 100) <= 60) {
         let rewardType = ["ouro", "fragmento", "item"][rand(0, 2)];
         if (rewardType === "ouro") {
@@ -693,7 +782,7 @@ function enterDungeon(dungeon, jogador, callbacks) {
 
   return {
     state: state,
-    look: look,
+    look: look.bind(null, state),
     move: move,
     investigate: investigate,
     getCurrentSummary: getCurrentSummary,

@@ -103,7 +103,7 @@ export function equiparItem(jogador, item) {
     return;
   }
 
-  if (jogador.restricoes.semArmadura) {
+  if (jogador.restricoes && jogador.restricoes.semArmadura) {
     console.log(
       `${colors.red}❌ Sua raça não pode equipar armaduras!${colors.reset}`
     );
