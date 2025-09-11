@@ -1,8 +1,8 @@
-import { rand } from "./../../utilitarios.js";
+import { rand } from "./../utilitarios.js";
 
 // A função agora recebe o nome e a dificuldade como parâmetros
 export function criarInimigoMasmorra(nome, dificuldade) {
-  let inimigoBase;
+  let inimigoBase = {};
 
   switch (nome) {
     // === TIER 1: INIMIGOS FRÁGEIS ===
@@ -11,6 +11,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Esqueleto Errante",
         hp: 12,
         atk: 4,
+        class: 1,
         tipo: "monstro",
       };
       break;
@@ -19,23 +20,43 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Zumbi Corrompido",
         hp: 15,
         atk: 5,
+        class: 1,
         tipo: "monstro",
       };
       break;
     case "Rato Gigante":
-      inimigoBase = { nome: "Rato Gigante", hp: 10, atk: 3, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Rato Gigante",
+        hp: 10,
+        atk: 3,
+        class: 1,
+        tipo: "monstro",
+      };
       break;
     case "Sombra Menor":
-      inimigoBase = { nome: "Sombra Menor", hp: 13, atk: 6, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Sombra Menor",
+        hp: 13,
+        atk: 6,
+        class: 1,
+        tipo: "monstro",
+      };
       break;
     case "Lobo Selvagem":
-      inimigoBase = { nome: "Lobo Selvagem", hp: 18, atk: 7, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Lobo Selvagem",
+        hp: 18,
+        atk: 7,
+        class: 1,
+        tipo: "monstro",
+      };
       break;
     case "Aranha Venenosa":
       inimigoBase = {
         nome: "Aranha Venenosa",
         hp: 16,
         atk: 6,
+        class: 1,
         tipo: "monstro",
       };
       break;
@@ -44,6 +65,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Bandido da Selva",
         hp: 20,
         atk: 8,
+        class: 1,
         tipo: "monstro",
       };
       break;
@@ -52,11 +74,18 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Guerreiro Congelado",
         hp: 25,
         atk: 9,
+        class: 1,
         tipo: "monstro",
       };
       break;
     case "Harpia Gelada":
-      inimigoBase = { nome: "Harpia Gelada", hp: 22, atk: 10, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Harpia Gelada",
+        hp: 22,
+        atk: 10,
+        class: 1,
+        tipo: "monstro",
+      };
       break;
 
     // === TIER 2: INIMIGOS PADRÕES ===
@@ -65,6 +94,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Caranguejo de Cristal",
         hp: 30,
         atk: 9,
+        class: 2,
         tipo: "monstro",
       };
       break;
@@ -73,17 +103,25 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Lacaio de Fogo",
         hp: 28,
         atk: 11,
+        class: 2,
         tipo: "monstro",
       };
       break;
     case "Golem de Lava":
-      inimigoBase = { nome: "Golem de Lava", hp: 35, atk: 12, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Golem de Lava",
+        hp: 35,
+        atk: 12,
+        class: 2,
+        tipo: "monstro",
+      };
       break;
     case "Escorpião Flamejante":
       inimigoBase = {
         nome: "Escorpião Flamejante",
         hp: 32,
         atk: 13,
+        class: 2,
         tipo: "monstro",
       };
       break;
@@ -92,17 +130,25 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Acólito Corrompido",
         hp: 25,
         atk: 10,
+        class: 2,
         tipo: "monstro",
       };
       break;
     case "Livro Animado":
-      inimigoBase = { nome: "Livro Animado", hp: 20, atk: 8, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Livro Animado",
+        hp: 20,
+        atk: 8,
+        class: 2,
+        tipo: "monstro",
+      };
       break;
     case "Gárgula de Pedra":
       inimigoBase = {
         nome: "Gárgula de Pedra",
         hp: 40,
         atk: 14,
+        class: 2,
         tipo: "monstro",
       };
       break;
@@ -111,6 +157,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Rato do Subsolo",
         hp: 15,
         atk: 6,
+        class: 2,
         tipo: "monstro",
       };
       break;
@@ -119,6 +166,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Bandido Mineiro",
         hp: 35,
         atk: 11,
+        class: 2,
         tipo: "monstro",
       };
       break;
@@ -129,6 +177,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Autômato Danificado",
         hp: 45,
         atk: 12,
+        class: 3,
         tipo: "monstro",
       };
       break;
@@ -137,6 +186,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Répteis do Lodo",
         hp: 38,
         atk: 10,
+        class: 3,
         tipo: "monstro",
       };
       break;
@@ -145,17 +195,25 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Híbrido Putrefato",
         hp: 42,
         atk: 13,
+        class: 3,
         tipo: "monstro",
       };
       break;
     case "Mosca Gigante":
-      inimigoBase = { nome: "Mosca Gigante", hp: 30, atk: 11, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Mosca Gigante",
+        hp: 30,
+        atk: 11,
+        class: 3,
+        tipo: "monstro",
+      };
       break;
     case "Sentinela Obscura":
       inimigoBase = {
         nome: "Sentinela Obscura",
         hp: 55,
         atk: 18,
+        class: 3,
         tipo: "monstro",
       };
       break;
@@ -164,6 +222,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Acólito Maldito",
         hp: 40,
         atk: 15,
+        class: 3,
         tipo: "monstro",
       };
       break;
@@ -172,31 +231,52 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Neófito Sombrio",
         hp: 48,
         atk: 16,
+        class: 3,
         tipo: "monstro",
       };
       break;
     case "Faísca Viva":
-      inimigoBase = { nome: "Faísca Viva", hp: 30, atk: 14, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Faísca Viva",
+        hp: 30,
+        atk: 14,
+        class: 3,
+        tipo: "monstro",
+      };
       break;
     case "Metalúnculo":
-      inimigoBase = { nome: "Metalúnculo", hp: 50, atk: 15, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Metalúnculo",
+        hp: 50,
+        atk: 15,
+        class: 3,
+        tipo: "monstro",
+      };
       break;
     case "Operário Enlouquecido":
       inimigoBase = {
         nome: "Operário Enlouquecido",
         hp: 45,
         atk: 12,
+        class: 3,
         tipo: "monstro",
       };
       break;
     case "Eco Errante":
-      inimigoBase = { nome: "Eco Errante", hp: 40, atk: 17, tipo: "monstro" };
+      inimigoBase = {
+        nome: "Eco Errante",
+        hp: 40,
+        atk: 17,
+        class: 3,
+        tipo: "monstro",
+      };
       break;
     case "Guardião de Pedra":
       inimigoBase = {
         nome: "Guardião de Pedra",
         hp: 60,
         atk: 20,
+        class: 3,
         tipo: "monstro",
       };
       break;
@@ -205,6 +285,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Magus Errático",
         hp: 50,
         atk: 19,
+        class: 3,
         tipo: "monstro",
       };
       break;
@@ -215,6 +296,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Coveiro Errante",
         hp: 80,
         atk: 15,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -223,6 +305,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Guardião Ossudo",
         hp: 100,
         atk: 18,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -231,17 +314,25 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Cenobita das Trevas",
         hp: 90,
         atk: 17,
+        class: 1,
         tipo: "miniboss",
       };
       break;
     case "Xamã Corvo":
-      inimigoBase = { nome: "Xamã Corvo", hp: 85, atk: 16, tipo: "miniboss" };
+      inimigoBase = {
+        nome: "Xamã Corvo",
+        hp: 85,
+        atk: 16,
+        class: 1,
+        tipo: "miniboss",
+      };
       break;
     case "Capitão dos Lobos":
       inimigoBase = {
         nome: "Capitão dos Lobos",
         hp: 110,
         atk: 20,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -250,6 +341,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Ent Enraizado",
         hp: 130,
         atk: 18,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -258,6 +350,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Lorde Glacial",
         hp: 150,
         atk: 25,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -266,6 +359,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Górgula de Gelo",
         hp: 120,
         atk: 22,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -274,6 +368,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Urso de Cristal",
         hp: 160,
         atk: 24,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -282,6 +377,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Forjador Ardente",
         hp: 140,
         atk: 28,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -290,6 +386,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Senhor das Brasas",
         hp: 170,
         atk: 26,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -298,6 +395,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Ancião de Magma",
         hp: 155,
         atk: 27,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -306,6 +404,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Bibliotecário Louco",
         hp: 100,
         atk: 19,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -314,6 +413,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Escriba Profano",
         hp: 115,
         atk: 21,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -322,6 +422,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Ancião Arcano",
         hp: 125,
         atk: 23,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -330,6 +431,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Capataz Caído",
         hp: 95,
         atk: 18,
+        class: 1,
         tipo: "miniboss",
       };
       break;
@@ -338,6 +440,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Gárgula de Minério",
         hp: 110,
         atk: 20,
+        class: 2,
         tipo: "miniboss",
       };
       break;
@@ -346,6 +449,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Homem de Pedra das Minas",
         hp: 140,
         atk: 21,
+        class: 2,
         tipo: "miniboss",
       };
       break;
@@ -354,6 +458,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Xamã Venenoso",
         hp: 105,
         atk: 22,
+        class: 2,
         tipo: "miniboss",
       };
       break;
@@ -362,6 +467,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Feiticeira do Brejo",
         hp: 95,
         atk: 24,
+        class: 2,
         tipo: "miniboss",
       };
       break;
@@ -370,6 +476,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Monstro da Lama",
         hp: 150,
         atk: 20,
+        class: 2,
         tipo: "miniboss",
       };
       break;
@@ -378,6 +485,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Sacerdote Negro",
         hp: 180,
         atk: 28,
+        class: 2,
         tipo: "miniboss",
       };
       break;
@@ -386,6 +494,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Arauto das Trevas",
         hp: 190,
         atk: 30,
+        class: 2,
         tipo: "miniboss",
       };
       break;
@@ -394,6 +503,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Sentinela Eterna",
         hp: 200,
         atk: 32,
+        class: 3,
         tipo: "miniboss",
       };
       break;
@@ -402,6 +512,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Mestre Ferreiro",
         hp: 170,
         atk: 27,
+        class: 3,
         tipo: "miniboss",
       };
       break;
@@ -410,6 +521,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Centurião Metálico",
         hp: 200,
         atk: 30,
+        class: 3,
         tipo: "miniboss",
       };
       break;
@@ -418,6 +530,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Arcanista de Ferros",
         hp: 180,
         atk: 29,
+        class: 3,
         tipo: "miniboss",
       };
       break;
@@ -426,6 +539,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Senhor do Eco",
         hp: 220,
         atk: 35,
+        class: 3,
         tipo: "miniboss",
       };
       break;
@@ -434,6 +548,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Mestre das Runas",
         hp: 210,
         atk: 33,
+        class: 3,
         tipo: "miniboss",
       };
       break;
@@ -442,6 +557,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Sentinela Temporal",
         hp: 250,
         atk: 36,
+        class: 3,
         tipo: "miniboss",
       };
       break;
@@ -452,6 +568,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Kaelthos, Mestre das Catacumbas",
         hp: 300,
         atk: 30,
+        class: 1,
         tipo: "boss",
         poder: "Necromancia",
       };
@@ -461,6 +578,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Verdanth, Guardião Primordial da Selva",
         hp: 350,
         atk: 35,
+        class: 1,
         tipo: "boss",
         poder: "Raízes Presas",
       };
@@ -470,6 +588,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Aurlion, o Dragão Glacial",
         hp: 450,
         atk: 40,
+        class: 2,
         tipo: "boss",
         poder: "Sopro Glaciar",
       };
@@ -479,6 +598,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Ignarok, Senhor das Chamas Eternas",
         hp: 420,
         atk: 45,
+        class: 1,
         tipo: "boss",
         poder: "Erupção Infernal",
       };
@@ -488,6 +608,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Thal’Mor, Guardião dos Segredos Proibidos",
         hp: 380,
         atk: 42,
+        class: 1,
         tipo: "boss",
         poder: "Feitiços Antigos",
       };
@@ -497,6 +618,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Golem Minerador, Sentinela das Profundezas",
         hp: 500,
         atk: 50,
+        class: 2,
         tipo: "boss",
         poder: "Impacto Sísmico",
       };
@@ -506,6 +628,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Morghul, o Decompositor",
         hp: 400,
         atk: 40,
+        class: 3,
         tipo: "boss",
         poder: "Praga da Corrupção",
       };
@@ -515,6 +638,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Sombra Suprema, Guardiã das Trevas",
         hp: 480,
         atk: 55,
+        class: 2,
         tipo: "boss",
         poder: "Lâmina Etérea",
       };
@@ -524,6 +648,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Forjador Elemental, Senhor do Martelo",
         hp: 550,
         atk: 60,
+        class: 3,
         tipo: "boss",
         poder: "Martelo Incandescente",
       };
@@ -533,6 +658,7 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         nome: "Lorde do Tempo, Mestre das Areias",
         hp: 600,
         atk: 65,
+        class: 3,
         tipo: "boss",
         poder: "Ruptura Temporal",
       };
@@ -549,10 +675,43 @@ export function criarInimigoMasmorra(nome, dificuldade) {
       inimigoBase.atk * (1 + (dificuldade - 1) * 0.2)
     );
   }
+  // Recompensas base para cada tipo e classe de monstro
 
-  // Adiciona uma pequena variação de stats
+  const recompensaBase = {
+    monstro: {
+      1: { xp: 15, ouro: 8 },
+      2: { xp: 30, ouro: 15 },
+      3: { xp: 50, ouro: 25 },
+    },
+    miniboss: {
+      1: { xp: 100, ouro: 50 },
+      2: { xp: 150, ouro: 80 },
+      3: { xp: 250, ouro: 120 },
+    },
+    boss: {
+      1: { xp: 400, ouro: 200 },
+      2: { xp: 600, ouro: 300 },
+      3: { xp: 1000, ouro: 500 },
+    },
+  };
+
+  const multiplicadorDificuldade = 1 + (dificuldade - 1) * 0.2;
+
+  // Aplica o escalonamento aos atributos de HP e ATK
+  inimigoBase.hp = Math.floor(inimigoBase.hp * multiplicadorDificuldade);
+  inimigoBase.atk = Math.floor(inimigoBase.atk * multiplicadorDificuldade);
+
+  // Adiciona uma pequena variação de stats (sua lógica original)
   inimigoBase.hp = Math.max(1, inimigoBase.hp + rand(-5, 5));
   inimigoBase.atk = Math.max(1, inimigoBase.atk + rand(-2, 2));
 
+  // Busca a recompensa base usando as propriedades do monstro
+  const base = recompensaBase[inimigoBase.tipo][inimigoBase.class];
+
+  // Aplica o multiplicador de dificuldade à XP e ao Ouro
+  inimigoBase.xp = Math.floor(base.xp * multiplicadorDificuldade);
+  inimigoBase.ouro = Math.floor(base.ouro * multiplicadorDificuldade);
+
+  // Retorna o objeto completo com todos os dados
   return inimigoBase;
 }

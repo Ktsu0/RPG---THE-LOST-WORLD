@@ -1,4 +1,4 @@
-import { rand } from "./../../utilitarios.js";
+import { rand } from "./../utilitarios.js";
 
 export function executarHabilidadeEspecial(inimigo, jogador) {
   // LÓGICA UNIFICADA PARA HABILIDADES ESPECIAIS

@@ -4,7 +4,7 @@ import {
   gerenciarEquipamentos,
   aplicarBonusDeConjunto,
 } from "./../itens/gerenciarEquipamentos.js";
-import { getRaridadeCor } from "./../itens/loja/itensLoja.js";
+import { getRaridadeCor } from "./../loja/itensLoja.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync();
 

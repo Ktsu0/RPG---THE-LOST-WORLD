@@ -1,4 +1,4 @@
-import { colors } from "./../../utilitarios.js";
+import { colors } from "./../utilitarios.js";
 import { criarInimigoMasmorra } from "./criarInimigos.js";
 // ---------- Helpers ----------
 function rand(min, max) {
@@ -268,7 +268,7 @@ function gerarMasmorra(jogador, templateId, options) {
     return manhattan(b, entrance) - manhattan(a, entrance);
   });
   let bossCellCoord = candidatesForBoss[0];
-  grid[bossCellCoord.y][bossCellCoord.x].roomType = "boss"; // === ALTERAÇÃO AQUI: Usa a nova função para criar o chefe ===
+  grid[bossCellCoord.y][bossCellCoord.x].roomType = "boss";
   grid[bossCellCoord.y][bossCellCoord.x].content = criarInimigoMasmorra(
     tpl.boss.nome,
     dificuldade
@@ -277,20 +277,17 @@ function gerarMasmorra(jogador, templateId, options) {
   if (Math.random() < chanceDeDrop / 100) {
     const orbe = itens.find((item) => item.nome === "Orbe da Fênix Flamejante");
     grid[bossCellCoord.y][bossCellCoord.x].content.recompensa = orbe;
-    console.log(
-      `${colors.cyan}O chefe esconde um tesouro lendário...${colors.reset}`
-    );
   }
-  bossPlaced = true; // Remova o chefe da lista de candidatos para outras salas
+  bossPlaced = true;
   candidates = candidates.filter(
     (c) => c.x !== bossCellCoord.x || c.y !== bossCellCoord.y
-  ); // NOVO: Coloque os mini-chefes em salas aleatórias, sem ordenação
+  );
 
   let placedMinis = [];
   for (let i = 0; i < minibossCount && candidates.length > 0; i++) {
     let coord = candidates.shift();
     grid[coord.y][coord.x].roomType = "miniboss";
-    const nomeMiniboss = tpl.minibosses[rand(0, tpl.minibosses.length - 1)]; // === ALTERAÇÃO AQUI: Usa a nova função para criar o mini-chefe ===
+    const nomeMiniboss = tpl.minibosses[rand(0, tpl.minibosses.length - 1)];
     grid[coord.y][coord.x].content = criarInimigoMasmorra(
       nomeMiniboss,
       dificuldade
@@ -315,7 +312,6 @@ function gerarMasmorra(jogador, templateId, options) {
     let quantidade = rand(1, 3);
     let mobs = [];
     for (let k = 0; k < quantidade; k++) {
-      // === ALTERAÇÃO AQUI: Usa a nova função para criar os monstros ===
       mobs.push(criarInimigoMasmorra(mobName, dificuldade));
     }
     grid[c.y][c.x].content = { tipo: "mobs", mobs: mobs };
@@ -397,7 +393,7 @@ function gerarMasmorra(jogador, templateId, options) {
     generatedAt: new Date(),
     cleared: false,
   };
-  return dungeon;
+  jogador.masmorraAtual = dungeon;
 }
 
 // --- Importante: Adicione esta função auxiliar ---
@@ -469,17 +465,6 @@ export function look(state) {
           case "entrada":
             content = "E";
             break;
-          case "saida":
-            content = "S";
-            break;
-          case "inimigo":
-            content = "M";
-            break;
-          case "miniboss":
-            content = "M B";
-          case "boss":
-            content = "B";
-            break;
           case "armadilha":
             content = "T";
             break;
@@ -538,7 +523,6 @@ function enterDungeon(dungeon, jogador, callbacks) {
   function cellAt(x, y) {
     return dungeon.grid[y][x];
   }
-
   function move(dir) {
     marcarSalaComoVisitada();
     let realDir = dir;
@@ -597,65 +581,70 @@ function enterDungeon(dungeon, jogador, callbacks) {
       state.discoveries.push({ x: nx, y: ny, tipo: cell.roomType });
     }
 
-    if (cell.roomType === "monstro") {
-      const monstroEscolhido =
-        cell.content.mobs[rand(0, cell.content.mobs.length - 1)];
-      return {
-        msg: `${colors.white}Um ${monstroEscolhido.nome} apareceu! Prepare-se para a batalha.${colors.reset}`,
-        type: "batalha",
-        inimigo: monstroEscolhido,
-      };
-    } else if (cell.roomType === "miniboss") {
-      return {
-        msg: `${colors.cyan}Você encontrou o mini-chefe da masmorra, ${cell.content.nome}!${colors.reset}`,
-        type: "miniboss",
-        inimigo: cell.content,
-      };
-    } else if (cell.roomType === "boss") {
-      return {
-        msg: `${colors.red}O Guardião da Masmorra, ${cell.content.nome}, se levanta para te enfrentar!${colors.reset}`,
-        type: "boss",
-        inimigo: cell.content,
-      };
-    } else if (cell.roomType === "trap") {
-      return {
-        msg: `${colors.yellow}Você caiu em uma armadilha! Tome cuidado ao andar.${colors.reset}`,
-        type: "armadilha",
-        dano: cell.content.dano,
-      };
-    } else if (cell.roomType === "treasure") {
-      return {
-        msg: `${colors.yellow}Você encontrou um Tesouro!${colors.reset}`,
-        type: "tesouro",
-        item: cell.content.item,
-        ouro: cell.content.ouro,
-      };
-    } else if (cell.roomType === "secret") {
-      const secretMessages = [
-        "Você encontrou um mural antigo com runas esquecidas.",
-        "Há um baú de madeira escondido atrás de uma pedra solta.",
-        "Um quebra-cabeça de luzes está entalhado na parede.",
-        "Você sente uma aura mística emanando de um símbolo no chão.",
-        "Uma pequena fresta na parede revela um vislumbre de ouro.",
-      ];
-      const mensagemSecreta =
-        secretMessages[rand(0, secretMessages.length - 1)];
-      return {
-        msg: `${colors.gray}${mensagemSecreta}${colors.reset}`,
-        type: "segredo",
-      };
-    } else if (cell.roomType === "entrada") {
+    // --- AQUI ESTÁ A CORREÇÃO ---
+    // Apenas lide com a célula se ela tiver conteúdo
+    if (cell.content) {
+      if (cell.roomType === "monstro") {
+        const monstroEscolhido =
+          cell.content.mobs[rand(0, cell.content.mobs.length - 1)];
+        return {
+          msg: `${colors.white}Um ${monstroEscolhido.nome} apareceu! Prepare-se para a batalha.${colors.reset}`,
+          type: "batalha",
+          inimigo: monstroEscolhido,
+        };
+      } else if (cell.roomType === "miniboss") {
+        return {
+          msg: `${colors.cyan}Você encontrou o mini-chefe da masmorra, ${cell.content.nome}!${colors.reset}`,
+          type: "miniboss",
+          inimigo: cell.content,
+        };
+      } else if (cell.roomType === "boss") {
+        return {
+          msg: `${colors.red}O Guardião da Masmorra, ${cell.content.nome}, se levanta para te enfrentar!${colors.reset}`,
+          type: "boss",
+          inimigo: cell.content,
+        };
+      } else if (cell.roomType === "trap") {
+        return {
+          msg: `${colors.yellow}Você caiu em uma armadilha! Tome cuidado ao andar.${colors.reset}`,
+          type: "armadilha",
+          dano: cell.content.dano,
+        };
+      } else if (cell.roomType === "treasure") {
+        return {
+          msg: `${colors.yellow}Você encontrou um Tesouro!${colors.reset}`,
+          type: "tesouro",
+          item: cell.content.item,
+          ouro: cell.content.ouro,
+        };
+      } else if (cell.roomType === "secret") {
+        const secretMessages = [
+          "Você encontrou um mural antigo com runas esquecidas.",
+          "Há um baú de madeira escondido atrás de uma pedra solta.",
+          "Um quebra-cabeça de luzes está entalhado na parede.",
+          "Você sente uma aura mística emanando de um símbolo no chão.",
+          "Uma pequena fresta na parede revela um vislumbre de ouro.",
+        ];
+        const mensagemSecreta =
+          secretMessages[rand(0, secretMessages.length - 1)];
+        return {
+          msg: `${colors.gray}${mensagemSecreta}${colors.reset}`,
+          type: "segredo",
+        };
+      }
+    }
+
+    // Se não houver conteúdo, significa que a sala está vazia ou é a entrada.
+    if (cell.roomType === "entrada") {
       return {
         msg: `${colors.white}Você está na entrada da masmorra. O ar é pesado e misterioso...${colors.reset}`,
         type: "entrada",
       };
     } else {
-      {
-        return {
-          msg: "Você se moveu, a sala está vazia.",
-          type: "movimento",
-        };
-      }
+      return {
+        msg: "Você se moveu, a sala está vazia.",
+        type: "movimento",
+      };
     }
   }
 

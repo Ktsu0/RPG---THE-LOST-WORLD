@@ -1,6 +1,6 @@
 import promptSync from "prompt-sync";
 import { colors } from "./../utilitarios.js";
-import { getRaridadeCor } from "./loja/itensLoja.js";
+import { getRaridadeCor } from "./../loja/itensLoja.js";
 const prompt = promptSync();
 
 // --- Menu de seleção para Amuleto ou Talismã ---

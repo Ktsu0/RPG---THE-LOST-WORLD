@@ -8,10 +8,13 @@ import {
 } from "./../personagem/status.js";
 import { criarEsqueleto } from "./../personagem/habilidades.js";
 import { colors, rand } from "./../utilitarios.js";
-import { aplicarEfeitoArma, aplicarStatusPorTurno } from "../itens/armas.js";
-import { loja } from "../itens/loja/itensLoja.js";
+import {
+  aplicarEfeitoArma,
+  aplicarStatusPorTurno,
+} from "./../itens/armasEfeitos.js";
+import { processarDropDeItem } from "./../itens/chanceDrop.js";
 import { verificarMorte } from "./../itens/orbeRessureicao.js";
-import { executarHabilidadeEspecial } from "../missao/masmorra/habilidadesInimigos.js";
+import { executarHabilidadeEspecial } from "./../masmorra/habilidadesInimigos.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync();
 
@@ -45,7 +48,7 @@ function finalizarVitoria(inimigo, jogador) {
     console.log(`✨ Você ganhou ${xpGanho} de XP.`);
 
     checarLevelUp(jogador);
-    return; // Termina a função para não executar a lógica de monstros comuns
+    return;
   }
 
   // === LÓGICA PARA MONSTROS COMUNS (E MINI-BOSSES) ===
@@ -75,43 +78,19 @@ function finalizarVitoria(inimigo, jogador) {
     itemDropado = novaPocao;
   }
 
-  // Lógica de drop de armadura
-  const chanceArmadura = 10 + bonusDropItem;
-  if (rand(1, 100) <= chanceArmadura) {
-    const armors = loja.filter((i) => i.slot !== "consumable");
-    if (armors.length > 0) {
-      const drop = armors[rand(0, armors.length - 1)];
-      equiparItem(jogador, drop);
-      itemDropado = drop;
-    }
-  }
+  // Lógica de drop itens
 
-  // === EXIBIÇÃO DE MENSAGEM ===
+  let bonusTotalDrop = 0;
+  if (jogador.masmorraAtual) {
+    // Se estiver na masmorra, adiciona o bônus
+    const bonusMasmorra = 10;
+    bonusTotalDrop = bonusMasmorra;
+  }
+  processarDropDeItem(jogador, bonusTotalDrop);
   console.log(
     `\n${colors.green}Você derrotou o ${inimigo.nome}!${colors.reset}`
   );
-
-  if (jogador.masmorraAtual) {
-    if (itemDropado) {
-      console.log(`Você encontrou um ${itemDropado.nome}!`);
-      if (itemDropado.slot !== "consumable") {
-        console.log(`E o equipou!`);
-      }
-    } else {
-      console.log("O inimigo não deixou nada de valor.");
-    }
-  } else {
-    console.log(
-      `Ganhou ${colors.yellow}${xpGanho}${colors.reset} XP e ${colors.yellow}${ouroDrop}${colors.reset} de ouro.`
-    );
-    if (itemDropado) {
-      console.log(`🎁 Você encontrou um ${itemDropado.nome}!`);
-      if (itemDropado.slot !== "consumable") {
-        console.log(`E o equipou!`);
-      }
-    }
-  }
-
+  console.log(`Você ganhou ${xpGanho} de XP e ${ouroDrop} de ouro.`);
   checarLevelUp(jogador);
 }
 

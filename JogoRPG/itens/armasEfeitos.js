@@ -1,5 +1,5 @@
 // A função precisa ser importada para o seu arquivo de batalha
-import { rand } from "./../utilitarios.js";
+import { rand } from "../utilitarios.js";
 
 export function aplicarEfeitoArma(jogador, inimigo) {
   const arma = jogador.armaEquipada;

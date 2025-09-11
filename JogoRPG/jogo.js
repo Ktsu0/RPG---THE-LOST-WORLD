@@ -1,6 +1,6 @@
 import { criarPersonagem } from "./personagem/criacaoPersonagem.js";
 import { colors } from "./utilitarios.js";
-import { jogadaMasmorra } from "./missao/masmorra/jogadaMasmorra.js";
+import { jogadaMasmorra } from "./masmorra/jogadaMasmorra.js";
 import { menuPrincipal } from "./menuPrincipal/menuPrincipal.js";
 import promptSync from "prompt-sync";
 
@@ -50,8 +50,6 @@ function iniciarJogo() {
   }
   console.log("\n--- JOGO ENCERRADO ---");
 }
-
-iniciarJogo();
 
 // Inicia o jogo
 iniciarJogo(jogador);

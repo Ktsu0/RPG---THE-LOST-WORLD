@@ -345,7 +345,6 @@ export function fazerMissao(jogador) {
             missao.item.nome
           } (${missao.item.raridade.toUpperCase()})`
         );
-        // verifiqueiAmuletoSupremo();
       } else {
         console.log("Você não conseguiu pegar o item especial da missão.");
       }

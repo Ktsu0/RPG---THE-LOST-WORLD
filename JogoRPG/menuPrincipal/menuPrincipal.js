@@ -1,7 +1,7 @@
 import { colors, rand } from "./../utilitarios.js";
 import { status } from "./../personagem/status.js";
 import { menuAmuletoTalisma } from "./../itens/amuleto.js";
-import { abrirLoja } from "./../itens/loja/itensLoja.js";
+import { abrirLoja } from "./../loja/itensLoja.js";
 import { criarInimigo } from "./../inimigos/monstros.js";
 import { criarMiniBoss } from "./../inimigos/miniBoss.js";
 import { fazerMissao } from "./../missao/missoes.js";
@@ -13,9 +13,9 @@ import {
   DUNGEON_TEMPLATES,
   gerarMasmorra,
   enterDungeon,
-} from "./../missao/masmorra/masmorra.js";
+} from "./../masmorra/masmorra.js";
 import promptSync from "prompt-sync";
-import { jogadaMasmorra } from "./../missao/masmorra/jogadaMasmorra.js";
+import { jogadaMasmorra } from "./../masmorra/jogadaMasmorra.js";
 
 const prompt = promptSync({ sigint: true });
 
@@ -34,19 +34,30 @@ export function menuPrincipal(jogador) {
 
   switch (escolha) {
     case "1": // explorar
-      const chance = rand(1, 10);
+      const chance = rand(1, 100);
 
       if (chance <= 100) {
         console.log(
           `\n${colors.red}⚠ Durante sua exploração, você encontrou a entrada de uma MASMORRA!${colors.reset}`
         );
         const templateId = rand(0, DUNGEON_TEMPLATES.length - 1);
-        const masmorraGerada = gerarMasmorra(jogador, templateId);
-        console.log(`Você entra em: ${masmorraGerada.template.nome}`);
-
-        const masmorraAPI = enterDungeon(masmorraGerada, jogador);
-        // Atribua a masmorra API ao jogador.
-        jogador.masmorraAtual = masmorraAPI;
+        gerarMasmorra(jogador, templateId);
+        const secretMessages = [
+          "O chefe esconde um tesouro unico...",
+          "Runas antigas falam do guardião que quebra o ciclo final.",
+          "A chama da Fênix arde nas profundezas da masmorra.",
+          "Somente o guardião da masmorra pode conceder uma segunda chance.",
+          "O tesouro final é a única forma de enganar a morte.",
+          "O chefe não teme a morte, pois possui o segredo da vida.",
+          "",
+        ];
+        const mensagemSecreta =
+          secretMessages[rand(0, secretMessages.length - 1)];
+        console.log(
+          `${colors.white}Você entra em: ${jogador.masmorraAtual.template.nome}\n
+          ${colors.cyan}${mensagemSecreta}${colors.reset}`
+        );
+        const masmorraAPI = enterDungeon(jogador.masmorraAtual, jogador);
         // Chame a função para iniciar o loop da masmorra
         jogadaMasmorra(jogador, masmorraAPI);
       } else if (chance <= 85) {

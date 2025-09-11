@@ -1,5 +1,5 @@
 import promptSync from "prompt-sync";
-import { colors } from "./../../utilitarios.js";
+import { colors } from "./../utilitarios.js";
 const prompt = promptSync({ sigint: true });
 
 export const loja = [

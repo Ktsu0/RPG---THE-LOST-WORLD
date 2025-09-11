@@ -1,5 +1,5 @@
-import { batalha } from "./../../batalha/batalha.js";
-import { colors } from "./../../utilitarios.js";
+import { batalha } from "./../batalha/batalha.js";
+import { colors } from "./../utilitarios.js";
 import promptSync from "prompt-sync";
 import { limparSalaMasmorra } from "./limparSala.js";
 
