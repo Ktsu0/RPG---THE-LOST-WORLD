@@ -32,7 +32,7 @@ export function entrarNaTorre(jogador) {
             return;
         }
 
-        const heal = Math.floor(jogador.hpMax * 0.5);
+        const heal = Math.floor(jogador.hpMax * 0.75);
         jogador.hp = Math.min(jogador.hpMax, jogador.hp + heal);
         console.log(`✅ Você recupera ${heal} HP após o combate.`);
 
@@ -51,7 +51,7 @@ export function entrarNaTorre(jogador) {
         }
     }
     console.log(
-        "\n🎉 Você derrotou todos os bosses e salvou a princesa! FIM DE JOGO!"
+        `${colors.blue}🎉 Você derrotou todos os bosses e salvou a princesa! FIM DE JOGO!${colors.reset}`
     );
     process.exit();
 }

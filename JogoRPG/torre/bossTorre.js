@@ -80,7 +80,7 @@ export const torreBosses = [{
         xpBase: 210,
         ouroBase: 120,
         habilidades: {
-            summonSkeletonsEveryTurns: 2,
+            summonSkeletonsEveryTurns: 1,
             summonedSkeletonHp: 15,
             summonedSkeletonDmgBase: 5,
         },
@@ -173,17 +173,19 @@ function bossExecutarTurno(boss, jogador, criarMiniBossFn) {
         (h.summonSkeletonsEveryTurns === 0 ? 1 : h.summonSkeletonsEveryTurns) ===
         0
     ) {
-        // invoca 2 esqueletos
-        for (let i = 0; i < 2; i++) {
+        // 40% de chance de invocar
+        if (rand(1, 100) <= 40) {
+            // invocou esqueleto
             const s = {
                 hp: h.summonedSkeletonHp || 12,
                 dano: h.summonedSkeletonDmgBase || 3,
             };
             boss.estado.summonedSkeletons.push(s);
+
+            console.log(
+                `${colors.gray}☠️ ${boss.nome} invocou 1 esqueleto para auxiliar!${colors.reset}`
+            );
         }
-        console.log(
-            `${colors.gray}☠️ ${boss.nome} invocou 2 esqueletos para auxiliar!${colors.reset}`
-        );
     }
 
     // 9) dragon breath: chance de golpe crítico garantido
@@ -431,16 +433,44 @@ export function batalhaBossTorre(boss, jogador) {
             });
 
             // Mini-boss invocado
+            // Checa se há mini-boss invocado
             if (boss.estado.summonedMiniBoss) {
+                const mini = boss.estado.summonedMiniBoss;
                 console.log(
                     `${colors.yellow}⚠️ Você deve derrotar o mini-boss antes de continuar!${colors.reset}`
                 );
-                if (!resultadoHabilidade) {
-                    bossAtaca(boss, jogador);
+
+                // Turno do mini-boss: aplica dano ao jogador
+                console.log(
+                    `${colors.red}⚔️ Mini-boss ${mini.nome} ataca!${colors.reset}`
+                );
+                aplicarDanoAoJogador(jogador, mini.atk || 10);
+
+                // Turno do jogador contra o mini-boss
+                const escolhaMini = prompt("[1] Atacar o mini-boss  [2] Usar Poção: ");
+                if (escolhaMini === "1") {
+                    let danoAoMini = danoDoJogador(jogador);
+                    mini.hp -= danoAoMini;
+                    console.log(
+                        `${colors.bright}Você causou ${danoAoMini} de dano ao mini-boss ${mini.nome}!${colors.reset}`
+                    );
+
+                    // Checagem de morte do mini-boss
+                    if (mini.hp <= 0) {
+                        console.log(
+                            `${colors.green}✅ Você derrotou o mini-boss ${mini.nome}!${colors.reset}`
+                        );
+                        delete boss.estado.summonedMiniBoss; // libera o boss principal para atacar no próximo turno
+                        continue; // passa para o próximo loop do boss
+                    }
+                } else if (escolhaMini === "2") {
+                    usarPocao(jogador);
+                } else {
+                    console.log(`${colors.red}Opção inválida.${colors.reset}`);
                 }
-            } else {
-                // Ataque normal do boss
-                bossAtaca(boss, jogador);
+
+                // Bloqueia ataque do boss principal enquanto mini-boss existir
+                continue;
             }
 
             // Checagem de morte do jogador
