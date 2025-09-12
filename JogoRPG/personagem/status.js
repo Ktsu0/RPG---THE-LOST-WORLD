@@ -1,8 +1,8 @@
 import { ARMOR_SLOTS } from "./../jogo.js";
 import { colors, rand } from "./../utilitarios.js"; // Importa as cores
 import {
-  gerenciarEquipamentos,
-  aplicarBonusDeConjunto,
+    gerenciarEquipamentos,
+    aplicarBonusDeConjunto,
 } from "./../itens/gerenciarEquipamentos.js";
 import { getRaridadeCor } from "./../loja/itensLoja.js";
 import promptSync from "prompt-sync";
@@ -10,60 +10,60 @@ const prompt = promptSync();
 
 // --- Função auxiliar: formata itens para exibição ---
 function formatarItens(array) {
-  if (!array || array.length === 0)
-    return `${colors.gray}Nenhum${colors.reset}`;
-  const contagem = array.reduce((acc, item) => {
-    const nome = item.nome || item; // caso seja string ou objeto
-    acc[nome] = (acc[nome] || 0) + 1;
-    return acc;
-  }, {});
-  return Object.entries(contagem)
-    .map(([nome, qtd]) => `${qtd}x ${nome}`)
-    .join(", ");
+    if (!array || array.length === 0)
+        return `${colors.gray}Nenhum${colors.reset}`;
+    const contagem = array.reduce((acc, item) => {
+        const nome = item.nome || item; // caso seja string ou objeto
+        acc[nome] = (acc[nome] || 0) + 1;
+        return acc;
+    }, {});
+    return Object.entries(contagem)
+        .map(([nome, qtd]) => `${qtd}x ${nome}`)
+        .join(", ");
 }
 
 // --- Função auxiliar: verifica se todos os slots têm set completo ---
 function temSetCompleto(equipamentos) {
-  const itens = Object.values(equipamentos).filter((it) => it && it.set);
-  return (
-    itens.length === ARMOR_SLOTS.length &&
-    itens.every((it) => it.set === itens[0].set)
-  );
+    const itens = Object.values(equipamentos).filter((it) => it && it.set);
+    return (
+        itens.length === ARMOR_SLOTS.length &&
+        itens.every((it) => it.set === itens[0].set)
+    );
 }
 
 // --- Exibir status ---
 export function status(jogador) {
-  console.log(`\n${colors.bright}--- STATUS ---${colors.reset}`);
-  console.log(`${colors.cyan}Nome: ${colors.reset}${jogador.nome}`);
-  console.log(
-    `${colors.cyan}Nível:${colors.reset} ${jogador.nivel} | ${colors.green}XP:${
+    console.log(`\n${colors.bright}--- STATUS ---${colors.reset}`);
+    console.log(`${colors.cyan}Nome: ${colors.reset}${jogador.nome}`);
+    console.log(
+        `${colors.cyan}Nível:${colors.reset} ${jogador.nivel} | ${colors.green}XP:${
       colors.reset
     } ${jogador.xp}/${xpParaProximoNivel(jogador)}`
-  );
-  console.log(
-    `${colors.green}HP:${colors.reset} ${jogador.hp}/${jogador.hpMax}`
-  );
-  console.log(
-    `${colors.red}Atk atual:${colors.reset} ${calcularAtaque(jogador)}`
-  );
-  console.log(`${colors.yellow}Ouro:${colors.reset} ${jogador.ouro}`);
-  console.log(
-    `${colors.magenta}Consumíveis:${colors.reset} ${formatarItens(
+    );
+    console.log(
+        `${colors.green}HP:${colors.reset} ${jogador.hp}/${jogador.hpMax}`
+    );
+    console.log(
+        `${colors.red}Atk atual:${colors.reset} ${calcularAtaque(jogador)}`
+    );
+    console.log(`${colors.yellow}Ouro:${colors.reset} ${jogador.ouro}`);
+    console.log(
+        `${colors.magenta}Consumíveis:${colors.reset} ${formatarItens(
       jogador.itens
     )}`
-  );
-  console.log(
-    `${colors.magenta}Inventário:${colors.reset} ${formatarItens(
+    );
+    console.log(
+        `${colors.magenta}Inventário:${colors.reset} ${formatarItens(
       jogador.inventario
     )}`
-  );
+    );
 
-  console.log(`\n${colors.bright}Equipamentos:${colors.reset}`);
-  for (const s of ARMOR_SLOTS) {
-    const it = jogador.equipamentos[s];
-    const cor = it ? getRaridadeCor(it.raridade) : colors.gray; // Pega a cor pela raridade
-    console.log(
-      ` - ${s.toUpperCase()}: ${
+    console.log(`\n${colors.bright}Equipamentos:${colors.reset}`);
+    for (const s of ARMOR_SLOTS) {
+        const it = jogador.equipamentos[s];
+        const cor = it ? getRaridadeCor(it.raridade) : colors.gray; // Pega a cor pela raridade
+        console.log(
+                ` - ${s.toUpperCase()}: ${
         it
           ? `${cor}${it.nome}${colors.reset} (Def:${it.defesa} ATK+:${
               it.atkBonus
@@ -132,9 +132,8 @@ export function calcularAtaque(jogador) {
   );
   atk += atkBonus;
 
-  // bônus de set completo
-  if (temSetCompleto(jogador.equipamentos))
-    atk += Math.floor(jogador.nivel * 2);
+  // AQUI você soma o bônus de ataque do set
+  atk += jogador.bonusAtk || 0;
 
   // bônus do amuleto
   if (jogador.amuletoEquipado)
@@ -156,7 +155,8 @@ export function calcularDefesaTotal(jogador) {
     def += it.defesa || 0;
   }
 
-  if (temSetCompleto(jogador.equipamentos)) def += 10;
+  // AQUI você soma o bônus de defesa do set, se existir
+  def += jogador.bonusDef || 0;
 
   return def;
 }
