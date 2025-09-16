@@ -1,8 +1,8 @@
-import { colors, rand } from "./../utilitarios.js";
+import { colors, rand } from "../utilitarios.js";
 // --- Função para encontrar um baú de tesouro ---
 export function encontrarTesouro(jogador) {
   console.log(
-    `\n${colors.bright}📦 Você encontrou um baú de tesouro!${colors.reset}`
+    `\n${colors.blue}📦 Você encontrou um baú de tesouro!${colors.reset}`
   );
 
   const ouroEncontrado = Math.floor(jogador.nivel * rand(20, 50));
@@ -15,7 +15,7 @@ export function encontrarTesouro(jogador) {
   if (rand(1, 100) <= 30) {
     jogador.itens.push("Poção de Cura");
     console.log(
-      `${colors.blue}🧪 Você encontrou uma Poção de Cura!${colors.reset}`
+      `${colors.green}🧪 Você encontrou uma Poção de Cura!${colors.reset}`
     );
   }
 }

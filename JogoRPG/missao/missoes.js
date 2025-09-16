@@ -1,9 +1,13 @@
 import { criarMiniBoss } from "./../inimigos/miniBoss.js";
-import { checarLevelUp } from "./../personagem/status.js";
+import { checarLevelUp } from "./../personagem/experiencia.js";
 import { colors, rand } from "./../utilitarios.js";
 import { criarInimigo } from "./../inimigos/monstros.js";
 import { batalha } from "./../batalha/batalha.js";
-
+import {
+  DUNGEON_TEMPLATES,
+  gerarMasmorra,
+  enterDungeon,
+} from "../masmorra/masmorra.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync({ sigint: true });
 
@@ -14,7 +18,7 @@ export const missoes = [
     historia:
       "Um ritual arcano abriu um portal. Monstros surgem em ondas. Sobreviva e a recompensa será sua.",
     tipo: "lendario",
-    nivelMinimo: 5,
+    nivelMinimo: 4,
     chanceSucesso: 100,
     // Recompensas escalam com o nível do jogador
     xp: (nivel) => 50 + nivel * 5,
@@ -87,7 +91,7 @@ export const missoes = [
     item: { nome: "Pena do Corvo Sombrio", raridade: "comum" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 5,
     falha: { tipo: "hp", percentual: 10 },
   },
   {
@@ -102,7 +106,7 @@ export const missoes = [
     item: { nome: "Gema da Escuridão", raridade: "lendario" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 15,
-    chanceMasmorra: 2,
+    chanceMasmorra: 10,
     falha: { tipo: "item", chancePerdaItemPercent: 2 },
   },
   {
@@ -117,7 +121,7 @@ export const missoes = [
     item: { nome: "Essência da Noite", raridade: "raro" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 8,
     falha: { tipo: "ouro", percentualMin: 15, percentualMax: 20 },
   },
   {
@@ -132,7 +136,7 @@ export const missoes = [
     item: { nome: "Escama de Dragão Azul", raridade: "lendario" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 10,
     falha: { tipo: "hp", percentual: 20 },
   },
   {
@@ -147,7 +151,7 @@ export const missoes = [
     item: { nome: "Relíquia Brilhante", raridade: "raro" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 8,
     falha: { tipo: "ouro", percentualMin: 15, percentualMax: 20 },
   },
   {
@@ -162,7 +166,7 @@ export const missoes = [
     item: { nome: "Pergaminho Arcano", raridade: "comum" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 5,
     falha: { tipo: "hp", percentual: 10 },
   },
   {
@@ -177,7 +181,7 @@ export const missoes = [
     item: { nome: "Página Amaldiçoada", raridade: "raro" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 8,
     falha: { tipo: "ouro", percentualMin: 15, percentualMax: 20 },
   },
   {
@@ -192,7 +196,7 @@ export const missoes = [
     item: { nome: "Coração de Magma", raridade: "lendario" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 10,
     falha: { tipo: "item", chancePerdaItemPercent: 2 },
   },
   {
@@ -207,7 +211,7 @@ export const missoes = [
     item: { nome: "Máscara Sombria", raridade: "raro" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 8,
     falha: { tipo: "ouro", percentualMin: 15, percentualMax: 20 },
   },
   {
@@ -222,7 +226,7 @@ export const missoes = [
     item: { nome: "Flor da Aurora", raridade: "comum" },
     chanceMiniBoss: 10,
     chanceMissaoExtra: 5,
-    chanceMasmorra: 1,
+    chanceMasmorra: 5,
     falha: { tipo: "hp", percentual: 10 },
   },
 ];
@@ -247,68 +251,76 @@ export function fazerMissao(jogador) {
   // Se a missão for do tipo "ondas", chame a nova função de batalha
   if (missao.tipoBatalha === "ondas") {
     batalhaOndas(jogador);
-    return; // Retorne para evitar a lógica padrão de recompensa da missão
+    return;
   }
+  console.log(
+    `\n${colors.yellow}📜 Missão: ${colors.bright}${missao.descricao}${colors.reset}`
+  );
+  console.log(`${colors.cyan}📖 ${missao.historia}${colors.reset}`);
 
-  // A verificação de nível mínimo agora é redundante e pode ser removida
-  // if (jogador.nivel < missao.nivelMinimo) { ... }
+  let recompensaTexto = `${colors.green}Chance de sucesso:${colors.reset} ${missao.chanceSucesso}% | `;
+  recompensaTexto += `${colors.blue}Recompensa:${colors.reset} ${Math.round(
+    missao.xp(jogador.nivel)
+  )} XP `;
+  recompensaTexto += `e ${Math.round(missao.ouro(jogador.nivel))} ouro`;
 
-  console.log(`\n📜 Missão: ${missao.descricao}`);
-  console.log(`📖 ${missao.historia}`);
-  let recompensaTexto = `Chance de sucesso: ${
-    missao.chanceSucesso
-  }% | Recompensa: ${missao.xp(jogador.nivel)} XP e ${missao.ouro(
-    jogador.nivel
-  )} ouro`;
   if (missao.item) {
     if (typeof missao.item === "string") {
-      recompensaTexto += ` + item (${missao.item})`;
+      recompensaTexto += ` + ${colors.magenta}item${colors.reset} (${missao.item})`;
     } else {
-      recompensaTexto += ` + item ${missao.item.nome} [${missao.item.raridade}]`;
+      let corItem = colors.white;
+      if (missao.item.raridade.toLowerCase() === "raro") corItem = colors.blue;
+      else if (missao.item.raridade.toLowerCase() === "lendario")
+        corItem = colors.yellow;
+
+      recompensaTexto += ` + ${colors.magenta}item${colors.reset} ${corItem}${missao.item.nome}${colors.reset} [${missao.item.raridade}]`;
     }
   }
+
   console.log(recompensaTexto + ".");
 
-  const confirmar = prompt("Deseja tentar a missão? (s/n) ");
+  const confirmar = prompt(
+    `${colors.white}Deseja tentar a missão? (s/n) ${colors.reset}`
+  );
   if (confirmar.toLowerCase() !== "s") {
-    console.log("Missão cancelada.");
+    console.log(`${colors.red}❌ Missão cancelada.${colors.reset}`);
     return;
   }
 
   // 🔥 1% de chance de masmorra secreta
   if (rand(1, 100) <= missao.chanceMasmorra) {
     console.log(
-      "⚠ Você encontrou uma MASMORRA SECRETA! Prepare-se para um desafio insano!"
+      `${colors.magenta}${colors.bright}⚠ Você encontrou uma MASMORRA SECRETA! Prepare-se para um desafio insano!${colors.reset}`
     );
+
     // 1. Escolhe um template de masmorra aleatório
     const templateId = rand(0, DUNGEON_TEMPLATES.length - 1);
 
     // 2. Gera a masmorra
-    const masmorraGerada = gerarMasmorra(templateId);
-    console.log(`Você entrou em: ${masmorraGerada.template.nome}`);
+    const masmorraGerada = gerarMasmorra(jogador, templateId);
+    console.log(
+      `${colors.cyan}🏰 Você entrou em: ${colors.yellow}${masmorraGerada.template.nome}${colors.reset}`
+    );
 
     // 3. Inicia a sessão de exploração
     // Este objeto precisa ser armazenado em um estado global do jogador ou do jogo
     jogador.masmorraAtual = enterDungeon(masmorraGerada, jogador);
-
-    // Agora você precisa entrar em um novo loop de jogo para a exploração da masmorra
-    // A lógica do jogo principal precisará ser ajustada para permitir
-    // comandos como "mover", "investigar" etc.
-
-    return; // Sai da função fazerMissao()
+    return;
   }
 
   // 🔥 10% de chance de miniboss (balanceado por tipo da missão)
   if (rand(1, 100) <= missao.chanceMiniBoss) {
     const miniboss = criarMiniBoss(missao.tipo, jogador.nivel);
     console.log(
-      `⚠ Um MiniBoss apareceu: ${miniboss.nome} (HP: ${miniboss.hp}, ATK: ${miniboss.atk})`
+      `${colors.red}⚠ Um MiniBoss apareceu: ${miniboss.nome} (HP: ${miniboss.hp}, ATK: ${miniboss.atk})`
     );
     // --- LÓGICA DA BATALHA DO MINIBOSS ---
     const venceuBatalha = batalha(miniboss, jogador);
 
     if (!venceuBatalha) {
-      console.log(`❌ Você foi derrotado pelo mini-boss! A missão falhou.`);
+      console.log(
+        `${colors.red}❌ Você foi derrotado pelo mini-boss! A missão falhou.`
+      );
       aplicarPenalidade(missao.falha.tipo, jogador);
       return; // Sai da função, pois o jogador falhou na missão
     }
@@ -316,15 +328,21 @@ export function fazerMissao(jogador) {
 
   // 🎲 Resultado da missão
   const resultado = rand(1, 100);
+
   if (resultado <= missao.chanceSucesso) {
-    console.log("✅ Missão completada com sucesso!");
     console.log(
-      `Você recebeu ${missao.xp(jogador.nivel)} XP e ${missao.ouro(
-        jogador.nivel
-      )} ouro`
+      `${colors.green}✅ Missão completada com sucesso!${colors.reset}`
     );
-    jogador.xp += missao.xp(jogador.nivel);
-    jogador.ouro += missao.ouro(jogador.nivel);
+
+    const xpReward = Math.round(missao.xp(jogador.nivel));
+    const ouroReward = Math.round(missao.ouro(jogador.nivel));
+
+    console.log(
+      `${colors.cyan}✨ Você recebeu ${xpReward} XP e ${ouroReward} ouro${colors.reset}`
+    );
+
+    jogador.xp += xpReward;
+    jogador.ouro += ouroReward;
 
     // Entregar item (com chance por raridade)
     if (missao.item && typeof missao.item === "object") {
@@ -341,34 +359,42 @@ export function fazerMissao(jogador) {
       if (rollDrop <= chanceFinal) {
         jogador.inventario.push(missao.item.nome);
         console.log(
-          `🎁 Você obteve o item da missão: ${
+          `${colors.yellow}🎁 Você obteve o item da missão: ${
             missao.item.nome
-          } (${missao.item.raridade.toUpperCase()})`
+          } (${missao.item.raridade.toUpperCase()})${colors.reset}`
         );
       } else {
-        console.log("Você não conseguiu pegar o item especial da missão.");
+        console.log(
+          `${colors.gray}Você não conseguiu pegar o item especial da missão.${colors.reset}`
+        );
       }
     } else if (missao.item && typeof missao.item === "string") {
       jogador.inventario.push(missao.item);
-      console.log(`Você obteve o item: ${missao.item}`);
-      // verifiqueiAmuletoSupremo();
+      console.log(
+        `${colors.yellow}🎁 Você obteve o item: ${missao.item}${colors.reset}`
+      );
+      verifiqueiAmuletoSupremo();
     }
 
     // Chance extra de encontrar Poção de Cura
     if (rand(1, 100) <= 30) {
       jogador.itens.push("Poção de Cura");
-      console.log("Além disso, você encontrou uma Poção de Cura!");
+      console.log(
+        `${colors.green}🧪 Além disso, você encontrou uma Poção de Cura!${colors.reset}`
+      );
     }
 
     // Chance de missão extra
     if (rand(1, 100) <= missao.chanceMissaoExtra) {
-      console.log("🔥 Uma missão extra apareceu! Continue sua aventura...");
+      console.log(
+        `${colors.magenta}🔥 Uma missão extra apareceu! Continue sua aventura...${colors.reset}`
+      );
       fazerMissao(jogador);
     }
 
     checarLevelUp(jogador);
   } else {
-    console.log("❌ Falhou na missão!"); // Captura e exibe a mensagem de penalidade
+    console.log(`${colors.red}❌ Falhou na missão!${colors.reset}`);
     const mensagemPenalidade = aplicarPenalidade(missao.falha.tipo, jogador);
     console.log(mensagemPenalidade);
   }
@@ -406,7 +432,12 @@ export function batalhaOndas(jogador) {
   console.log(
     `\n${colors.bright}${colors.red}O portal se fecha e um MiniBoss lendário surge!${colors.reset}`
   );
-  const miniboss = criarMiniBoss(jogador);
+  jogador.hp = Math.floor(jogador.hp + jogador.hpMax * 0.3);
+  console.log(
+    `${colors.green}Seu HP foi restaurado para ${jogador.hp} antes da luta com o MiniBoss.${colors.reset}`
+  );
+
+  const miniboss = criarMiniBoss("lendario", jogador.nivel);
   const venceuBoss = batalha(miniboss, jogador, false);
 
   if (venceuBoss) {
@@ -419,7 +450,9 @@ export function batalhaOndas(jogador) {
       );
       jogador.inventario.push("Fragmento Antigo");
     } else {
-      console.log("O MiniBoss não deixou cair o Fragmento Antigo.");
+      console.log(
+        `${colors.cyan}O MiniBoss não deixou cair o Fragmento Antigo.`
+      );
     }
 
     // Recompensa final escalada com o nível
@@ -445,22 +478,25 @@ export function batalhaOndas(jogador) {
 
 function aplicarPenalidade(tipo, jogador) {
   if (tipo === "ouro") {
-    const perda = Math.floor(jogador.ouro * (rand(15, 20) / 100));
+    const perda = rand(15, 100);
     jogador.ouro = Math.max(0, jogador.ouro - perda);
-    return `💰 Você perdeu ${perda} de ouro!`;
+    return `${colors.yellow}💰 Você perdeu ${perda} de ouro!${colors.reset}`;
   }
+
   if (tipo === "hp") {
     const perda = Math.floor(jogador.hp * 0.2);
     jogador.hp = Math.max(1, jogador.hp - perda);
-    return `❤️ Você perdeu ${perda} de HP!`;
+    return `${colors.red}❤️ Você perdeu ${perda} de HP!${colors.reset}`;
   }
+
   if (tipo === "item" && jogador.setCompleto) {
     if (rand(1, 100) <= 2) {
       const itemPerdido = jogador.removerItemAleatorio(); // retorna nome do item removido
-      return `🛡️ Você perdeu uma peça do seu set: ${itemPerdido}!`;
+      return `${colors.red}🛡️ Você perdeu uma peça do seu set: ${itemPerdido}!${colors.reset}`;
     } else {
-      return `Por sorte, não perdeu nenhum item.`;
+      return `${colors.green}🍀 Por sorte, não perdeu nenhum item.${colors.reset}`;
     }
   }
-  return `Sem penalidades graves desta vez.`;
+
+  return `${colors.cyan}⚖️ Sem penalidades graves desta vez.${colors.reset}`;
 }

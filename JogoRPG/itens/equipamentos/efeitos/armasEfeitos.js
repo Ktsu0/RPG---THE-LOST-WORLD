@@ -1,5 +1,5 @@
 // A função precisa ser importada para o seu arquivo de batalha
-import { rand } from "../utilitarios.js";
+import { rand, colors } from "../../../utilitarios.js";
 
 export function aplicarEfeitoArma(jogador, inimigo) {
   const arma = jogador.armaEquipada;
@@ -87,14 +87,14 @@ export function aplicarStatusPorTurno(inimigo) {
         inimigo.hp -= status.dano;
         status.duracao--;
         console.log(
-          `\n🩸 ${inimigo.nome} está sangrando e perdeu ${status.dano} HP.`
+          `\n🩸 ${colors.gray}${inimigo.nome} está sangrando e perdeu${colors.reset} ${colors.red}${status.dano} HP.${colors.reset}`
         );
         return status.duracao > 0;
       case "incendio":
         inimigo.hp -= status.dano;
         status.duracao--;
         console.log(
-          `\n🔥 ${inimigo.nome} está em chamas e perdeu ${status.dano} HP.`
+          `\n🔥 ${colors.gray}${inimigo.nome} está em chamas e perdeu${colors.reset} ${colors.red}${status.dano} HP.${colors.reset}`
         );
         return status.duracao > 0;
       case "confusao":

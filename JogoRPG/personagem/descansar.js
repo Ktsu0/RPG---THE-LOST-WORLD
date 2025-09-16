@@ -1,16 +1,24 @@
-import { rand } from "./../utilitarios.js";
-import { batalha } from "../batalha/batalha.js";
-import { criarInimigo } from "../inimigos/monstros.js";
+import { rand, colors } from "./../utilitarios.js";
+import { batalha } from "./../batalha/batalha.js";
+import { criarInimigo } from "./../inimigos/monstros.js";
+
 // --- Descansar ---
 export function descansar(jogador) {
+  // Calcula a cura, sem ultrapassar o HP máximo
   const cura = Math.min(jogador.hpMax - jogador.hp, rand(15, 30));
   jogador.hp += cura;
+
   console.log(
-    `\n🛌 Você descansou e recuperou ${cura} HP. (HP: ${jogador.hp}/${jogador.hpMax})`
+    `\n🛌 Você descansou e recuperou ${colors.green}${cura} HP${colors.reset}. (HP: ${colors.green}${jogador.hp}${colors.reset}/${colors.green}${jogador.hpMax}${colors.reset})`
   );
-  // custo de tempo/risco: chance encontrar inimigo leve
-  if (rand(1, 100) <= 20) {
-    console.log("Durante o descanso você foi surpreendido!");
-    batalha(criarInimigo(jogador), jogador);
+
+  // Chance de encontro durante o descanso
+  const encontroChance = 20;
+  if (rand(1, 100) <= encontroChance) {
+    console.log(
+      `${colors.red}⚠ Durante o descanso você foi surpreendido!${colors.reset}`
+    );
+    const inimigo = criarInimigo(jogador);
+    batalha(inimigo, jogador);
   }
 }

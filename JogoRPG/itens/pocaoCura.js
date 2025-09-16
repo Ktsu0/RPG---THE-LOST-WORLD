@@ -3,110 +3,123 @@ import promptSync from "prompt-sync";
 
 const prompt = promptSync({ sigint: true });
 
-// --- Usar Poção ---
+// --- Usar Poção / Néctar ---
 export function usarPocao(jogador) {
-    // 1. Identifica os itens de cura que o jogador possui
-    const temPocaoCura = jogador.inventario.some(
-        (item) => item.nome === "Poção de Cura"
+  // Conta quantos itens de cada tipo o jogador possui
+  let qtdPocao = jogador.inventario.filter(
+    (i) => i.nome === "Poção de Cura"
+  ).length;
+  let qtdNectar = jogador.inventario.filter(
+    (i) => i.nome === "Néctar da Vida Eterna"
+  ).length;
+
+  if (qtdPocao === 0 && qtdNectar === 0) {
+    console.log(
+      `${colors.red}❌ Você não possui nenhum item de cura no seu inventário!${colors.reset}`
     );
-    const temNectar = jogador.inventario.some(
-        (item) => item.nome === "Néctar da Vida Eterna"
+    return false;
+  }
+
+  console.log(
+    `\n${colors.white}=== ITENS DE CURA DISPONÍVEIS ===${colors.reset}`
+  );
+  if (qtdPocao > 0)
+    console.log(
+      ` [1] ${colors.cyan}Poção de Cura${colors.reset} (${colors.green}${qtdPocao} disponíveis${colors.reset})`
     );
+  if (qtdNectar > 0)
+    console.log(
+      ` [2] ${colors.magenta}Néctar da Vida Eterna${colors.reset} (${colors.green}${qtdNectar} disponíveis${colors.reset})`
+    );
+  console.log("[0] Cancelar");
 
-    // 2. Lógica para quando não há itens de cura
-    if (!temPocaoCura && !temNectar) {
-        console.log("❌ Você não possui nenhum item de cura no seu inventário!");
-        return false;
-    }
+  const escolha = prompt(
+    `${colors.yellow}Escolha o item que deseja usar:${colors.reset} `
+  );
 
-    // 3. Lógica para quando o jogador tem apenas um tipo de item
-    if (temNectar && !temPocaoCura) {
-        // Se só tiver o Néctar, pergunta se quer usar o item especial
-        const confirmar = prompt(
-            `Você tem apenas um item especial: ${colors.magenta}Néctar da Vida Eterna.${colors.reset} Deseja usá-lo? (sim/não)`
-        );
-        if (confirmar.toLowerCase() === "sim") {
-            const index = jogador.inventario.findIndex(
-                (item) => item.nome === "Néctar da Vida Eterna"
-            );
-            if (index !== -1) {
-                jogador.inventario.splice(index, 1);
-                jogador.hp = jogador.hpMax;
-                console.log(
-                    `💖 ${colors.magenta}Você usou o Néctar da Vida Eterna e sua vida foi completamente restaurada!${colors.reset}`
-                );
-                console.log(`HP: ${jogador.hp}/${jogador.hpMax}`);
-                return true;
-            }
-        }
-        console.log("Ação cancelada.");
-        return false;
-    }
-
-    // 4. Lógica para quando o jogador tem apenas poções de cura
-    if (temPocaoCura && !temNectar) {
-        // Usa a poção de cura diretamente, sem menu
-        const index = jogador.inventario.findIndex(
-            (item) => item.nome === "Poção de Cura"
-        );
-        jogador.inventario.splice(index, 1);
-        const cura = rand(30, 50);
-        jogador.hp = Math.min(jogador.hp + cura, jogador.hpMax);
+  switch (escolha) {
+    case "1":
+      if (qtdPocao === 0) {
         console.log(
-            `💊 Você usou uma Poção de Cura e recuperou ${cura} HP! (HP: ${jogador.hp}/${jogador.hpMax})`
+          `${colors.red}Você não possui Poção de Cura.${colors.reset}`
         );
-        return true;
-    }
+        return false;
+      }
+      const indexPocao = jogador.inventario.findIndex(
+        (i) => i.nome === "Poção de Cura"
+      );
+      jogador.inventario.splice(indexPocao, 1);
 
-    // 5. Lógica para quando o jogador tem ambos os itens
-    if (temPocaoCura && temNectar) {
-        console.log("\nQual item de cura você deseja usar?");
-        console.log(" [1] Poção de Cura (Recupera uma pequena quantidade de HP)");
-        console.log(" [2] Néctar da Vida Eterna (Restaura 100% da vida)");
+      // Cura escalável pelo nível
+      const curaMin = Math.floor(jogador.hpMax * 0.15);
+      const curaMax = Math.floor(jogador.hpMax * 0.25);
+      const cura = rand(curaMin, curaMax);
 
-        // Simula a entrada do usuário com 'prompt'
-        const escolha = prompt("Digite o número da sua escolha:");
+      jogador.hp = Math.min(jogador.hp + cura, jogador.hpMax);
+      qtdPocao -= 1;
 
-        switch (escolha) {
-            case "1":
-                // Lógica de uso da poção de cura
-                const indexPocao = jogador.inventario.findIndex(
-                    (item) => item.nome === "Poção de Cura"
-                );
-                jogador.inventario.splice(indexPocao, 1);
-                const cura = rand(30, 50);
-                jogador.hp = Math.min(jogador.hp + cura, jogador.hpMax);
-                console.log(
-                    `💊 Você usou uma Poção de Cura e recuperou ${cura} HP! (HP: ${jogador.hp}/${jogador.hpMax})`
-                );
-                return true;
+      console.log(
+        `💊 ${colors.cyan}Você usou uma Poção de Cura e recuperou ${cura} HP!${colors.reset} (HP: ${colors.green}${jogador.hp}/${jogador.hpMax}${colors.reset})`
+      );
 
-            case "2":
-                // Lógica de uso do Néctar (com confirmação)
-                const confirmarNectar = prompt(
-                    `Você tem apenas um item especial: ${colors.magenta}Néctar da Vida Eterna.${colors.reset} Deseja usá-lo? (sim/não)`
-                );
-                // A correção está nesta linha: a variável é 'confirmarNectar'
-                if (confirmarNectar.toLowerCase() === "sim") {
-                    const indexNectar = jogador.inventario.findIndex(
-                        (item) => item.nome === "Néctar da Vida Eterna"
-                    );
-                    if (indexNectar !== -1) {
-                        jogador.inventario.splice(indexNectar, 1);
-                        jogador.hp = jogador.hpMax;
-                        console.log(
-                            `💖 ${colors.magenta}Você usou o Néctar da Vida Eterna e sua vida foi completamente restaurada!${colors.reset}`
-                        );
-                        console.log(`HP: ${jogador.hp}/${jogador.hpMax}`);
-                        return true;
-                    }
-                }
-                console.log("Ação cancelada.");
-                return false;
+      if (qtdPocao > 0) {
+        console.log(
+          `${colors.green}Você ainda possui ${qtdPocao} Poção(s) de Cura.${colors.reset}`
+        );
+      } else {
+        console.log(
+          `${colors.red}Você não tem mais Poção de Cura.${colors.reset}`
+        );
+      }
+      return true;
 
-            default:
-                console.log("Escolha inválida. Ação cancelada.");
-                return false;
-        }
-    }
+    case "2":
+      if (qtdNectar === 0) {
+        console.log(
+          `${colors.red}Você não possui Néctar da Vida Eterna.${colors.reset}`
+        );
+        return false;
+      }
+      const confirmar = prompt(
+        `Deseja usar o ${colors.magenta}Néctar da Vida Eterna${colors.reset}? (sim/não) `
+      );
+      if (confirmar.toLowerCase() !== "sim") {
+        console.log(`${colors.yellow}Ação cancelada.${colors.reset}`);
+        return false;
+      }
+      const indexNectar = jogador.inventario.findIndex(
+        (i) => i.nome === "Néctar da Vida Eterna"
+      );
+      jogador.inventario.splice(indexNectar, 1);
+      jogador.hp = jogador.hpMax;
+      qtdNectar -= 1;
+
+      console.log(
+        `💖 ${colors.magenta}Você usou o Néctar da Vida Eterna e sua vida foi completamente restaurada!${colors.reset}`
+      );
+      console.log(
+        `HP: ${colors.green}${jogador.hp}/${jogador.hpMax}${colors.reset}`
+      );
+
+      if (qtdNectar > 0) {
+        console.log(
+          `${colors.green}Você ainda possui ${qtdNectar} Néctar(s) da Vida Eterna.${colors.reset}`
+        );
+      } else {
+        console.log(
+          `${colors.red}Você não tem mais Néctar da Vida Eterna.${colors.reset}`
+        );
+      }
+      return true;
+
+    case "0":
+      console.log(`${colors.yellow}Ação cancelada.${colors.reset}`);
+      return false;
+
+    default:
+      console.log(
+        `${colors.red}Escolha inválida. Ação cancelada.${colors.reset}`
+      );
+      return false;
+  }
 }

@@ -115,18 +115,16 @@ export function criarInimigo(jogador) {
     },
   ];
 
-  // Filtra os inimigos de acordo com o nível mínimo
+  // Filtra inimigos de acordo com o nível do jogador
   const inimigosDisponiveis = templates.filter(
     (e) => jogador.nivel >= e.minNivel
   );
-
-  // Se não houver inimigos disponíveis para o nível, retorna nulo ou um inimigo padrão
   if (inimigosDisponiveis.length === 0) {
     console.log("Nenhum inimigo disponível para o seu nível.");
     return null;
   }
 
-  // Seleciona um inimigo aleatório da lista filtrada
+  // Seleciona um inimigo aleatório
   const t = inimigosDisponiveis[rand(0, inimigosDisponiveis.length - 1)];
 
   const hp = Math.round(
