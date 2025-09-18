@@ -1,5 +1,5 @@
-import { getRaridadeCor } from "../../../loja/itensLoja.js";
-import { colors } from "../../../utilitarios.js";
+import { getRaridadeCor } from "./../../../codigosUniversais.js";
+import { colors } from "./../../../utilitarios.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync();
 

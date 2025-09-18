@@ -1,5 +1,6 @@
 import { menuAmuletoSupremo } from "./amuleto/menuAmuleto.js";
 import { colors } from "./../../utilitarios.js";
+import { menuTalismaSupremo } from "./talisma/menuTalisma.js";
 
 import promptSync from "prompt-sync";
 const prompt = promptSync();

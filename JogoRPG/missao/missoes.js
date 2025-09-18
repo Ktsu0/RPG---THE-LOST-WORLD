@@ -9,6 +9,7 @@ import {
   enterDungeon,
 } from "../masmorra/masmorra.js";
 import promptSync from "prompt-sync";
+import { getRaridadeCor } from "./../codigosUniversais.js";
 const prompt = promptSync({ sigint: true });
 
 // === Missões ===
@@ -259,28 +260,30 @@ export function fazerMissao(jogador) {
   console.log(`${colors.cyan}📖 ${missao.historia}${colors.reset}`);
 
   let recompensaTexto = `${colors.green}Chance de sucesso:${colors.reset} ${missao.chanceSucesso}% | `;
-  recompensaTexto += `${colors.blue}Recompensa:${colors.reset} ${Math.round(
-    missao.xp(jogador.nivel)
-  )} XP `;
-  recompensaTexto += `e ${Math.round(missao.ouro(jogador.nivel))} ouro`;
+  recompensaTexto += `${colors.blue}Recompensa:${colors.reset} ${
+    colors.green
+  }${Math.round(missao.xp(jogador.nivel))} XP${colors.reset} `;
+  recompensaTexto += `e ${colors.yellow}${Math.round(
+    missao.ouro(jogador.nivel)
+  )} ouro${colors.reset}`;
 
   if (missao.item) {
     if (typeof missao.item === "string") {
-      recompensaTexto += ` + ${colors.magenta}item${colors.reset} (${missao.item})`;
+      recompensaTexto += ` + ${corItem}item(${missao.item})${colors.reset} `;
     } else {
-      let corItem = colors.white;
+      let corItem = getRaridadeCor(missao.item.raridade);
       if (missao.item.raridade.toLowerCase() === "raro") corItem = colors.blue;
       else if (missao.item.raridade.toLowerCase() === "lendario")
         corItem = colors.yellow;
 
-      recompensaTexto += ` + ${colors.magenta}item${colors.reset} ${corItem}${missao.item.nome}${colors.reset} [${missao.item.raridade}]`;
+      recompensaTexto += ` + ${corItem}item${missao.item.nome} [${missao.item.raridade}]${colors.reset}`;
     }
   }
 
   console.log(recompensaTexto + ".");
 
   const confirmar = prompt(
-    `${colors.white}Deseja tentar a missão? (s/n) ${colors.reset}`
+    `${colors.bright}${colors.white}Deseja tentar a missão? (s/n) ${colors.reset}`
   );
   if (confirmar.toLowerCase() !== "s") {
     console.log(`${colors.red}❌ Missão cancelada.${colors.reset}`);
@@ -319,7 +322,7 @@ export function fazerMissao(jogador) {
 
     if (!venceuBatalha) {
       console.log(
-        `${colors.red}❌ Você foi derrotado pelo mini-boss! A missão falhou.`
+        `${colors.red}❌ Você foi derrotado pelo mini-boss! A missão falhou.${colors.reset}`
       );
       aplicarPenalidade(missao.falha.tipo, jogador);
       return; // Sai da função, pois o jogador falhou na missão
@@ -359,7 +362,9 @@ export function fazerMissao(jogador) {
       if (rollDrop <= chanceFinal) {
         jogador.inventario.push(missao.item.nome);
         console.log(
-          `${colors.yellow}🎁 Você obteve o item da missão: ${
+          `${colors.bright}${colors.white}🎁 Você obteve o item da missão: ${
+            colors.bright
+          }${colors.magenta}${
             missao.item.nome
           } (${missao.item.raridade.toUpperCase()})${colors.reset}`
         );
