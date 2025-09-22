@@ -23,10 +23,13 @@ export function gerenciarArmas(jogador) {
   }
 
   armasDisponiveis.forEach((arma, index) => {
+    const efeitoNome = arma.efeito ? arma.efeito.tipo : "Nenhum";
     console.log(
       `[${colors.green}${index + 1}${colors.reset}] ${colors.magenta}${
         arma.nome
-      }${colors.reset} (+${arma.atk} ATK, Efeito: ${arma.efeito || "Nenhum"})`
+      }${colors.reset} (ATK:${colors.green}+${arma.atk}${
+        colors.reset
+      }, Efeito: ${colors.magenta}${efeitoNome}${colors.reset})`
     );
   });
   console.log(`[${colors.gray}0${colors.reset}] Voltar`);

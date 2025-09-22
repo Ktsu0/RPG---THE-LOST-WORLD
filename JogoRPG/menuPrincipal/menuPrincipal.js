@@ -36,7 +36,7 @@ export function menuPrincipal(jogador) {
     case "1": // explorar
       const chance = rand(1, 100);
 
-      if (chance <= 10) {
+      if (chance <= 100) {
         console.log(
           `\n${colors.red}⚠ Durante sua exploração, você encontrou a entrada de uma MASMORRA!${colors.reset}`
         );
@@ -56,6 +56,7 @@ export function menuPrincipal(jogador) {
           `${colors.white}Você entra em: ${jogador.masmorraAtual.template.nome}\n
           ${colors.cyan}${mensagemSecreta}${colors.reset}`
         );
+
         const masmorraAPI = enterDungeon(jogador.masmorraAtual, jogador);
         // Chame a função para iniciar o loop da masmorra
         jogadaMasmorra(jogador, masmorraAPI);

@@ -33,9 +33,9 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         tipo: "monstro",
       };
       break;
-    case "Sombra Menor":
+    case "Espectro Sombrio":
       inimigoBase = {
-        nome: "Sombra Menor",
+        nome: "Espectro Sombrio",
         hp: 13,
         atk: 6,
         class: 1,
@@ -300,36 +300,36 @@ export function criarInimigoMasmorra(nome, dificuldade) {
         tipo: "miniboss",
       };
       break;
-    case "Guardião Ossudo":
+    case "Ceifador":
       inimigoBase = {
-        nome: "Guardião Ossudo",
+        nome: "Ceifador",
         hp: 100,
         atk: 18,
         class: 1,
         tipo: "miniboss",
       };
       break;
-    case "Cenobita das Trevas":
+    case "Mago Negro":
       inimigoBase = {
-        nome: "Cenobita das Trevas",
+        nome: "Mago Negro",
         hp: 90,
         atk: 17,
         class: 1,
         tipo: "miniboss",
       };
       break;
-    case "Xamã Corvo":
+    case "Feiticeiro das Asas Negras":
       inimigoBase = {
-        nome: "Xamã Corvo",
+        nome: "Feiticeiro das Asas Negras",
         hp: 85,
         atk: 16,
         class: 1,
         tipo: "miniboss",
       };
       break;
-    case "Capitão dos Lobos":
+    case "Lobo Espectral":
       inimigoBase = {
-        nome: "Capitão dos Lobos",
+        nome: "Lobo Espectral",
         hp: 110,
         atk: 20,
         class: 1,

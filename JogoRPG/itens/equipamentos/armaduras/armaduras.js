@@ -20,7 +20,7 @@ export function gerenciarArmaduras(jogador) {
     `\n${colors.magenta}Seu inventário de armaduras disponíveis:${colors.reset}`
   );
   const armadurasNoInventario = jogador.inventario.filter(
-    (i) => i.slot && i.slot !== "consumable"
+    (item) => item.slot && ARMOR_SLOTS.includes(item.slot)
   );
 
   if (armadurasNoInventario.length === 0) {
@@ -34,8 +34,10 @@ export function gerenciarArmaduras(jogador) {
     console.log(
       `[${colors.green}${index + 1}${colors.reset}] ${colors.magenta}${
         item.nome
-      }${colors.reset} (Def:${item.defesa} ATK+:${item.atkBonus} Set:${
-        item.set || "-"
+      }${colors.reset} (Def:${colors.green}+${item.defesa}${colors.reset} ATK:${
+        colors.green
+      }+${item.atkBonus}${colors.reset} Set:${colors.cyan}${item.set || "-"}${
+        colors.reset
       })`
     );
   });

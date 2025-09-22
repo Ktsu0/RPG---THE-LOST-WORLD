@@ -39,9 +39,9 @@ export async function exibirStatusInicial(jogador) {
   // --- INTRODUÇÃO COM EFEITO DE DIGITANDO ---
   const introText = [
     `Há séculos, o Reino de Eldoria vive em um pesadelo sem fim.`,
-    `${colors.bright}${colors.gray}A noite não é mais ausência de luz, é um abismo que respira, devorando a esperança dos homens.${colors.reset}`,
-    `Das sombras mais profundas, hordas de criaturas surgiram, saqueando nossas terras,sequestrando a Princesa Myria e banindo o sono e a paz.`,
-    `Por anos, os cantos dos pássaros foram silenciados, substituídos pelos ${colors.gray}lamentos${colors.reset} daqueles que sucumbem à escuridão.`,
+    `A noite não é mais ausência de luz, é um abismo que respira, devorando a esperança dos homens.`,
+    `Das sombras mais profundas, hordas de criaturas surgiram, saqueando nossas terras, sequestrando a Princesa Myria e banindo o sono e a paz.`,
+    `Por anos, os cantos dos pássaros foram silenciados, substituídos pelos lamentos daqueles que sucumbem à escuridão.`,
     ``,
     `Mas as lendas sussurram sobre uma profecia:`,
     `${colors.magenta}"Quando a última estrela do céu cair, surgirá um herói, forjado pelo caos, que empunhará a luz e desafiará a própria escuridão."${colors.reset}`,

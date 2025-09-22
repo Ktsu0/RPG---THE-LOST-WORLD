@@ -7,7 +7,7 @@ import { verificarFimDeJogo } from "../verificar/derrota/derrota.js";
 
 const prompt = promptSync({ sigint: true });
 
-export function jogadaMasmorra(jogador, masmorraAPI) {
+export function jogadaMasmorra(jogador, masmorra) {
   // Use um loop while para manter o jogador na masmorra
   while (jogador.masmorraAtual) {
     console.log(
@@ -43,7 +43,7 @@ export function jogadaMasmorra(jogador, masmorraAPI) {
             break;
         }
 
-        const resultado = masmorraAPI.move(direcaoConvertida); // CORREÇÃO
+        const resultado = masmorra.move(direcaoConvertida); // CORREÇÃO
 
         // === A LÓGICA CRÍTICA ESTÁ AQUI ===
         if (
@@ -75,13 +75,13 @@ export function jogadaMasmorra(jogador, masmorraAPI) {
 
       case "2": {
         // olhar
-        console.log(masmorraAPI.look());
+        console.log(masmorra.look());
         break;
       }
 
       case "3": {
         // investigar
-        const resultadoInvestigacao = masmorraAPI.investigate(); // CORREÇÃO
+        const resultadoInvestigacao = masmorra.investigate(); // CORREÇÃO
         console.log(resultadoInvestigacao.msg);
         if (resultadoInvestigacao.result === "triggered") {
           jogador.hp -= resultadoInvestigacao.dano;

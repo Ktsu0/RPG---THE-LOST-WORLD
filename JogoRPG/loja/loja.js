@@ -3,7 +3,7 @@ import { colors } from "./../utilitarios.js";
 import { getRaridadeCor } from "./../codigosUniversais.js";
 import { armasDisponiveis } from "./itensLoja/armas.js";
 import { loja } from "./itensLoja/itensLoja.js";
-
+import { consumiveis } from "./itensLoja/consumiveis.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync({ sigint: true });
 

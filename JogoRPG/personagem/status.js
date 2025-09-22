@@ -30,9 +30,11 @@ function exibirEquipamento(slot, equipamento) {
   if (!equipamento) return `${colors.gray}Nenhum${colors.reset}`;
 
   const cor = getRaridadeCor(equipamento.raridade);
-  return `${cor}${equipamento.nome}${colors.reset} (DEF:${
+  return `${cor}${equipamento.nome}${colors.reset} (DEF:${colors.green}${
     equipamento.defesa
-  } ATK+:${equipamento.atkBonus} Set:${equipamento.set || "Nenhum"})`;
+  }${colors.reset} ATK:${colors.green}+${equipamento.atkBonus}${
+    colors.reset
+  } Set:${colors.cyan}${equipamento.set || "Nenhum"}${colors.reset})`;
 }
 
 // --- Exibe status do jogador ---
