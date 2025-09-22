@@ -106,7 +106,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
     switch (inimigo.poder) {
       case "Necromancia":
         console.log("💀 Ossos se levantam da terra para te atacar!");
-        const danoBaseNecro = rand(5, 10);
+        const danoBaseNecro = inimigo.atk;
         const danoTotalNecro = Math.floor(danoBaseNecro + inimigo.atk * 0.1);
         jogador.hp -= danoTotalNecro;
         console.log(
@@ -115,7 +115,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Sopro Glaciar":
-        const danoBaseGelo = rand(8, 15);
+        const danoBaseGelo = inimigo.atk;
         const danoTotalGelo = Math.floor(danoBaseGelo + inimigo.atk * 0.1);
         jogador.hp -= danoTotalGelo;
         console.log(
@@ -124,7 +124,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Erupção Infernal":
-        const danoBaseFogo = rand(15, 25);
+        const danoBaseFogo = inimigo.atk;
         const danoTotalFogo = Math.floor(danoBaseFogo + inimigo.atk * 0.1);
         jogador.hp -= danoTotalFogo;
         console.log(
@@ -133,7 +133,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Feitiços Antigos":
-        const danoBaseArcano = rand(10, 20);
+        const danoBaseArcano = inimigo.atk;
         const danoTotalArcano = Math.floor(danoBaseArcano + inimigo.atk * 0.1);
         jogador.hp -= danoTotalArcano;
         console.log(
@@ -142,7 +142,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Impacto Sísmico":
-        const danoBaseTerremoto = rand(12, 20);
+        const danoBaseTerremoto = inimigo.atk;
         const danoTotalTerremoto = Math.floor(
           danoBaseTerremoto + inimigo.atk * 0.1
         );
@@ -153,7 +153,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Praga da Corrupção":
-        const danoBaseToxico = rand(15, 20);
+        const danoBaseToxico = inimigo.atk;
         const danoTotalToxico = Math.floor(danoBaseToxico + inimigo.atk * 0.1);
         jogador.hp -= danoTotalToxico;
         console.log(
@@ -162,7 +162,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Lâmina Etérea":
-        const danoBaseIgnorar = rand(20, 25);
+        const danoBaseIgnorar = inimigo.atk;
         const danoTotalIgnorar = Math.floor(
           danoBaseIgnorar + inimigo.atk * 0.1
         );
@@ -173,7 +173,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Martelo Incandescente":
-        const danoBaseMartelo = rand(25, 30);
+        const danoBaseMartelo = inimigo.atk;
         const danoTotalMartelo = Math.floor(
           danoBaseMartelo + inimigo.atk * 0.1
         );
@@ -184,7 +184,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Ruptura Temporal":
-        const danoBaseRuptura = rand(30, 40);
+        const danoBaseRuptura = inimigo.atk;
         const danoTotalRuptura = Math.floor(
           danoBaseRuptura + inimigo.atk * 0.1
         );
@@ -195,7 +195,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         break;
 
       case "Raízes Presas":
-        const danoBaseRaizes = rand(10, 18);
+        const danoBaseRaizes = inimigo.atk;
         const danoTotalRaizes = Math.floor(danoBaseRaizes + inimigo.atk * 0.1);
         jogador.hp -= danoTotalRaizes;
         console.log(

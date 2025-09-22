@@ -2,6 +2,7 @@ import { getRaridadeCor } from "./../../../codigosUniversais.js";
 import { colors } from "./../../../utilitarios.js";
 import promptSync from "prompt-sync";
 import { gerenciarAmuleto } from "./gerenciador.js";
+import { menuAmuletoTalisma } from "./../menuPrincipal.js";
 const prompt = promptSync();
 
 // --- Menu Amuleto Supremo ---
@@ -70,5 +71,7 @@ export function menuAmuletoSupremo(jogador) {
         `${colors.red}❌ Você não possui todos os itens necessários!${colors.reset}`
       );
     }
+  } else {
+    menuAmuletoTalisma(jogador);
   }
 }

@@ -16,17 +16,12 @@ export function abrirLoja(jogador) {
     );
   }
 
-  function comprarItem(item, tipo = "equipamento") {
+  function comprarItem(item) {
     if (jogador.ouro >= item.preco) {
       jogador.ouro -= item.preco;
-      if (tipo === "equipamento") {
-        jogador.equipamentos[item.slot] = item;
-      } else if (tipo === "arma") {
-        jogador.armas.push(item);
-        jogador.armaEquipada = item;
-      }
+      jogador.inventario.push(item); // Adiciona o item ao inventário
       console.log(
-        `${colors.green}✅ Você comprou e equipou: ${item.nome}${colors.reset}`
+        `${colors.green}✅ Você comprou: ${item.nome}! O item foi para o seu inventário.${colors.reset}`
       );
     } else {
       console.log(`${colors.red}Ouro insuficiente!${colors.reset}`);
@@ -163,9 +158,25 @@ export function abrirLoja(jogador) {
 
   function menuPocoes() {
     let voltarPocoes = false;
-    const precoPocao = 200;
+    const pocaoDeCura = consumiveis.find(
+      (item) => item.nome === "Poção de Cura"
+    );
+
+    if (!pocaoDeCura) {
+      console.log(
+        `${colors.red}❌ Poção de Cura não encontrada!${colors.reset}`
+      );
+      return;
+    }
 
     while (!voltarPocoes) {
+      exibirOuro();
+
+      // Obtenha o número de poções no inventário
+      const numPocoes = jogador.inventario.filter(
+        (item) => item.nome === pocaoDeCura.nome
+      ).length;
+
       console.log(
         `\n🧪 ${colors.bright}${colors.cyan}Poções de Cura${colors.reset}`
       );
@@ -173,11 +184,7 @@ export function abrirLoja(jogador) {
         `Cada poção restaura entre ${colors.green}20% - 30%${colors.reset} da sua vida máxima.`
       );
       console.log(
-        `Preço: ${colors.yellow}${precoPocao}${
-          colors.reset
-        } ouro | Você possui: ${
-          jogador.pocoes ? colors.green + jogador.pocoes : colors.red + "0"
-        }${colors.reset}`
+        `Preço: ${colors.yellow}${pocaoDeCura.preco}${colors.reset} ouro | Você possui: ${colors.green}${numPocoes}${colors.reset}`
       );
       console.log(`[1] Comprar Poção`);
       console.log(`${colors.red}[0] Voltar${colors.reset}`);
@@ -187,11 +194,13 @@ export function abrirLoja(jogador) {
       if (escolhaPocao === "0") {
         voltarPocoes = true;
       } else if (escolhaPocao === "1") {
-        if (jogador.ouro >= precoPocao) {
-          jogador.ouro -= precoPocao;
-          jogador.pocoes = (jogador.pocoes || 0) + 1;
+        if (jogador.ouro >= pocaoDeCura.preco) {
+          jogador.ouro -= pocaoDeCura.preco;
+          jogador.inventario.push(pocaoDeCura);
           console.log(
-            `${colors.green}✅ Você comprou uma Poção de Cura! Agora possui ${jogador.pocoes}.${colors.reset}`
+            `${colors.green}✅ Você comprou uma Poção de Cura! Agora possui ${
+              numPocoes + 1
+            }.${colors.reset}`
           );
         } else {
           console.log(`${colors.red}Ouro insuficiente!${colors.reset}`);

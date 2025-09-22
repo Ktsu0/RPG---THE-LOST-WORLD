@@ -19,6 +19,7 @@
     "homepage": "https://github.com/Ktsu0/RPG---THE-LOST-WORLD#readme",
     "description": "",
     "dependencies": {
+        "promisify": "^0.0.3",
         "prompt-sync": "^4.2.0"
     }
 }

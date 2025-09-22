@@ -1,0 +1,1 @@
+await exibirStatusInicial(jogador);

@@ -8,7 +8,7 @@ const classesDisponiveis = [
   { nome: "Assassino", desc: "Sangramento + bônus drop de itens" },
   { nome: "Bárbaro", desc: "Fúria quando HP baixo" },
   { nome: "Necromante", desc: "Invocar esqueleto aliado" },
-  { nome: "Druida", desc: "Chance de cura de 5% HP por turno + bônus esquiva" },
+  { nome: "Xamã", desc: "Chance de cura de 5% HP por turno + bônus esquiva" },
 ];
 
 const classesBonus = {

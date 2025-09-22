@@ -706,7 +706,8 @@ export function criarInimigoMasmorra(nome, dificuldade) {
   inimigoBase.atk = Math.max(1, inimigoBase.atk + rand(-2, 2));
 
   // Busca a recompensa base usando as propriedades do monstro
-  const base = recompensaBase[inimigoBase.tipo][inimigoBase.class];
+  const classe = Number(inimigoBase.class);
+  const base = recompensaBase[inimigoBase.tipo][classe];
 
   // Aplica o multiplicador de dificuldade à XP e ao Ouro
   inimigoBase.xp = Math.floor(base.xp * multiplicadorDificuldade);

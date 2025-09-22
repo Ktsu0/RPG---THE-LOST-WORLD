@@ -19,7 +19,7 @@ function shuffle(array) {
 function manhattan(a, b) {
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 }
-let itens = [
+export let itens = [
   {
     nome: "Orbe da Fênix Flamejante",
     tipo: "reliquia",
@@ -30,7 +30,7 @@ let itens = [
     nome: "Coração Flamejante",
     tipo: "reliquia",
     qualidade: "Épico",
-    efeito: "Restaura 10 HP ao derrotar cada inimigo dentro da masmorra",
+    efeito: "Restaura 25 HP ao derrotar cada inimigo dentro da masmorra",
   },
   {
     nome: "Fragmento do Sol Caído",
@@ -258,7 +258,7 @@ function getCenter(size) {
   return { x: c, y: c };
 }
 
-function rolarDropDeItemComum(dificuldade, todosItens) {
+export function rolarDropDeItemComum(dificuldade) {
   const chancesDropComum = {
     "Néctar da Vida Eterna": 1.5 * dificuldade,
     "Bússola do Destino": 5.0 * dificuldade,
@@ -266,7 +266,7 @@ function rolarDropDeItemComum(dificuldade, todosItens) {
 
   const roll = Math.random() * 100;
 
-  for (const item of todosItens) {
+  for (const item of itens) {
     const chance = chancesDropComum[item.nome];
     if (chance && roll <= chance) {
       return item;

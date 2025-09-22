@@ -34,13 +34,13 @@ const racasDisponiveis = [
     restricoes: {},
   },
   {
-    nome: "Drow",
-    desc: "+10% Crítico, -10 HP",
-    bonus: { hp: -10, atk: 0, def: 0, critChance: 10 },
+    nome: "Bestial",
+    desc: "+10% Crítico, -7 HP",
+    bonus: { hp: -7, atk: 0, def: 0, critChance: 10 },
     restricoes: {},
   },
   {
-    nome: "Dragãoide",
+    nome: "Dragonoide",
     desc: "+15 HP, +5 ATK, não pode usar armaduras",
     bonus: { hp: 15, atk: 5, def: 0, critChance: 0 },
     restricoes: { semArmadura: true },
@@ -78,7 +78,7 @@ function exibirRacas() {
             ? `${colors.red}${m}${colors.reset}`
             : `${colors.green}${m}${colors.reset}`
         )
-        .replace(/([+-]\d+% Crítico)/g, `${colors.green}$1${colors.reset}`) // Critico sempre verde
+        .replace(/([+-]\d+% Crítico)/g, `${colors.green}$1${colors.reset}`)
         .replace(
           /não pode usar armaduras/g,
           `${colors.red}não pode usar armaduras${colors.reset}`

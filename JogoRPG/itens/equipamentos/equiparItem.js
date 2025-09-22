@@ -4,31 +4,57 @@ import { colors } from "../../utilitarios.js";
 
 // --- Equipar item ---
 export function equiparItem(jogador, item) {
-  if (!ARMOR_SLOTS.includes(item.slot)) {
+  // Se for uma arma, chama a função específica
+  if (item.slot === "weapon") {
+    equiparArma(jogador, item);
+  }
+  // Se for uma armadura, chama a função específica
+  else if (ARMOR_SLOTS.includes(item.slot)) {
+    equiparArmadura(jogador, item);
+  }
+  // Caso o slot seja desconhecido
+  else {
     console.log("Slot desconhecido para esse item.");
-    return;
   }
+}
 
-  if (jogador.restricoes && jogador.restricoes.semArmadura) {
+function equiparArmadura(jogador, armadura) {
+  // --- Lógica para o caso de o slot estar ocupado ---
+  if (jogador.equipamentos[armadura.slot]) {
+    // Adiciona o item recém-dropado ao inventário, sem equipá-lo
+    jogador.inventario.push(armadura);
+
     console.log(
-      `${colors.red}❌ Sua raça não pode equipar armaduras!${colors.reset}`
+      `${colors.yellow}🔹 Slot de ${armadura.slot} já está ocupado.${colors.reset}`
     );
-    return;
+    console.log(
+      `${colors.bright}${colors.white}${armadura.nome}${colors.reset} foi adicionada ao seu inventário.`
+    );
   }
-
-  // Verifica se o slot já está ocupado
-  if (jogador.equipamentos[item.slot]) {
-    // Slot ocupado, adiciona ao inventário
-    jogador.inventario.push(item);
-    console.log(
-      `${colors.yellow}🔹 Slot de ${item.slot} já está ocupado. ${item.nome} foi para o inventário.${colors.reset}`
-    );
-  } else {
+  // --- Lógica para o caso de o slot estar vazio ---
+  else {
     // Slot vazio, equipa o item
-    jogador.equipamentos[item.slot] = item;
+    jogador.equipamentos[armadura.slot] = armadura;
+
+    // Aplica o bônus de conjunto
     aplicarBonusDeConjunto(jogador);
+
     console.log(
-      `${colors.bright}${colors.white}${item.nome} equipada com Sucesso.${colors.reset}`
+      `${colors.bright}${colors.white}${armadura.nome} equipada com Sucesso.${colors.reset}`
     );
   }
+}
+
+function equiparArma(jogador, arma) {
+  // Se já houver uma arma equipada, ela vai para o inventário
+  if (jogador.armaEquipada) {
+    jogador.inventario.push(jogador.armaEquipada);
+  }
+
+  // Equipa a nova arma
+  jogador.armaEquipada = arma;
+
+  console.log(
+    `✅ ${colors.green}Equipou:${colors.reset} ${colors.magenta}${arma.nome}${colors.reset}`
+  );
 }

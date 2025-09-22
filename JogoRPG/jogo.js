@@ -15,8 +15,8 @@ jogador.equipamentos = jogador.equipamentos || {
   feet: null,
 };
 
-function iniciarJogo() {
-  exibirStatusInicial(jogador);
+async function iniciarJogo() {
+  await exibirStatusInicial(jogador);
   let jogoAtivo = true;
 
   while (jogoAtivo) {

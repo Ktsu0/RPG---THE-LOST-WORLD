@@ -1,3 +1,4 @@
+import { menuAmuletoTalisma } from "./../menuPrincipal.js";
 import { getRaridadeCor } from "./../../../codigosUniversais.js";
 import { colors } from "./../../../utilitarios.js";
 import promptSync from "prompt-sync";
@@ -60,7 +61,7 @@ export function menuTalismaSupremo(jogador) {
         }
       });
 
-      // Deduz o ouro necessário
+      // Reduz o ouro necessário
       jogador.ouro -= ouroNecessario;
 
       // Adiciona o talismã ao inventário
@@ -70,5 +71,7 @@ export function menuTalismaSupremo(jogador) {
         `${colors.red}❌ Você não possui os itens e/ou o ouro necessários!${colors.reset}`
       );
     }
+  } else {
+    menuAmuletoTalisma(jogador);
   }
 }

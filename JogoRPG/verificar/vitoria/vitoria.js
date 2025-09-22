@@ -1,3 +1,4 @@
+import { rolarDropDeItemComum } from "./../../masmorra/masmorra.js";
 import { processarDropDeItem } from "./../../itens/dropItem/chanceDrop.js";
 import { checarLevelUp } from "./../../personagem/experiencia.js";
 import { rand, colors } from "./../../utilitarios.js";
@@ -9,7 +10,7 @@ function aplicarCoraçãoFlamejante(jogador) {
       (i) => i.nome === "Coração Flamejante"
     );
     if (coracao) {
-      const hpRestaurado = 10;
+      const hpRestaurado = 25;
       jogador.hp = Math.min(jogador.hp + hpRestaurado, jogador.hpMax);
       console.log(
         `\n💖 ${colors.magenta}O Coração Flamejante brilha! Você recuperou ${hpRestaurado} HP!${colors.reset}`
@@ -26,7 +27,7 @@ function adicionarItemUnico(jogador, item) {
     );
   } else {
     jogador.inventario.push(item);
-    console.log(`\n🎉 Você obteve um item: ${item.nome}!`);
+    console.log(`\n🎉 Você obteve um item: ${colors.magenta}${item.nome}!`);
   }
 }
 
@@ -39,7 +40,7 @@ function processarDrops(jogador, inimigo) {
   if (rand(1, 100) <= 15 + bonusDropItem) {
     const novaPocao = {
       nome: "Poção de Cura",
-      slot: "consumable",
+      slot: "inventario",
       preco: 200,
       cura: 50,
     };
@@ -57,12 +58,10 @@ function processarDrops(jogador, inimigo) {
 }
 
 // --- FUNÇÃO PRINCIPAL ---
-export function finalizarVitoria(inimigo, jogador) {
-  const xpGanho = inimigo.xp || Math.floor(inimigo.hpMax / 5 + inimigo.atk * 2);
-  let ouroGanho = Math.floor(
-    (inimigo.ouro || rand(50, 100)) *
-      (inimigo.tipo === "boss" ? inimigo.dificuldade : 1)
-  );
+export function finalizarVitoria(inimigo, jogador, dificuldade, itens) {
+  const xpGanho =
+    Number(inimigo.xp) || Math.floor(inimigo.hpMax / 5 + inimigo.atk * 2);
+  const ouroGanho = Number(inimigo.ouro) || rand(50, 100);
 
   jogador.xp += xpGanho;
   jogador.ouro += ouroGanho;

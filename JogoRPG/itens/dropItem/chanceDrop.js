@@ -5,7 +5,7 @@ import { getRaridadeCor } from "./../../codigosUniversais.js";
 
 // --- Processar drop de item ---
 export function processarDropDeItem(jogador, bonus = 0, bonusDropItem = 0) {
-  const chanceDropTotal = 15 + bonus + bonusDropItem;
+  const chanceDropTotal = 10 + bonus + bonusDropItem;
   let itemDropado = null;
 
   if (rand(1, 100) <= chanceDropTotal) {

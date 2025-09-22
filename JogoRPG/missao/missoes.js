@@ -2,7 +2,7 @@ import { criarMiniBoss } from "./../inimigos/miniBoss.js";
 import { checarLevelUp } from "./../personagem/experiencia.js";
 import { colors, rand } from "./../utilitarios.js";
 import { criarInimigo } from "./../inimigos/monstros.js";
-import { batalha } from "./../batalha/batalha.js";
+import { batalha, batalhaOnda } from "./../batalha/batalha.js";
 import {
   DUNGEON_TEMPLATES,
   gerarMasmorra,
@@ -311,7 +311,6 @@ export function fazerMissao(jogador) {
     return;
   }
 
-  // 🔥 10% de chance de miniboss (balanceado por tipo da missão)
   if (rand(1, 100) <= missao.chanceMiniBoss) {
     const miniboss = criarMiniBoss(missao.tipo, jogador.nivel);
     console.log(
@@ -416,7 +415,7 @@ export function batalhaOndas(jogador) {
   for (let onda = 1; onda <= 10; onda++) {
     console.log(`\n--- Onda ${onda} de 10 ---`);
     const inimigo = criarInimigo(jogador);
-    const venceuOnda = batalha(inimigo, jogador, false);
+    const venceuOnda = batalhaOnda(inimigo, jogador, false);
 
     if (venceuOnda) {
       if (rand(1, 100) <= 5) {
@@ -443,7 +442,7 @@ export function batalhaOndas(jogador) {
   );
 
   const miniboss = criarMiniBoss("lendario", jogador.nivel);
-  const venceuBoss = batalha(miniboss, jogador, false);
+  const venceuBoss = batalhaOnda(miniboss, jogador, false);
 
   if (venceuBoss) {
     console.log(
@@ -459,17 +458,6 @@ export function batalhaOndas(jogador) {
         `${colors.cyan}O MiniBoss não deixou cair o Fragmento Antigo.`
       );
     }
-
-    // Recompensa final escalada com o nível
-    const ouroFinal = 100 + jogador.nivel * 10;
-    const xpFinal = 50 + jogador.nivel * 5;
-
-    jogador.ouro += ouroFinal;
-    jogador.xp += xpFinal;
-    console.log(
-      `${colors.yellow}Você ganhou ${ouroFinal} de ouro e ${xpFinal} XP como recompensa final!${colors.reset}`
-    );
-
     checarLevelUp(jogador);
     return true;
   } else {
@@ -496,7 +484,7 @@ function aplicarPenalidade(tipo, jogador) {
 
   if (tipo === "item" && jogador.setCompleto) {
     if (rand(1, 100) <= 2) {
-      const itemPerdido = jogador.removerItemAleatorio(); // retorna nome do item removido
+      const itemPerdido = jogador.removerItemAleatorio();
       return `${colors.red}🛡️ Você perdeu uma peça do seu set: ${itemPerdido}!${colors.reset}`;
     } else {
       return `${colors.green}🍀 Por sorte, não perdeu nenhum item.${colors.reset}`;
