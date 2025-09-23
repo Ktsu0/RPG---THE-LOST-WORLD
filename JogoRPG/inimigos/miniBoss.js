@@ -1,24 +1,10 @@
 import { rand } from "./../utilitarios.js";
+import { minibosses } from "./createMiniBoss.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync();
 
 // --- Cria Mini-Boss ---
 export function criarMiniBoss(tipo, nivelJogador) {
-  const minibosses = {
-    comum: [
-      { nome: "Capitão Sombrio", baseHp: 120, baseAtk: 12 },
-      { nome: "Sentinela Perdido", baseHp: 130, baseAtk: 15 },
-    ],
-    raro: [
-      { nome: "Guardião de Ruínas", baseHp: 160, baseAtk: 18 },
-      { nome: "Assassino das Sombras", baseHp: 170, baseAtk: 20 },
-    ],
-    lendario: [
-      { nome: "Feiticeiro Caído", baseHp: 220, baseAtk: 25 },
-      { nome: "Dragão Corrompido", baseHp: 250, baseAtk: 28 },
-    ],
-  };
-
   const lista = minibosses[tipo] || minibosses.comum;
   const m = lista[rand(0, lista.length - 1)];
 

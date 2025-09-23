@@ -59,7 +59,7 @@ export function usarPocao(jogador) {
       qtdPocao -= 1;
 
       console.log(
-        `💊 ${colors.cyan}Você usou uma Poção de Cura e recuperou ${cura} HP!${colors.reset} (HP: ${colors.green}${jogador.hp}/${jogador.hpMax}${colors.reset})`
+        `🧪 ${colors.cyan}Você usou uma Poção de Cura e recuperou ${cura} HP!${colors.reset} (HP: ${colors.green}${jogador.hp}/${jogador.hpMax}${colors.reset})`
       );
 
       if (qtdPocao > 0) {

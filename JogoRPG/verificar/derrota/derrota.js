@@ -17,11 +17,15 @@ export function verificarFimDeJogo(jogador) {
       console.log(
         `${colors.green}Você ressuscitou com 50% de vida, mas todo seu inventário foi perdido!${colors.reset}`
       );
-      return false;
+      return false; // Retorna false para continuar o jogo
     } else {
       console.log(
-        `${colors.red}Seus ferimentos foram fatais. O mundo está perdido...${colors.reset}`
+        `${colors.red}💀 Seus ferimentos foram fatais. O mundo está perdido...${colors.reset}`
       );
+      console.log(
+        `\n${colors.bright}${colors.white}--- JOGO ENCERRADO ---${colors.reset}`
+      );
+      process.exit(); // <-- Adicione esta linha para encerrar o jogo
       return true;
     }
   }

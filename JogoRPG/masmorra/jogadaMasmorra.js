@@ -7,8 +7,8 @@ import { verificarFimDeJogo } from "../verificar/derrota/derrota.js";
 
 const prompt = promptSync({ sigint: true });
 
-export function jogadaMasmorra(jogador, masmorra) {
-  // Use um loop while para manter o jogador na masmorra
+export function jogadaMasmorra(jogador) {
+  // Use o loop 'while' para manter o jogador na masmorra
   while (jogador.masmorraAtual) {
     console.log(
       `\n${colors.bright}Você está em uma masmorra! O que deseja fazer?${colors.reset}`
@@ -20,7 +20,7 @@ export function jogadaMasmorra(jogador, masmorra) {
 
     switch (escolhaMasmorra) {
       case "1": {
-        // mover
+        // Mover
         console.log("Para onde? ([01]Norte / [02]Sul / [03]Leste / [04]Oeste)");
         const direcaoEscolhida = prompt(">> ");
         let direcaoConvertida;
@@ -43,9 +43,8 @@ export function jogadaMasmorra(jogador, masmorra) {
             break;
         }
 
-        const resultado = masmorra.move(direcaoConvertida); // CORREÇÃO
+        const resultado = jogador.masmorraAtual.move(direcaoConvertida);
 
-        // === A LÓGICA CRÍTICA ESTÁ AQUI ===
         if (
           resultado.type === "batalha" ||
           resultado.type === "miniboss" ||
@@ -55,7 +54,10 @@ export function jogadaMasmorra(jogador, masmorra) {
           const vitoria = batalha(resultado.inimigo, jogador);
           if (vitoria) {
             limparSalaMasmorra(jogador);
-          } else if (jogador.hp <= 0) {
+            // Se o jogador vence, o loop deve continuar, mas a sala está limpa.
+            // Nada precisa ser feito aqui, pois o loop 'while' se encarregará do próximo turno.
+          } else {
+            // Se o jogador perde a batalha, o jogo deve terminar.
             if (verificarFimDeJogo(jogador)) return;
           }
         } else if (resultado.type === "armadilha") {
@@ -74,14 +76,14 @@ export function jogadaMasmorra(jogador, masmorra) {
       }
 
       case "2": {
-        // olhar
-        console.log(masmorra.look());
+        // Olhar
+        console.log(jogador.masmorraAtual.look());
         break;
       }
 
       case "3": {
-        // investigar
-        const resultadoInvestigacao = masmorra.investigate(); // CORREÇÃO
+        // Investigar
+        const resultadoInvestigacao = jogador.masmorraAtual.investigate();
         console.log(resultadoInvestigacao.msg);
         if (resultadoInvestigacao.result === "triggered") {
           jogador.hp -= resultadoInvestigacao.dano;
@@ -94,7 +96,7 @@ export function jogadaMasmorra(jogador, masmorra) {
       }
 
       case "0":
-        // Lógica de sair da masmorra
+        // Lógica para sair da masmorra
         if (tentarSairMasmorra(jogador)) {
           return; // Sai da função se a saída for bem-sucedida
         }

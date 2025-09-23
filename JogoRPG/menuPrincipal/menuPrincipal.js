@@ -7,7 +7,7 @@ import { fazerMissao } from "./../missao/missoes.js";
 import { batalha } from "./../batalha/batalha.js";
 import { entrarNaTorre } from "./../torre/entrarTorre.js";
 import { descansar } from "./../personagem/descansar.js";
-import { encontrarTesouro } from "../missao/tesouro.js";
+import { encontrarTesouro } from "./../tesouro/tesouro.js";
 import { jogadaMasmorra } from "./../masmorra/jogadaMasmorra.js";
 import { menuAmuletoTalisma } from "./../itens/amuletoTalisma/menuPrincipal.js";
 import {
@@ -36,12 +36,18 @@ export function menuPrincipal(jogador) {
     case "1": // explorar
       const chance = rand(1, 100);
 
-      if (chance <= 100) {
+      if (chance <= 10) {
         console.log(
           `\n${colors.red}⚠ Durante sua exploração, você encontrou a entrada de uma MASMORRA!${colors.reset}`
         );
         const templateId = rand(0, DUNGEON_TEMPLATES.length - 1);
-        gerarMasmorra(jogador, templateId);
+
+        // 1. Gere a masmorra e a salve em uma variável temporária.
+        const masmorraGerada = gerarMasmorra(jogador, templateId);
+
+        // 2. Inicie a masmorra, adicionando as funções de jogo, e armazene o resultado em jogador.masmorraAtual.
+        jogador.masmorraAtual = enterDungeon(masmorraGerada, jogador);
+
         const secretMessages = [
           "O chefe esconde um tesouro unico...",
           "Runas antigas falam do guardião que quebra o ciclo final.",
@@ -53,13 +59,11 @@ export function menuPrincipal(jogador) {
         const mensagemSecreta =
           secretMessages[rand(0, secretMessages.length - 1)];
         console.log(
-          `${colors.white}Você entra em: ${jogador.masmorraAtual.template.nome}\n
-          ${colors.cyan}${mensagemSecreta}${colors.reset}`
+          `${colors.white}Você entra em: ${jogador.masmorraAtual.state.dungeon.template.nome}\n\n${colors.cyan}${mensagemSecreta}${colors.reset}`
         );
 
-        const masmorraAPI = enterDungeon(jogador.masmorraAtual, jogador);
-        // Chame a função para iniciar o loop da masmorra
-        jogadaMasmorra(jogador, masmorraAPI);
+        // 3. Chame a função para iniciar o loop da masmorra.
+        jogadaMasmorra(jogador);
       } else if (chance <= 85) {
         if (rand(1, 100) <= 10) {
           const miniboss = criarMiniBoss(null, jogador.nivel);

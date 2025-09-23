@@ -1,5 +1,4 @@
 import { criarPersonagem } from "./personagem/criacao/criacaoPersonagem.js";
-import { colors } from "./utilitarios.js";
 import { exibirStatusInicial } from "./abertura/cabecario.js";
 import { verificarFimDeJogo } from "./verificar/derrota/derrota.js";
 import { processarTurno } from "./verificar/turno/turno.js";
@@ -20,13 +19,10 @@ async function iniciarJogo() {
   let jogoAtivo = true;
 
   while (jogoAtivo) {
-    if (verificarFimDeJogo(jogador)) break;
+    verificarFimDeJogo(jogador);
     const continuarJogo = processarTurno(jogador);
     if (continuarJogo === false) jogoAtivo = false;
   }
-  console.log(
-    `\n${colors.bright}${colors.white}--- JOGO ENCERRADO ---${colors.reset}`
-  );
 }
 
 // Inicia o jogo

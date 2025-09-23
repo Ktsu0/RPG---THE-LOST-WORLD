@@ -45,7 +45,7 @@ function processarDrops(jogador, inimigo) {
       cura: 50,
     };
     jogador.inventario.push(novaPocao);
-    console.log(`\n🍷 Você encontrou uma Poção de Cura!`);
+    console.log(`\n🧪 Você encontrou uma Poção de Cura!`);
   }
 
   // Drop adicional do inimigo
@@ -58,7 +58,7 @@ function processarDrops(jogador, inimigo) {
 }
 
 // --- FUNÇÃO PRINCIPAL ---
-export function finalizarVitoria(inimigo, jogador, dificuldade, itens) {
+export function finalizarVitoria(inimigo, jogador) {
   const xpGanho =
     Number(inimigo.xp) || Math.floor(inimigo.hpMax / 5 + inimigo.atk * 2);
   const ouroGanho = Number(inimigo.ouro) || rand(50, 100);
@@ -76,4 +76,5 @@ export function finalizarVitoria(inimigo, jogador, dificuldade, itens) {
   processarDrops(jogador, inimigo);
 
   checarLevelUp(jogador);
+  return true;
 }

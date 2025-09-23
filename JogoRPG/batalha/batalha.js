@@ -10,7 +10,7 @@ import { ataqueJogadorOndas } from "./ataqueJogador/ataqueOndaJogador.js";
 
 export function batalha(inimigo, jogador, dificuldade, itens) {
   console.log(
-    `\n${colors.bright}🔥 Você encontrou um ${inimigo.nome}!${colors.reset} (${colors.red}HP:${colors.reset} ${inimigo.hp}, ${colors.red}ATK:${colors.reset} ${inimigo.atk})`
+    `\n🔥Você encontrou um ${colors.bright}${colors.red}${inimigo.nome}!${colors.reset} (HP: ${colors.red}${inimigo.hp}${colors.reset} , ATK: ${colors.red}${inimigo.atk}${colors.reset})`
   );
   if (!inimigo.status) inimigo.status = [];
   let rodadas = 0;
@@ -46,7 +46,7 @@ export function batalha(inimigo, jogador, dificuldade, itens) {
 
 export function batalhaOnda(inimigo, jogador) {
   console.log(
-    `\n${colors.bright}🔥 Você encontrou um ${inimigo.nome}!${colors.reset} (${colors.red}HP:${colors.reset} ${inimigo.hp}, ${colors.red}ATK:${colors.reset} ${inimigo.atk})`
+    `\n🔥 ${colors.red}Você encontrou um ${colors.bright}${colors.red}${inimigo.nome}!${colors.reset} (${colors.red}HP:${inimigo.hp}${colors.reset} , ${colors.red}ATK: ${inimigo.atk}${colors.reset})`
   );
   if (!inimigo.status) inimigo.status = [];
   let rodadas = 0;
