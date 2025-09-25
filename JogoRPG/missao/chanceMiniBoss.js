@@ -11,7 +11,7 @@ export function createMiniBoss(jogador, missao) {
 
     if (!venceuBatalha) {
       console.log(
-        `${colors.red}❌ Você foi derrotado pelo mini-boss! A missão falhou.${colors.reset}`
+        `${colors.red}❌ Você foi derrotado pelo mini-boss!${colors.reset}`
       );
       aplicarPenalidade(missao.falha.tipo, jogador);
       return; // <-- O 'return' aqui é crucial

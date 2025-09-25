@@ -1,4 +1,3 @@
-import promptSync from "prompt-sync";
 import { colors } from "./../utilitarios.js";
 import { getRaridadeCor } from "./../codigosUniversais.js";
 import { masmorraExtra } from "./chanceMasmorra.js";
@@ -7,21 +6,27 @@ import { createMiniBoss } from "./chanceMiniBoss.js";
 import { resultadoMissao } from "./resultadoMissao.js";
 import { batalhaOndas } from "./missaoOndas.js";
 import { printCharByChar, gerarHistoria } from "./createHistoria.js";
+import readline from "readline";
 
-const prompt = promptSync({ sigint: true });
-
-function waitForEnter() {
-  prompt();
+function createReadlineInterface() {
+  return readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
 }
 
 export async function fazerMissao(jogador) {
+  const rl = createReadlineInterface();
+
   const missao = filtroMissao(jogador);
   if (!missao) {
+    rl.close();
     return;
   }
 
   if (missao.tipoBatalha === "ondas") {
     batalhaOndas(jogador);
+    rl.close();
     return;
   }
 
@@ -53,34 +58,52 @@ export async function fazerMissao(jogador) {
 
   console.log(recompensaTexto + ".");
 
-  const confirmar = prompt(
-    `${colors.bright}${colors.white}Deseja tentar a missão? (s/n) ${colors.reset}`
-  );
+  const confirmar = await new Promise((resolve) => {
+    rl.question(
+      `${colors.bright}${colors.white}Deseja tentar a missão? (s/n) ${colors.reset}`,
+      (answer) => {
+        resolve(answer);
+      }
+    );
+  });
+
   if (confirmar.toLowerCase() !== "s") {
     console.log(`${colors.red}❌ Missão cancelada.${colors.reset}`);
+    rl.close();
     return;
   }
 
-  // Limpa o buffer de entrada para evitar conflito
-
-  process.stdout.write("\x1Bc");
-  console.log(`\n${colors.bright}Iniciando a missão...${colors.reset}\n`);
-  try {
-    const historiaGerada = await gerarHistoria(missao);
-    await printCharByChar(historiaGerada, 40);
-  } catch (error) {
-    console.error(
-      `${colors.red}Falha ao gerar a história da missão:`,
-      error,
-      colors.reset
-    );
-    console.log("Continuando com a missão sem a história.");
-  }
-  console.log(`${colors.dim}Pressione ENTER para continuar...${colors.reset}`);
-  waitForEnter();
   console.clear();
+  console.log(`\n${colors.bright}Iniciando a missão...${colors.reset}\n`);
 
+  // Lógica de verificação para ativar/desativar a história da IA
+  if (jogador.ativarHistoria) {
+    try {
+      const historiaGerada = await gerarHistoria(missao);
+      await printCharByChar(historiaGerada, 40);
+    } catch (error) {
+      console.error(
+        `${colors.red}Falha ao gerar a história da missão:`,
+        error,
+        colors.reset
+      );
+      console.log("Continuando com a missão sem a história.");
+    }
+    await new Promise((resolve) => {
+      rl.question(
+        `${colors.dim}Pressione ENTER para continuar...${colors.reset}`,
+        () => {
+          resolve();
+        }
+      );
+    });
+    console.clear();
+    rl.close();
+  } else {
+    console.log(`${colors.dim}A história foi pulada.${colors.reset}`);
+  }
+
+  resultadoMissao(jogador, missao);
   masmorraExtra(jogador, missao);
   createMiniBoss(jogador, missao);
-  resultadoMissao(jogador, missao);
 }

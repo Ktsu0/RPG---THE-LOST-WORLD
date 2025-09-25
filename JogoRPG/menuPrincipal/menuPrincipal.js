@@ -10,6 +10,7 @@ import { descansar } from "./../personagem/descansar.js";
 import { encontrarTesouro } from "./../tesouro/tesouro.js";
 import { jogadaMasmorra } from "./../masmorra/jogadaMasmorra.js";
 import { menuAmuletoTalisma } from "./../itens/amuletoTalisma/menuPrincipal.js";
+import { menuConfiguracoes } from "./../codigosUniversais.js";
 import {
   DUNGEON_TEMPLATES,
   gerarMasmorra,
@@ -20,6 +21,11 @@ import promptSync from "prompt-sync";
 const prompt = promptSync({ sigint: true });
 
 export async function menuPrincipal(jogador) {
+  // Inicialize a propriedade se ela não existir
+  if (jogador.ativarHistoria === undefined) {
+    jogador.ativarHistoria = true;
+  }
+
   console.log(`\n${colors.bright}O que deseja fazer agora?${colors.reset}`);
   console.log(`🌳 [1] Explorar`);
   console.log(`📝 [2] Fazer uma missão`);
@@ -28,6 +34,7 @@ export async function menuPrincipal(jogador) {
   console.log(`🔮 [5] Craftar`);
   console.log(`💰 [6] Loja`);
   console.log(`🏰 [7] Enfrentar Torre`);
+  console.log(`⚙️  [8] Configurações`);
   console.log(`${colors.reset}🚪 [0] Sair do jogo${colors.reset}`);
 
   const escolha = prompt("Escolha: ");
@@ -42,10 +49,7 @@ export async function menuPrincipal(jogador) {
         );
         const templateId = rand(0, DUNGEON_TEMPLATES.length - 1);
 
-        // 1. Gere a masmorra e a salve em uma variável temporária.
         const masmorraGerada = gerarMasmorra(jogador, templateId);
-
-        // 2. Inicie a masmorra, adicionando as funções de jogo, e armazene o resultado em jogador.masmorraAtual.
         jogador.masmorraAtual = enterDungeon(masmorraGerada, jogador);
 
         const secretMessages = [
@@ -62,22 +66,21 @@ export async function menuPrincipal(jogador) {
           `${colors.white}Você entra em: ${jogador.masmorraAtual.state.dungeon.template.nome}\n\n${colors.cyan}${mensagemSecreta}${colors.reset}`
         );
 
-        // 3. Chame a função para iniciar o loop da masmorra.
-        jogadaMasmorra(jogador);
+        await jogadaMasmorra(jogador);
       } else if (chance <= 85) {
         if (rand(1, 100) <= 10) {
           const miniboss = criarMiniBoss(null, jogador.nivel);
           console.log(
             `\n${colors.red}⚠️ Atenção! Um MINI-BOSS apareceu!${colors.reset}`
           );
-          batalha(miniboss, jogador); // Chame a batalha diretamente
+          await batalha(miniboss, jogador);
         } else {
           let inimigo = criarInimigo(jogador);
-          batalha(inimigo, jogador); // Chame a batalha diretamente
+          await batalha(inimigo, jogador);
         }
       } else {
         if (rand(1, 100) <= 80) {
-          encontrarTesouro(jogador);
+          await encontrarTesouro(jogador);
         } else {
           console.log("Você explorou, mas não encontrou nada interessante.");
         }
@@ -108,17 +111,19 @@ export async function menuPrincipal(jogador) {
     case "7":
       entrarNaTorre(jogador);
       break;
+    case "8":
+      menuConfiguracoes(jogador);
+      break;
 
     case "0":
       console.log("Saindo do jogo. Até a próxima!");
-      return false; // Retorna false para encerrar o loop principal
+      return false;
 
     default:
       console.log("Escolha inválida, tente novamente.");
       break;
   }
 
-  // Recuperação passiva
   if (jogador.hp > 0 && rand(1, 100) <= 25) {
     const regen = rand(2, 6);
     jogador.hp = Math.min(jogador.hp + regen, jogador.hpMax || jogador.hp);
@@ -127,5 +132,5 @@ export async function menuPrincipal(jogador) {
     );
   }
 
-  return true; // Retorna true para continuar o loop
+  return true;
 }

@@ -29,3 +29,31 @@ export function getRaridadeCor(raridade) {
       return colors.reset; // Cor padrão
   }
 }
+
+export function menuConfiguracoes(jogador) {
+  while (true) {
+    console.log(`\n${colors.bright}⚙️ Configurações${colors.reset}`);
+
+    const statusHistoria = jogador.ativarHistoria
+      ? `${colors.green}ATIVADO${colors.reset}`
+      : `${colors.red}DESATIVADO${colors.reset}`;
+    console.log(`\nModo de História: ${statusHistoria}`);
+
+    console.log(`\n[1] Alternar Modo de História`);
+    console.log(`[0] Voltar`);
+
+    const escolha = prompt("Escolha: ");
+
+    switch (escolha) {
+      case "1":
+        jogador.ativarHistoria = !jogador.ativarHistoria;
+        break;
+      case "0":
+        console.log("Voltando para o menu principal...");
+        return;
+      default:
+        console.log("Escolha inválida, tente novamente.");
+        break;
+    }
+  }
+}
