@@ -20,7 +20,7 @@ async function iniciarJogo() {
 
   while (jogoAtivo) {
     verificarFimDeJogo(jogador);
-    const continuarJogo = processarTurno(jogador);
+    const continuarJogo = await processarTurno(jogador);
     if (continuarJogo === false) jogoAtivo = false;
   }
 }

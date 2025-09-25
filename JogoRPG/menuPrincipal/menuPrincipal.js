@@ -19,7 +19,7 @@ import promptSync from "prompt-sync";
 
 const prompt = promptSync({ sigint: true });
 
-export function menuPrincipal(jogador) {
+export async function menuPrincipal(jogador) {
   console.log(`\n${colors.bright}O que deseja fazer agora?${colors.reset}`);
   console.log(`🌳 [1] Explorar`);
   console.log(`📝 [2] Fazer uma missão`);
@@ -86,7 +86,7 @@ export function menuPrincipal(jogador) {
       break;
 
     case "2":
-      fazerMissao(jogador);
+      await fazerMissao(jogador);
       break;
 
     case "3":

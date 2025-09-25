@@ -11,34 +11,29 @@ const ai = new GoogleGenerativeAI(process.env.API_KEY);
 
 // Função para imprimir texto caractere por caractere
 export async function printCharByChar(text, charDelay = 40) {
-    for (const char of text) {
-        process.stdout.write(char);
-        await delay(charDelay);
-    }
-    process.stdout.write("\n");
+  for (const char of text) {
+    process.stdout.write(char);
+    await delay(charDelay);
+  }
+  process.stdout.write("\n");
 }
 
 // Gera a história usando Gemini
 export async function gerarHistoria(missao) {
-    const systemPrompt =
-        "Você é um mestre de RPG. Sua tarefa é criar uma breve e cativante introdução narrativa para uma missão, usando apenas a descrição e a história fornecidas. A narrativa deve ser envolvente e inspiradora. Não adicione diálogos ou escolhas. Apenas a narrativa. A história pode ter cerca de 4 a 6 frases.";
+  const systemPrompt =
+    "Você é um mestre de RPG. Sua tarefa é criar uma breve e cativante introdução narrativa para uma missão, usando apenas a descrição e a história fornecidas. A narrativa deve ser envolvente e inspiradora. Não adicione diálogos ou escolhas. Apenas a narrativa. A história pode ter cerca de 4 a 6 frases.";
 
-    const userQuery = `Descrição: "${missao.descricao}". História: "${missao.historia}".`;
+  const userQuery = `Descrição: "${missao.descricao}". História: "${missao.historia}".`;
 
-    try {
-        // Usando o método correto para gerar conteúdo
-        const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const response = await model.generateContent({
-            contents: [
-                { role: "system", parts: [{ text: systemPrompt }] },
-                { role: "user", parts: [{ text: userQuery }] },
-            ],
-        });
+  try {
+    // Usando o método correto para gerar conteúdo
+    const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const response = await model.generateContent(systemPrompt + userQuery);
 
-        // Retorna o texto limpo
-        return response.response.text();
-    } catch (error) {
-        console.error("Erro ao chamar API Gemini:", error);
-        return "Falha ao gerar história.";
-    }
+    // Retorna o texto limpo
+    return response.response.text();
+  } catch (error) {
+    console.error("Erro ao chamar API Gemini:", error);
+    return "Falha ao gerar história.";
+  }
 }
