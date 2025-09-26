@@ -2,10 +2,8 @@ import { aplicarBonusDeConjunto } from "./../efeitos/armadurasEfeitos.js";
 import { colors } from "./../../../utilitarios.js";
 import { ARMOR_SLOTS } from "./../../../jogo.js";
 
-import promptSync from "prompt-sync";
-const prompt = promptSync();
-
-export function gerenciarArmaduras(jogador) {
+// A função agora é assíncrona
+export async function gerenciarArmaduras(jogador) {
   console.log(`\n${colors.bright}=== ARMADURAS ===${colors.reset}`);
 
   ARMOR_SLOTS.forEach((slot) => {
@@ -43,7 +41,9 @@ export function gerenciarArmaduras(jogador) {
   });
   console.log(`[${colors.gray}0${colors.reset}] Voltar`);
 
-  const idxRaw = prompt("Escolha a armadura para equipar: ");
+  const idxRaw = await new Promise((resolve) => {
+    process.stdin.once("data", (key) => resolve(key.toString().trim()));
+  });
   const idx = parseInt(idxRaw);
 
   if (isNaN(idx) || idx < 0 || idx > armadurasNoInventario.length) {
@@ -54,7 +54,15 @@ export function gerenciarArmaduras(jogador) {
 
   const armaduraEscolhida = armadurasNoInventario[idx - 1];
 
-  // Guarda armadura atual no inventário
+  // --- VERIFICA RESTRIÇÃO DE RAÇA ---
+  if (jogador.restricoes?.semArmadura) {
+    console.log(
+      `${colors.red}❌ Sua raça não pode equipar armaduras.${colors.reset}`
+    );
+    return;
+  }
+
+  // Guarda a armadura atual no inventário, se houver
   if (jogador.equipamentos[armaduraEscolhida.slot]) {
     jogador.inventario.push(jogador.equipamentos[armaduraEscolhida.slot]);
   }
@@ -63,14 +71,14 @@ export function gerenciarArmaduras(jogador) {
   jogador.equipamentos[armaduraEscolhida.slot] = armaduraEscolhida;
 
   // Remove do inventário
-  jogador.inventario = jogador.inventario.filter(
-    (i) => i !== armaduraEscolhida
+  const indexParaRemover = jogador.inventario.findIndex(
+    (i) => i === armaduraEscolhida
   );
+  if (indexParaRemover > -1) jogador.inventario.splice(indexParaRemover, 1);
 
   console.log(
     `✅ ${colors.green}Equipou:${colors.reset} ${colors.magenta}${armaduraEscolhida.nome}${colors.reset}`
   );
 
-  // Recalcula bônus de conjunto
   aplicarBonusDeConjunto(jogador);
 }

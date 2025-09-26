@@ -1,9 +1,7 @@
+import { calcularDanoInimigo } from "../batalha/ataqueInimigo/funcionAuxiliares/calcularDanoInimigo.js";
 import { rand } from "./../utilitarios.js";
 
 export function executarHabilidadeEspecial(inimigo, jogador) {
-  // LÓGICA UNIFICADA PARA HABILIDADES ESPECIAIS
-  // O retorno "true" indica que uma habilidade foi usada.
-
   // ----------------------------------------
   // MINI-BOSSES: Ataque Poderoso (20% de chance)
   // ----------------------------------------
@@ -22,41 +20,42 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
   // INIMIGOS COMUNS: Habilidades Variadas
   // ----------------------------------------
   if (inimigo.habilidade) {
-    if (inimigo.habilidade === "roubo_e_fuga" && rand(1, 100) <= 10) {
+    if (inimigo.habilidade === "roubo_e_fuga" && rand(1, 100) <= 100) {
       const ouroRoubado = rand(20, 50);
       if (jogador.ouro >= ouroRoubado) {
         jogador.ouro -= ouroRoubado;
         console.log(
           `\n💰 O Goblin Ladrão roubou ${ouroRoubado} de ouro e fugiu!`
         );
-        // Note: Se a fuga precisar de lógica extra, a função que chamou essa
-        // precisará lidar com o retorno 'fuga'.
         return "fuga";
       }
       return true;
-    } else if (inimigo.habilidade === "esquiva" && rand(1, 100) <= 15) {
+    } else if (inimigo.habilidade === "esquiva" && rand(1, 100) <= 150) {
       console.log(
         `\n💨 O Lobo das Sombras se moveu rapidamente e se esquivou do seu ataque!`
       );
       return "esquiva";
-    } else if (inimigo.habilidade === "ataque_duplo" && rand(1, 100) <= 15) {
+    } else if (inimigo.habilidade === "ataque_duplo" && rand(1, 100) <= 150) {
       console.log(`\n⚔️ O Bandido Veterano está preparando um ataque duplo!`);
       return "ataque_duplo";
-    } else if (inimigo.habilidade === "envenenamento" && rand(1, 100) <= 20) {
-      console.log(
-        `\n🤢 O Arauto do Pântano te envenenou! Você perderá vida a cada turno.`
-      );
-      jogador.status.push({
-        tipo: "envenenamento",
-        duracao: rand(3, 5),
-        dano: 5,
-      });
-      return true;
-    } else if (inimigo.habilidade === "invulneravel" && rand(1, 100) <= 15) {
-      console.log(
-        `\n👻 O Espectro Errante se tornou etéreo! Seus ataques físicos não o afetam.`
-      );
-      return "invulneravel";
+    } else if (inimigo.habilidade === "envenenamento") {
+      // dano normal
+      const dano = calcularDanoInimigo(inimigo, jogador);
+      jogador.hp = Math.max(0, jogador.hp - dano);
+      console.log(`${inimigo.nome} atacou e causou ${dano} de dano.`);
+
+      // chance de envenenar
+      if (rand(1, 100) <= 20) {
+        jogador.status.push({
+          tipo: "envenenamento",
+          duracao: rand(3, 5),
+          dano: 5,
+        });
+        console.log(`🤢 ${inimigo.nome} envenenou você!`);
+      }
+    } else if (inimigo.habilidade === "invulneravel" && rand(1, 100) <= 150) {
+      console.log(`\n👻 ${inimigo.nome} se tornou etéreo!`);
+      inimigo.status.push({ tipo: "invulneravel", duracao: 1 });
     } else if (
       inimigo.habilidade === "petrificar" &&
       inimigo.hp < inimigo.hpMax * 0.3 &&
@@ -66,7 +65,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         `\n🗿 A Gárgula de Pedra se petrificou, reduzindo o dano que recebe!`
       );
       return "petrificar";
-    } else if (inimigo.habilidade === "teia" && rand(1, 100) <= 25) {
+    } else if (inimigo.habilidade === "teia" && rand(1, 100) <= 250) {
       console.log(
         `\n🕸️ Você foi pego em uma teia! Não pode agir no próximo turno.`
       );
@@ -81,16 +80,13 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
       return "dano_extra";
     } else if (
       inimigo.habilidade === "bloquear_e_contra_atacar" &&
-      rand(1, 100) <= 25
+      rand(1, 100) <= 250
     ) {
       console.log(
         `\n🛡️ O Cavaleiro Amaldiçoado se preparou para bloquear e contra-atacar!`
       );
       return "bloquear_e_contra_atacar";
     } else if (inimigo.habilidade === "regeneracao") {
-      const hpRegen = Math.floor(inimigo.hpMax * 0.05);
-      inimigo.hp = Math.min(inimigo.hp + hpRegen, inimigo.hpMax);
-      console.log(`\n💚 O Demônio Menor regenerou ${hpRegen} HP!`);
       return true;
     }
   }

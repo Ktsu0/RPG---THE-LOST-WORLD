@@ -1,12 +1,12 @@
 import { getRaridadeCor } from "./../../../codigosUniversais.js";
 import { colors } from "./../../../utilitarios.js";
-import promptSync from "prompt-sync";
 import { gerenciarAmuleto } from "./gerenciador.js";
 import { menuAmuletoTalisma } from "./../menuPrincipal.js";
-const prompt = promptSync();
+import { exibirMenuPrincipal } from "./../../../menuPrincipal/menuPrincipal.js";
 
-// --- Menu Amuleto Supremo ---
-export function menuAmuletoSupremo(jogador) {
+// Função adaptada para ser assíncrona
+export async function menuAmuletoSupremo(jogador) {
+  // Exibir o menu e os requisitos
   console.log(`\n${colors.bright}🔮 Menu do Amuleto 🔮${colors.reset}`);
   console.log(
     `${colors.white}Para criar o Amuleto Supremo você precisa dos seguintes itens:${colors.reset}`
@@ -43,35 +43,57 @@ export function menuAmuletoSupremo(jogador) {
     `\n${colors.magenta}Bônus do Amuleto Supremo: ${colors.bright}+5% ATK e +10% VIDA${colors.reset}`
   );
 
-  const opcao = prompt(
-    `${colors.green}[1] CRAFTAR${colors.reset} | ${colors.gray}[2] SAIR${colors.reset}: `
+  // Aguarda a escolha do jogador de forma assíncrona
+  console.log(
+    `${colors.green}[1] CRAFTAR${colors.reset} | ${colors.gray}[2] SAIR${colors.reset}`
   );
+  const opcao = await new Promise((resolve) => {
+    process.stdin.once("data", (key) => {
+      resolve(key.toString().trim());
+    });
+  });
 
-  if (opcao === "1") {
-    const possuiTodos = itensNecessarios.every((item) => item.qtd >= item.max);
-
-    if (possuiTodos) {
-      console.log(
-        `${colors.green}Você criou o Amuleto Supremo!${colors.reset}`
+  // Processa a escolha com switch/case
+  switch (opcao) {
+    case "1": {
+      const possuiTodos = itensNecessarios.every(
+        (item) => item.qtd >= item.max
       );
-      gerenciarAmuleto(jogador);
 
-      // Remove os itens usados
-      itensNecessarios.forEach((item) => {
-        for (let i = 0; i < item.max; i++) {
-          const idx = jogador.inventario.indexOf(item.nome);
-          if (idx !== -1) jogador.inventario.splice(idx, 1);
-        }
-      });
+      if (possuiTodos) {
+        console.log(
+          `${colors.green}Você criou o Amuleto Supremo!${colors.reset}`
+        );
+        gerenciarAmuleto(jogador);
 
-      jogador.inventario.push("Amuleto Supremo");
-      jogador.amuletoEquipado = false; // ainda não equipado
-    } else {
-      console.log(
-        `${colors.red}❌ Você não possui todos os itens necessários!${colors.reset}`
-      );
+        // Remove os itens usados
+        itensNecessarios.forEach((item) => {
+          for (let i = 0; i < item.max; i++) {
+            const idx = jogador.inventario.indexOf(item.nome);
+            if (idx !== -1) jogador.inventario.splice(idx, 1);
+          }
+        });
+
+        jogador.inventario.push("Amuleto Supremo");
+        jogador.amuletoEquipado = false;
+        await exibirMenuPrincipal(jogador); // Retorna ao menu principal após a criação
+      } else {
+        console.log(
+          `${colors.red}❌ Você não possui todos os itens necessários!${colors.reset}`
+        );
+      }
+      break;
     }
-  } else {
-    menuAmuletoTalisma(jogador);
+    case "2": {
+      console.log("Saindo...");
+      menuAmuletoTalisma(jogador);
+      break;
+    }
+    default: {
+      console.log("Opção inválida.");
+
+      menuAmuletoTalisma(jogador);
+      break;
+    }
   }
 }

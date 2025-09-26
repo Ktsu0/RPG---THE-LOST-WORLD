@@ -1,11 +1,9 @@
 import { colors, rand } from "./../utilitarios.js";
-import promptSync from "prompt-sync";
 import { usarPocao } from "./../itens/pocaoCura.js";
 import { criarMiniBoss } from "./../inimigos/miniBoss.js";
 import { calcularDefesaTotal } from "../batalha/ataqueJogador/calcular/calcularDef.js";
 import { danoDoJogador } from "./../batalha/ataqueJogador/calcular/danoJogador.js";
 import { aplicarFuria } from "./../personagem/habilidades.js";
-const prompt = promptSync({ sigint: true });
 
 export const torreBosses = [
   {
@@ -108,7 +106,7 @@ export const torreBosses = [
   },
 ];
 // aplica checagens ANTES do jogador atacar (block / invisibilidade)
-function bossPreAttackChecagens(boss, jogador) {
+function bossPreAttackChecagens(boss) {
   // se boss está invisível, jogador tem chance de errar o ataque (tratado no cálculo do dano)
   if (boss.estado.invisivel) {
     console.log(
@@ -205,9 +203,6 @@ function bossExecutarTurno(boss, jogador, criarMiniBossFn) {
       `${colors.yellow}⚠️ ${boss.nome} invocou um mini-boss: ${m.nome}!${colors.reset}`
     );
   }
-
-  // 4 & 5 => critChanceBonus e blockChance já serão considerados quando o boss atacar
-  // 7) chance de quebrar arma/armadura (aplica durante ataque do boss)
 }
 
 function calcularSoproDoDragao(boss, jogador) {
@@ -316,8 +311,7 @@ export function criarBossTorre(indice, jogador) {
     },
   };
 }
-
-export function batalhaBossTorre(boss, jogador) {
+export async function batalhaBossTorre(boss, jogador) {
   if (!boss.status) boss.status = [];
   if (!boss.estado.summonedSkeletons) boss.estado.summonedSkeletons = [];
 
@@ -334,7 +328,13 @@ export function batalhaBossTorre(boss, jogador) {
       jogador.petrificadoTurns--;
     } else {
       console.log("[1] Atacar  [2] Usar Poção  [3] Fugir");
-      const escolha = prompt("Escolha: ");
+
+      // Substituindo o prompt síncrono
+      const escolha = await new Promise((resolve) => {
+        process.stdin.once("data", (key) => {
+          resolve(key.toString().trim());
+        });
+      });
 
       if (escolha === "1") {
         const preAttack = bossPreAttackChecagens(boss, jogador);
@@ -372,7 +372,7 @@ export function batalhaBossTorre(boss, jogador) {
           );
         }
       } else if (escolha === "2") {
-        usarPocao(jogador);
+        await usarPocao(jogador);
       } else if (escolha === "3") {
         if (rand(1, 100) <= 60) {
           console.log(`${colors.cyan}🏃 Você conseguiu fugir!${colors.reset}`);
@@ -385,7 +385,8 @@ export function batalhaBossTorre(boss, jogador) {
       }
     }
 
-    // Aplica dano de status do boss antes do turno do boss
+    // ... (o restante do código permanece o mesmo, a menos que outras funções
+    // auxiliares também precisem de await, o que não parece ser o caso aqui)
     boss.status.forEach((status) => {
       if (status.tipo === "veneno") {
         aplicarDanoAoJogador(jogador, status.danoPorTurno);
@@ -397,31 +398,23 @@ export function batalhaBossTorre(boss, jogador) {
     });
     boss.status = boss.status.filter((s) => s.duracao > 0);
 
-    // Checagem de morte do Boss
     if (boss.hp <= 0) {
       const resurrected = bossOnDeath(boss, jogador);
       if (!resurrected) {
         console.log(
           `${colors.green}✅ Você derrotou ${boss.nome}!${colors.reset}`
         );
-        return true; // Vitória imediata
+        return true;
       } else {
         console.log(
           `${colors.yellow}⚠️ ${boss.nome} ressuscitou!${colors.reset}`
         );
-        // continua o loop normalmente
       }
     }
 
-    // Turno do boss (só se estiver vivo)
     if (boss.hp > 0) {
-      const resultadoHabilidade = bossExecutarTurno(
-        boss,
-        jogador,
-        criarMiniBoss
-      );
+      bossExecutarTurno(boss, jogador, criarMiniBoss);
 
-      // Esqueletos atacam
       boss.estado.summonedSkeletons.forEach((s) => {
         if (s.hp > 0) {
           console.log(
@@ -431,22 +424,25 @@ export function batalhaBossTorre(boss, jogador) {
         }
       });
 
-      // Mini-boss invocado
-      // Checa se há mini-boss invocado
       if (boss.estado.summonedMiniBoss) {
         const mini = boss.estado.summonedMiniBoss;
         console.log(
           `${colors.yellow}⚠️ Você deve derrotar o mini-boss antes de continuar!${colors.reset}`
         );
 
-        // Turno do mini-boss: aplica dano ao jogador
         console.log(
           `${colors.red}⚔️ Mini-boss ${mini.nome} ataca!${colors.reset}`
         );
         aplicarDanoAoJogador(jogador, mini.atk || 10);
 
-        // Turno do jogador contra o mini-boss
-        const escolhaMini = prompt("[1] Atacar o mini-boss  [2] Usar Poção: ");
+        // Substituindo o prompt síncrono aqui também
+        console.log("[1] Atacar o mini-boss  [2] Usar Poção: ");
+        const escolhaMini = await new Promise((resolve) => {
+          process.stdin.once("data", (key) => {
+            resolve(key.toString().trim());
+          });
+        });
+
         if (escolhaMini === "1") {
           let danoAoMini = danoDoJogador(jogador);
           mini.hp -= danoAoMini;
@@ -454,25 +450,22 @@ export function batalhaBossTorre(boss, jogador) {
             `${colors.bright}Você causou ${danoAoMini} de dano ao mini-boss ${mini.nome}!${colors.reset}`
           );
 
-          // Checagem de morte do mini-boss
           if (mini.hp <= 0) {
             console.log(
               `${colors.green}✅ Você derrotou o mini-boss ${mini.nome}!${colors.reset}`
             );
-            delete boss.estado.summonedMiniBoss; // libera o boss principal para atacar no próximo turno
-            continue; // passa para o próximo loop do boss
+            delete boss.estado.summonedMiniBoss;
+            continue;
           }
         } else if (escolhaMini === "2") {
-          usarPocao(jogador);
+          await usarPocao(jogador);
         } else {
           console.log(`${colors.red}Opção inválida.${colors.reset}`);
         }
 
-        // Bloqueia ataque do boss principal enquanto mini-boss existir
         continue;
       }
 
-      // Checagem de morte do jogador
       if (jogador.hp <= 0) {
         console.log(
           `${colors.red}❌ Você foi derrotado e expulso da torre!${colors.reset}`

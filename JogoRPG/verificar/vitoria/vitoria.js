@@ -1,4 +1,3 @@
-import { rolarDropDeItemComum } from "./../../masmorra/masmorra.js";
 import { processarDropDeItem } from "./../../itens/dropItem/chanceDrop.js";
 import { checarLevelUp } from "./../../personagem/experiencia.js";
 import { rand, colors } from "./../../utilitarios.js";

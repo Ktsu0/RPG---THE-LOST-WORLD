@@ -3,7 +3,7 @@ import { batalha } from "./../batalha/batalha.js";
 import { criarInimigo } from "./../inimigos/monstros.js";
 
 // --- Descansar ---
-export function descansar(jogador) {
+export async function descansar(jogador) {
   // Calcula a cura, sem ultrapassar o HP máximo
   const cura = Math.min(jogador.hpMax - jogador.hp, rand(15, 30));
   jogador.hp += cura;
@@ -19,6 +19,6 @@ export function descansar(jogador) {
       `${colors.red}⚠ Durante o descanso você foi surpreendido!${colors.reset}`
     );
     const inimigo = criarInimigo(jogador);
-    batalha(inimigo, jogador);
+    await batalha(inimigo, jogador);
   }
 }

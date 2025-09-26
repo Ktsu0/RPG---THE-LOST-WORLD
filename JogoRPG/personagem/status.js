@@ -2,12 +2,13 @@ import { ARMOR_SLOTS } from "./../jogo.js";
 import { colors } from "./../utilitarios.js";
 import { gerenciarEquipamentos } from "./../itens/equipamentos/gerenciarEquipamentos.js";
 import { getRaridadeCor } from "./../codigosUniversais.js";
-import promptSync from "prompt-sync";
 import { calcularAtaque } from "./../batalha/ataqueJogador/calcular/calcularAtk.js";
 import { xpParaProximoNivel } from "./experiencia.js";
 import { calcularDefesaTotal } from "./../batalha/ataqueJogador/calcular/calcularDef.js";
 
-const prompt = promptSync();
+// Remova o prompt-sync
+// import promptSync from "prompt-sync";
+// const prompt = promptSync();
 
 // --- Formata itens para exibição ---
 function formatarItens(array) {
@@ -37,10 +38,13 @@ function exibirEquipamento(slot, equipamento) {
   } Set:${colors.cyan}${equipamento.set || "Nenhum"}${colors.reset})`;
 }
 
-// --- Exibe status do jogador ---
-export function status(jogador) {
+// --- Exibe status do jogador (agora assíncrono) ---
+export async function status(jogador) {
   console.log(`\n${colors.bright}--- STATUS ---${colors.reset}`);
   console.log(`${colors.cyan}Nome:${colors.reset} ${jogador.nome}`);
+  console.log(
+    `${colors.cyan}Raça:${colors.reset} ${jogador.raca} | ${colors.cyan}Class:${colors.reset} ${jogador.classe}`
+  );
   console.log(
     `${colors.cyan}Nível:${colors.reset} ${jogador.nivel} | ${colors.green}XP:${
       colors.reset
@@ -85,10 +89,19 @@ export function status(jogador) {
     : `${colors.gray}Nenhuma${colors.reset}`;
   console.log(`${colors.red}Arma equipada:${colors.reset} ${arma}`);
 
-  const opcao = prompt(
-    `\n${colors.bright}[M] Gerenciar Equipamentos/Armas${colors.reset} ou ${colors.bright}${colors.white}Enter para sair:${colors.reset} `
-  );
-  if (opcao.toLowerCase() === "m") gerenciarEquipamentos(jogador);
+  // Espera a entrada do usuário de forma assíncrona
+  const opcao = await new Promise((resolve) => {
+    console.log(
+      `\n${colors.bright}[M] Gerenciar Equipamentos/Armas${colors.reset} ou ${colors.bright}${colors.white}Enter para sair:${colors.reset} `
+    );
+    process.stdin.once("data", (key) => {
+      resolve(key.toString().trim());
+    });
+  });
+
+  if (opcao.toLowerCase() === "m") {
+    await gerenciarEquipamentos(jogador);
+  }
 
   console.log(`${colors.dim}---------------${colors.reset}\n`);
 }

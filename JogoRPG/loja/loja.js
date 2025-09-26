@@ -4,229 +4,235 @@ import { getRaridadeCor } from "./../codigosUniversais.js";
 import { armasDisponiveis } from "./itensLoja/armas.js";
 import { loja } from "./itensLoja/itensLoja.js";
 import { consumiveis } from "./itensLoja/consumiveis.js";
-import promptSync from "prompt-sync";
-const prompt = promptSync({ sigint: true });
 
-export function abrirLoja(jogador) {
-  let sairLoja = false;
+function exibirOuro(jogador) {
+  console.log(
+    `Você tem ${colors.yellow}${jogador.ouro}${colors.reset} de ouro`
+  );
+}
 
-  function exibirOuro() {
+function comprarItem(item, jogador) {
+  if (jogador.ouro >= item.preco) {
+    jogador.ouro -= item.preco;
+    jogador.inventario.push(item);
     console.log(
-      `Você tem ${colors.yellow}${jogador.ouro}${colors.reset} de ouro`
+      `${colors.green}✅ Você comprou: ${item.nome}! O item foi para o seu inventário.${colors.reset}`
     );
+    return true;
+  } else {
+    console.log(`${colors.red}Ouro insuficiente!${colors.reset}`);
+    return false;
   }
+}
 
-  function comprarItem(item) {
-    if (jogador.ouro >= item.preco) {
-      jogador.ouro -= item.preco;
-      jogador.inventario.push(item); // Adiciona o item ao inventário
-      console.log(
-        `${colors.green}✅ Você comprou: ${item.nome}! O item foi para o seu inventário.${colors.reset}`
+async function menuArmaduras(jogador) {
+  let voltarConjuntos = false;
+
+  while (!voltarConjuntos) {
+    const conjuntos = [
+      ...new Set(
+        loja.filter((i) => i.slot !== "consumable" && i.set).map((i) => i.set)
+      ),
+    ];
+
+    exibirOuro(jogador);
+    console.log(
+      `\n${colors.bright}${colors.cyan}Conjuntos disponíveis:${colors.reset}`
+    );
+    conjuntos.forEach((set, i) => {
+      const cor = getRaridadeCor(
+        loja.find((item) => item.set === set).raridade
       );
+      console.log(`[${i + 1}] ${cor}${set}${colors.reset}`);
+    });
+    console.log(`${colors.red}[0] Voltar${colors.reset}`);
+
+    const setEscolhaRaw = await new Promise((resolve) => {
+      process.stdin.once("data", (key) => {
+        resolve(key.toString().trim());
+      });
+    });
+    const setEscolhaNum = parseInt(setEscolhaRaw);
+    let setNome;
+
+    if (
+      !isNaN(setEscolhaNum) &&
+      setEscolhaNum > 0 &&
+      setEscolhaNum <= conjuntos.length
+    ) {
+      setNome = conjuntos[setEscolhaNum - 1];
+    } else if (setEscolhaRaw === "0") {
+      voltarConjuntos = true;
+      continue;
     } else {
-      console.log(`${colors.red}Ouro insuficiente!${colors.reset}`);
+      setNome = setEscolhaRaw;
     }
-  }
 
-  function menuArmaduras() {
-    let voltarConjuntos = false;
+    const pecas = loja.filter(
+      (i) => i.set === setNome && i.slot !== "consumable"
+    );
+    if (pecas.length === 0) {
+      console.log(`${colors.red}Conjunto inválido!${colors.reset}`);
+      continue;
+    }
 
-    while (!voltarConjuntos) {
-      const conjuntos = [
-        ...new Set(
-          loja.filter((i) => i.slot !== "consumable" && i.set).map((i) => i.set)
-        ),
-      ];
-
-      exibirOuro();
+    let voltarPecas = false;
+    while (!voltarPecas) {
       console.log(
-        `\n${colors.bright}${colors.cyan}Conjuntos disponíveis:${colors.reset}`
+        `\n${colors.dim}⚠ Complete o conjunto ${colors.bright}${setNome}${
+          colors.reset
+        }${colors.dim} para ganhar bônus: ${mostrarBonusDoSet(setNome)}${
+          colors.reset
+        }`
       );
-      conjuntos.forEach((set, i) => {
-        const cor = getRaridadeCor(
-          loja.find((item) => item.set === set).raridade
+      exibirOuro(jogador);
+      console.log(
+        `\n${colors.bright}${colors.cyan}Peças disponíveis do conjunto ${setNome}:${colors.reset}`
+      );
+
+      pecas.forEach((p, i) => {
+        const cor = getRaridadeCor(p.raridade);
+        console.log(
+          `[${i + 1}] ${p.slot.toUpperCase()}: ${cor}${p.nome}${
+            colors.reset
+          } (${colors.magenta}+${p.defesa} DEF, +${p.atkBonus} ATK${
+            colors.reset
+          }) - ${colors.yellow}${p.preco}${colors.reset} ouro`
         );
-        console.log(`[${i + 1}] ${cor}${set}${colors.reset}`);
       });
+
       console.log(`${colors.red}[0] Voltar${colors.reset}`);
-
-      const setEscolhaRaw = prompt("Escolha o conjunto pelo número: ");
-      const setEscolhaNum = parseInt(setEscolhaRaw);
-      let setNome;
-
-      if (
-        !isNaN(setEscolhaNum) &&
-        setEscolhaNum > 0 &&
-        setEscolhaNum <= conjuntos.length
-      ) {
-        setNome = conjuntos[setEscolhaNum - 1];
-      } else if (setEscolhaRaw === "0") {
-        voltarConjuntos = true;
-        continue;
-      } else {
-        setNome = setEscolhaRaw;
-      }
-
-      const pecas = loja.filter(
-        (i) => i.set === setNome && i.slot !== "consumable"
-      );
-      if (pecas.length === 0) {
-        console.log(`${colors.red}Conjunto inválido!${colors.reset}`);
-        continue;
-      }
-
-      let voltarPecas = false;
-      while (!voltarPecas) {
-        console.log(
-          `\n${colors.dim}⚠ Complete o conjunto ${colors.bright}${setNome}${
-            colors.reset
-          }${colors.dim} para ganhar bônus: ${mostrarBonusDoSet(setNome)}${
-            colors.reset
-          }`
-        );
-        exibirOuro();
-        console.log(
-          `\n${colors.bright}${colors.cyan}Peças disponíveis do conjunto ${setNome}:${colors.reset}`
-        );
-
-        pecas.forEach((p, i) => {
-          const cor = getRaridadeCor(p.raridade);
-          console.log(
-            `[${i + 1}] ${p.slot.toUpperCase()}: ${cor}${p.nome}${
-              colors.reset
-            } (${colors.magenta}+${p.defesa} DEF, +${p.atkBonus} ATK${
-              colors.reset
-            }) - ${colors.yellow}${p.preco}${colors.reset} ouro`
-          );
+      const escolhaPecaRaw = await new Promise((resolve) => {
+        process.stdin.once("data", (key) => {
+          resolve(key.toString().trim());
         });
-
-        console.log(`${colors.red}[0] Voltar${colors.reset}`);
-        const escolhaPeca = parseInt(prompt("Escolha a peça pelo número: "));
-
-        if (escolhaPeca === 0) {
-          voltarPecas = true;
-          continue;
-        }
-
-        const itemEscolhido = pecas[escolhaPeca - 1];
-        if (!itemEscolhido) {
-          console.log(`${colors.red}Peça inválida!${colors.reset}`);
-          continue;
-        }
-
-        comprarItem(itemEscolhido, "equipamento");
-      }
-    }
-  }
-
-  function menuArmas() {
-    let voltarArmas = false;
-    while (!voltarArmas) {
-      exibirOuro();
-      console.log(
-        `\n⚔ ${colors.bright}${colors.cyan}Armas disponíveis:${colors.reset}`
-      );
-
-      armasDisponiveis.forEach((arma, i) => {
-        const cor = getRaridadeCor(arma.raridade);
-        console.log(
-          `[${i + 1}] ${cor}${arma.nome}${colors.reset} (${colors.magenta}+${
-            arma.atk
-          } ATK${colors.reset}) ${colors.cyan}${
-            arma.efeito ? `(Efeito: ${arma.efeito.tipo})` : ""
-          }${colors.reset} - ${colors.yellow}${arma.preco}${colors.reset} ouro`
-        );
       });
+      const escolhaPeca = parseInt(escolhaPecaRaw);
 
-      console.log(`${colors.red}[0] Voltar${colors.reset}`);
-      const escolhaArma = parseInt(prompt("Escolha a arma pelo número: "));
-
-      if (escolhaArma === 0) {
-        voltarArmas = true;
+      if (escolhaPeca === 0) {
+        voltarPecas = true;
         continue;
       }
 
-      const arma = armasDisponiveis[escolhaArma - 1];
-      if (!arma) {
-        console.log(`${colors.red}Escolha inválida!${colors.reset}`);
+      const itemEscolhido = pecas[escolhaPeca - 1];
+      if (!itemEscolhido) {
+        console.log(`${colors.red}Peça inválida!${colors.reset}`);
         continue;
       }
 
-      comprarItem(arma, "arma");
+      comprarItem(itemEscolhido, jogador);
     }
   }
+}
 
-  function menuPocoes() {
-    let voltarPocoes = false;
-    const pocaoDeCura = consumiveis.find(
-      (item) => item.nome === "Poção de Cura"
+async function menuArmas(jogador) {
+  let voltarArmas = false;
+  while (!voltarArmas) {
+    exibirOuro(jogador);
+    console.log(
+      `\n⚔ ${colors.bright}${colors.cyan}Armas disponíveis:${colors.reset}`
     );
 
-    if (!pocaoDeCura) {
+    armasDisponiveis.forEach((arma, i) => {
+      const cor = getRaridadeCor(arma.raridade);
       console.log(
-        `${colors.red}❌ Poção de Cura não encontrada!${colors.reset}`
+        `[${i + 1}] ${cor}${arma.nome}${colors.reset} (${colors.magenta}+${
+          arma.atk
+        } ATK${colors.reset}) ${colors.cyan}${
+          arma.efeito ? `(Efeito: ${arma.efeito.tipo})` : ""
+        }${colors.reset} - ${colors.yellow}${arma.preco}${colors.reset} ouro`
       );
-      return;
+    });
+
+    console.log(`${colors.red}[0] Voltar${colors.reset}`);
+    const escolhaArmaRaw = await new Promise((resolve) => {
+      process.stdin.once("data", (key) => {
+        resolve(key.toString().trim());
+      });
+    });
+    const escolhaArma = parseInt(escolhaArmaRaw);
+
+    if (escolhaArma === 0) {
+      voltarArmas = true;
+      continue;
     }
 
-    while (!voltarPocoes) {
-      exibirOuro();
-
-      // Obtenha o número de poções no inventário
-      const numPocoes = jogador.inventario.filter(
-        (item) => item.nome === pocaoDeCura.nome
-      ).length;
-
-      console.log(
-        `\n🧪 ${colors.bright}${colors.cyan}Poções de Cura${colors.reset}`
-      );
-      console.log(
-        `Cada poção restaura entre ${colors.green}20% - 30%${colors.reset} da sua vida máxima.`
-      );
-      console.log(
-        `Preço: ${colors.yellow}${pocaoDeCura.preco}${colors.reset} ouro | Você possui: ${colors.green}${numPocoes}${colors.reset}`
-      );
-      console.log(`[1] Comprar Poção`);
-      console.log(`${colors.red}[0] Voltar${colors.reset}`);
-
-      const escolhaPocao = prompt("Escolha: ");
-
-      if (escolhaPocao === "0") {
-        voltarPocoes = true;
-      } else if (escolhaPocao === "1") {
-        if (jogador.ouro >= pocaoDeCura.preco) {
-          jogador.ouro -= pocaoDeCura.preco;
-          jogador.inventario.push(pocaoDeCura);
-          console.log(
-            `${colors.green}✅ Você comprou uma Poção de Cura! Agora possui ${
-              numPocoes + 1
-            }.${colors.reset}`
-          );
-        } else {
-          console.log(`${colors.red}Ouro insuficiente!${colors.reset}`);
-        }
-      } else {
-        console.log(`${colors.red}Escolha inválida!${colors.reset}`);
-      }
+    const arma = armasDisponiveis[escolhaArma - 1];
+    if (!arma) {
+      console.log(`${colors.red}Escolha inválida!${colors.reset}`);
+      continue;
     }
+
+    comprarItem(arma, jogador);
+  }
+}
+
+async function menuPocoes(jogador) {
+  let voltarPocoes = false;
+  const pocaoDeCura = consumiveis.find((item) => item.nome === "Poção de Cura");
+
+  if (!pocaoDeCura) {
+    console.log(`${colors.red}❌ Poção de Cura não encontrada!${colors.reset}`);
+    return;
   }
 
-  // --- Loop principal da loja ---
+  while (!voltarPocoes) {
+    exibirOuro(jogador);
+
+    const numPocoes = jogador.inventario.filter(
+      (item) => item.nome === pocaoDeCura.nome
+    ).length;
+
+    console.log(
+      `\n🧪 ${colors.bright}${colors.cyan}Poções de Cura${colors.reset}`
+    );
+    console.log(
+      `Cada poção restaura entre ${colors.green}20% - 30%${colors.reset} da sua vida máxima.`
+    );
+    console.log(
+      `Preço: ${colors.yellow}${pocaoDeCura.preco}${colors.reset} ouro | Você possui: ${colors.green}${numPocoes}${colors.reset}`
+    );
+    console.log(`[1] Comprar Poção`);
+    console.log(`${colors.red}[0] Voltar${colors.reset}`);
+
+    const escolhaPocao = await new Promise((resolve) => {
+      process.stdin.once("data", (key) => {
+        resolve(key.toString().trim());
+      });
+    });
+
+    if (escolhaPocao === "0") {
+      voltarPocoes = true;
+    } else if (escolhaPocao === "1") {
+      comprarItem(pocaoDeCura, jogador);
+    } else {
+      console.log(`${colors.red}Escolha inválida!${colors.reset}`);
+    }
+  }
+}
+
+// --- Loop principal da loja ---
+export async function abrirLoja(jogador) {
+  let sairLoja = false;
   while (!sairLoja) {
     console.log(
       `\n🏪 ${colors.bright}${colors.cyan}Bem-vindo à Loja!${colors.reset}`
     );
-    exibirOuro();
+    exibirOuro(jogador);
     console.log(`[1] ${colors.cyan}Armaduras${colors.reset}`);
     console.log(`[2] ${colors.cyan}Armas${colors.reset}`);
     console.log(`[3] ${colors.cyan}Poções de Cura${colors.reset}`);
     console.log(`🚪 ${colors.red}[0] Sair${colors.reset}`);
 
-    const escolha = prompt("Escolha: ");
+    const escolha = await new Promise((resolve) => {
+      process.stdin.once("data", (key) => {
+        resolve(key.toString().trim());
+      });
+    });
 
-    if (escolha === "1") menuArmaduras();
-    else if (escolha === "2") menuArmas();
-    else if (escolha === "3") menuPocoes();
+    if (escolha === "1") await menuArmaduras(jogador);
+    else if (escolha === "2") await menuArmas(jogador);
+    else if (escolha === "3") await menuPocoes(jogador);
     else if (escolha === "0") {
       sairLoja = true;
       console.log(`${colors.cyan}Saindo da loja.${colors.reset}`);

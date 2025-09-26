@@ -1,9 +1,7 @@
 import { colors } from "./../../../utilitarios.js";
 
-import promptSync from "prompt-sync";
-const prompt = promptSync();
-
-export function gerenciarArmas(jogador) {
+// A função agora é assíncrona
+export async function gerenciarArmas(jogador) {
   console.log(`\n${colors.bright}=== ARMAS ===${colors.reset}`);
 
   const armaAtual = jogador.armaEquipada
@@ -34,7 +32,12 @@ export function gerenciarArmas(jogador) {
   });
   console.log(`[${colors.gray}0${colors.reset}] Voltar`);
 
-  const idxRaw = prompt("Escolha a arma para equipar: ");
+  // Remove o prompt-sync e espera pela entrada do usuário
+  const idxRaw = await new Promise((resolve) => {
+    process.stdin.once("data", (key) => {
+      resolve(key.toString().trim());
+    });
+  });
   const idx = parseInt(idxRaw);
 
   if (isNaN(idx) || idx < 0 || idx > armasDisponiveis.length) {
@@ -45,7 +48,7 @@ export function gerenciarArmas(jogador) {
 
   const armaEscolhida = armasDisponiveis[idx - 1];
 
-  // Guarda arma atual no inventário
+  // Guarda arma atual no inventário, se houver
   if (jogador.armaEquipada) {
     jogador.inventario.push(jogador.armaEquipada);
   }
@@ -53,8 +56,13 @@ export function gerenciarArmas(jogador) {
   // Equipa a nova arma
   jogador.armaEquipada = armaEscolhida;
 
-  // Remove do inventário
-  jogador.inventario = jogador.inventario.filter((i) => i !== armaEscolhida);
+  // Remove do inventário (garantindo que apenas uma seja removida)
+  const indexParaRemover = jogador.inventario.findIndex(
+    (i) => i === armaEscolhida
+  );
+  if (indexParaRemover > -1) {
+    jogador.inventario.splice(indexParaRemover, 1);
+  }
 
   console.log(
     `✅ ${colors.green}Equipou:${colors.reset} ${colors.magenta}${armaEscolhida.nome}${colors.reset}`

@@ -19,11 +19,21 @@ export function equiparItem(jogador, item) {
 }
 
 function equiparArmadura(jogador, armadura) {
+  // --- Checa se a raça não pode usar armaduras ---
+  if (jogador.restricoes.semArmadura) {
+    jogador.inventario.push(armadura); // não equipa, apenas inventário
+    console.log(
+      `${colors.red}❌ Sua raça não pode usar armaduras!${colors.reset}`
+    );
+    console.log(
+      `${colors.bright}${colors.white}${armadura.nome}${colors.reset} foi adicionada ao seu inventário.`
+    );
+    return; // interrompe aqui
+  }
+
   // --- Lógica para o caso de o slot estar ocupado ---
   if (jogador.equipamentos[armadura.slot]) {
-    // Adiciona o item recém-dropado ao inventário, sem equipá-lo
     jogador.inventario.push(armadura);
-
     console.log(
       `${colors.yellow}🔹 Slot de ${armadura.slot} já está ocupado.${colors.reset}`
     );
@@ -33,12 +43,8 @@ function equiparArmadura(jogador, armadura) {
   }
   // --- Lógica para o caso de o slot estar vazio ---
   else {
-    // Slot vazio, equipa o item
     jogador.equipamentos[armadura.slot] = armadura;
-
-    // Aplica o bônus de conjunto
     aplicarBonusDeConjunto(jogador);
-
     console.log(
       `${colors.bright}${colors.white}${armadura.nome} equipada com Sucesso.${colors.reset}`
     );

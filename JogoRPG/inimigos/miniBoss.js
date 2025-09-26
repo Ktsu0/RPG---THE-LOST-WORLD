@@ -1,7 +1,5 @@
 import { rand } from "./../utilitarios.js";
 import { minibosses } from "./createMiniBoss.js";
-import promptSync from "prompt-sync";
-const prompt = promptSync();
 
 // --- Cria Mini-Boss ---
 export function criarMiniBoss(tipo, nivelJogador) {

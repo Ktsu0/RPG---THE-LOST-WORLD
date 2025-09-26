@@ -4,7 +4,7 @@ import { criarInimigo } from "./../inimigos/monstros.js";
 import { checarLevelUp } from "./../personagem/experiencia.js";
 import { colors, rand } from "./../utilitarios.js";
 
-export function batalhaOndas(jogador) {
+export async function batalhaOndas(jogador) {
   console.log(
     `${colors.bright}Você entrou na Arena Amaldiçoada! Prepare-se para o desafio!${colors.reset}`
   );
@@ -15,7 +15,7 @@ export function batalhaOndas(jogador) {
   for (let onda = 1; onda <= 10; onda++) {
     console.log(`\n--- Onda ${onda} de 10 ---`);
     const inimigo = criarInimigo(jogador);
-    const venceuOnda = batalhaOnda(inimigo, jogador);
+    const venceuOnda = await batalhaOnda(inimigo, jogador);
 
     // Se o jogador perdeu a onda, a missão inteira falha.
     if (!venceuOnda) {
@@ -49,7 +49,7 @@ export function batalhaOndas(jogador) {
   );
 
   const miniboss = criarMiniBoss("lendario", jogador.nivel);
-  const venceuBoss = batalhaOnda(miniboss, jogador, false);
+  const venceuBoss = await batalhaOnda(miniboss, jogador, false);
 
   if (venceuBoss) {
     console.log(

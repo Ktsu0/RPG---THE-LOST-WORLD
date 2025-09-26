@@ -6,27 +6,22 @@ import { createMiniBoss } from "./chanceMiniBoss.js";
 import { resultadoMissao } from "./resultadoMissao.js";
 import { batalhaOndas } from "./missaoOndas.js";
 import { printCharByChar, gerarHistoria } from "./createHistoria.js";
-import readline from "readline";
-
-function createReadlineInterface() {
-  return readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-}
+import { lidarComEntrada } from "../menuPrincipal/entradaMenu.js";
 
 export async function fazerMissao(jogador) {
-  const rl = createReadlineInterface();
+  // 1. Remove qualquer listener de entrada anterior
+  process.stdin.removeAllListeners("data");
 
+  // 2. Encontra a missão e exibe as informações
   const missao = filtroMissao(jogador);
   if (!missao) {
-    rl.close();
+    lidarComEntrada(jogador);
     return;
   }
 
   if (missao.tipoBatalha === "ondas") {
-    batalhaOndas(jogador);
-    rl.close();
+    await batalhaOndas(jogador); // Usa await para esperar a batalha
+    lidarComEntrada(jogador);
     return;
   }
 
@@ -45,7 +40,7 @@ export async function fazerMissao(jogador) {
 
   if (missao.item) {
     if (typeof missao.item === "string") {
-      recompensaTexto += ` + ${corItem}item (${missao.item})${colors.reset} `;
+      recompensaTexto += ` + item (${missao.item}) `;
     } else {
       let corItem = getRaridadeCor(missao.item.raridade);
       if (missao.item.raridade.toLowerCase() === "raro") corItem = colors.blue;
@@ -58,25 +53,28 @@ export async function fazerMissao(jogador) {
 
   console.log(recompensaTexto + ".");
 
+  // 3. Pede confirmação e espera a entrada do usuário de forma assíncrona
+  console.log(
+    `${colors.bright}${colors.white}Deseja tentar a missão? (s/n) ${colors.reset}`
+  );
+
+  // Cria uma nova Promise para esperar a resposta 's' ou 'n'
   const confirmar = await new Promise((resolve) => {
-    rl.question(
-      `${colors.bright}${colors.white}Deseja tentar a missão? (s/n) ${colors.reset}`,
-      (answer) => {
-        resolve(answer);
-      }
-    );
+    process.stdin.once("data", (key) => {
+      resolve(key.toString().trim().toLowerCase());
+    });
   });
 
-  if (confirmar.toLowerCase() !== "s") {
+  if (confirmar !== "s") {
     console.log(`${colors.red}❌ Missão cancelada.${colors.reset}`);
-    rl.close();
+    lidarComEntrada(jogador); // Volta para o menu
     return;
   }
 
   console.clear();
   console.log(`\n${colors.bright}Iniciando a missão...${colors.reset}\n`);
 
-  // Lógica de verificação para ativar/desativar a história da IA
+  // 4. Lógica de história com await
   if (jogador.ativarHistoria) {
     try {
       const historiaGerada = await gerarHistoria(missao);
@@ -89,20 +87,22 @@ export async function fazerMissao(jogador) {
       );
       console.log("Continuando com a missão sem a história.");
     }
+
+    // Espera por ENTER
+    console.log(
+      `${colors.dim}Pressione ENTER para continuar...${colors.reset}`
+    );
     await new Promise((resolve) => {
-      rl.question(
-        `${colors.dim}Pressione ENTER para continuar...${colors.reset}`,
-        () => {
-          resolve();
-        }
-      );
+      process.stdin.once("data", () => {
+        resolve();
+      });
     });
     console.clear();
-    rl.close();
   } else {
     console.log(`${colors.dim}A história foi pulada.${colors.reset}`);
   }
 
+  // 5. Finaliza a missão e volta para o menu
   resultadoMissao(jogador, missao);
   masmorraExtra(jogador, missao);
   createMiniBoss(jogador, missao);

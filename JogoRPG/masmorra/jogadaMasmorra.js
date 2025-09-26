@@ -1,111 +1,125 @@
 import { batalha } from "./../batalha/batalha.js";
 import { colors } from "./../utilitarios.js";
-import promptSync from "prompt-sync";
 import { limparSalaMasmorra } from "./limparSala.js";
 import { tentarSairMasmorra } from "./sairMasmorra.js";
-import { verificarFimDeJogo } from "../verificar/derrota/derrota.js";
+import { verificarFimDeJogo } from "./../verificar/derrota/derrota.js";
 
-const prompt = promptSync({ sigint: true });
+// Flag global para evitar múltiplas instâncias
+let masmorraRodando = false;
+function exibirMemento() {
+  console.log(
+    `Use ${colors.green}W - A - S - D${colors.reset} para mover.\n` +
+      `${colors.cyan}M${colors.reset} para olhar o mapa.\n` +
+      `${colors.yellow}V${colors.reset} para investigar.\n` +
+      `${colors.red}P${colors.reset} para sair.`
+  );
+}
+export function jogadaMasmorra(jogador, sairCallback) {
+  if (!jogador.masmorraAtual || masmorraRodando) return;
+  masmorraRodando = true;
 
-export function jogadaMasmorra(jogador) {
-  // Use o loop 'while' para manter o jogador na masmorra
-  while (jogador.masmorraAtual) {
-    console.log(
-      `\n${colors.bright}Você está em uma masmorra! O que deseja fazer?${colors.reset}`
-    );
-    console.log(
-      `🧭 [01] Mover | 🔎 [02] Olhar | 🔍 [03] Investigar | 🚪 [0] Sair`
-    );
-    const escolhaMasmorra = prompt("Escolha: ");
+  console.log(`\n${colors.bright}Você entrou em uma masmorra!${colors.reset}`);
+  exibirMemento();
 
-    switch (escolhaMasmorra) {
-      case "1": {
-        // Mover
-        console.log("Para onde? ([01]Norte / [02]Sul / [03]Leste / [04]Oeste)");
-        const direcaoEscolhida = prompt(">> ");
-        let direcaoConvertida;
+  process.stdin.setRawMode(true);
+  process.stdin.resume();
+  process.stdin.setEncoding("utf8");
 
-        switch (direcaoEscolhida) {
-          case "1":
-            direcaoConvertida = "norte";
-            break;
-          case "2":
-            direcaoConvertida = "sul";
-            break;
-          case "3":
-            direcaoConvertida = "leste";
-            break;
-          case "4":
-            direcaoConvertida = "oeste";
-            break;
-          default:
-            direcaoConvertida = direcaoEscolhida;
-            break;
-        }
+  function sairMasmorra() {
+    process.stdin.removeListener("data", handleKey);
+    process.stdin.setRawMode(false);
+    masmorraRodando = false;
+    jogador.masmorraAtual = null;
+    if (sairCallback) sairCallback();
+  }
 
-        const resultado = jogador.masmorraAtual.move(direcaoConvertida);
+  async function handleKey(key) {
+    if (!jogador.masmorraAtual) return;
+    if (key === "\u0003") process.exit();
 
-        if (
-          resultado.type === "batalha" ||
-          resultado.type === "miniboss" ||
-          resultado.type === "boss"
-        ) {
-          console.log(resultado.msg);
-          const vitoria = batalha(resultado.inimigo, jogador);
-          if (vitoria) {
-            limparSalaMasmorra(jogador);
-            // Se o jogador vence, o loop deve continuar, mas a sala está limpa.
-            // Nada precisa ser feito aqui, pois o loop 'while' se encarregará do próximo turno.
-          } else {
-            // Se o jogador perde a batalha, o jogo deve terminar.
-            if (verificarFimDeJogo(jogador)) return;
-          }
-        } else if (resultado.type === "armadilha") {
-          console.log(resultado.msg);
+    let direcaoConvertida = null;
+
+    switch (key.toLowerCase()) {
+      case "w":
+        direcaoConvertida = "norte";
+        break;
+      case "s":
+        direcaoConvertida = "sul";
+        break;
+      case "a":
+        direcaoConvertida = "oeste";
+        break;
+      case "d":
+        direcaoConvertida = "leste";
+        break;
+
+      case "m":
+        console.log(jogador.masmorraAtual.look());
+        exibirMemento();
+        return;
+
+      case "v": {
+        const resultado = jogador.masmorraAtual.investigate();
+        console.log(resultado.msg);
+        if (resultado.result === "triggered") {
           jogador.hp -= resultado.dano;
           console.log(
             `Você recebeu ${resultado.dano} de dano! HP atual: ${jogador.hp}`
           );
-          if (verificarFimDeJogo(jogador)) return;
-        } else if (resultado.type === "tesouro") {
-          console.log(resultado.msg);
+          if (verificarFimDeJogo(jogador)) process.exit();
+        }
+        exibirMemento();
+        return;
+      }
+
+      case "p":
+        if (await tentarSairMasmorra(jogador)) {
+          console.log("Você saiu da masmorra.");
+          sairMasmorra();
         } else {
-          console.log(resultado.msg);
+          console.log("Não é possível sair agora.");
+          exibirMemento();
         }
-        break;
-      }
+        return;
 
-      case "2": {
-        // Olhar
-        console.log(jogador.masmorraAtual.look());
-        break;
-      }
+      default:
+        console.log("Comando inválido.");
+        exibirMemento();
+        return;
+    }
 
-      case "3": {
-        // Investigar
-        const resultadoInvestigacao = jogador.masmorraAtual.investigate();
-        console.log(resultadoInvestigacao.msg);
-        if (resultadoInvestigacao.result === "triggered") {
-          jogador.hp -= resultadoInvestigacao.dano;
-          console.log(
-            `Você recebeu ${resultadoInvestigacao.dano} de dano! HP atual: ${jogador.hp}`
-          );
-          if (verificarFimDeJogo(jogador)) return;
+    // --- Movimento ---
+    if (direcaoConvertida) {
+      const resultado = jogador.masmorraAtual.move(direcaoConvertida);
+      console.log(resultado.msg);
+
+      if (["batalha", "miniboss", "boss"].includes(resultado.type)) {
+        // 🔴 Pausa controles da masmorra
+        process.stdin.removeListener("data", handleKey);
+
+        // Executa a batalha
+        const vitoria = await batalha(resultado.inimigo, jogador);
+
+        if (vitoria) {
+          limparSalaMasmorra(jogador);
+        } else if (verificarFimDeJogo(jogador)) {
+          process.exit();
         }
-        break;
+
+        // 🟢 Retoma controles da masmorra depois da batalha
+        process.stdin.on("data", handleKey);
+      } else if (resultado.type === "armadilha") {
+        jogador.hp -= resultado.dano;
+        console.log(
+          `Você recebeu ${resultado.dano} de dano! HP atual: ${jogador.hp}`
+        );
+        if (verificarFimDeJogo(jogador)) process.exit();
       }
 
-      case "0":
-        // Lógica para sair da masmorra
-        if (tentarSairMasmorra(jogador)) {
-          return; // Sai da função se a saída for bem-sucedida
-        }
-        break;
-
-      default: {
-        console.log("Comando inválido. Tente novamente.");
-        break;
-      }
+      exibirMemento();
     }
   }
+
+  // Liga o listener
+  process.stdin.on("data", handleKey);
 }

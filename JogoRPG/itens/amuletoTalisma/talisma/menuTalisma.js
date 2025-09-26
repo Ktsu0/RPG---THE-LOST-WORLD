@@ -1,11 +1,10 @@
 import { menuAmuletoTalisma } from "./../menuPrincipal.js";
 import { getRaridadeCor } from "./../../../codigosUniversais.js";
 import { colors } from "./../../../utilitarios.js";
-import promptSync from "prompt-sync";
-const prompt = promptSync();
 
-// --- Menu Talismã da Torre ---
-export function menuTalismaSupremo(jogador) {
+// A função agora é assíncrona
+export async function menuTalismaSupremo(jogador) {
+  // Exibir o menu e os requisitos
   console.log(
     `\n${colors.bright}🗼 Menu do Talismã da Torre 🗼${colors.reset}`
   );
@@ -38,9 +37,15 @@ export function menuTalismaSupremo(jogador) {
     `Ouro necessário: [${corOuro}${jogador.ouro}/${ouroNecessario}${colors.reset}]`
   );
 
-  const opcao = prompt(
-    `${colors.green}[1] CRAFTAR${colors.reset} | ${colors.gray}[2] SAIR${colors.reset}: `
-  );
+  // Aguarda a escolha do jogador de forma assíncrona
+  const opcao = await new Promise((resolve) => {
+    console.log(
+      `${colors.green}[1] CRAFTAR${colors.reset} | ${colors.gray}[2] SAIR${colors.reset}`
+    );
+    process.stdin.once("data", (key) => {
+      resolve(key.toString().trim());
+    });
+  });
 
   if (opcao === "1") {
     const possuiTodosItens = itensNecessarios.every(
@@ -52,26 +57,23 @@ export function menuTalismaSupremo(jogador) {
       console.log(
         `${colors.green}✅ Você criou o Talismã da Torre!${colors.reset}`
       );
-
-      // Remove os itens usados
       itensNecessarios.forEach((item) => {
         for (let i = 0; i < item.max; i++) {
           const idx = jogador.inventario.indexOf(item.nome);
           if (idx !== -1) jogador.inventario.splice(idx, 1);
         }
       });
-
-      // Reduz o ouro necessário
       jogador.ouro -= ouroNecessario;
-
-      // Adiciona o talismã ao inventário
       jogador.inventario.push("Talismã da Torre");
     } else {
       console.log(
         `${colors.red}❌ Você não possui os itens e/ou o ouro necessários!${colors.reset}`
       );
     }
+  } else if (opcao === "2") {
+    console.log("Saindo...");
+    menuAmuletoTalisma();
   } else {
-    menuAmuletoTalisma(jogador);
+    console.log("Opção inválida.");
   }
 }
