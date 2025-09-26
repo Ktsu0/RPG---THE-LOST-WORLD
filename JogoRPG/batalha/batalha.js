@@ -11,37 +11,29 @@ import { ataqueJogadorOndas } from "./ataqueJogador/ataqueOndaJogador.js";
 // Função principal de batalha
 export async function batalha(inimigo, jogador, dificuldade, itens) {
   console.log(
-    `\n🔥Você encontrou um ${colors.bright}${colors.red}${inimigo.nome}!${colors.reset} (HP: ${colors.red}${inimigo.hp}${colors.reset} , ATK: ${colors.red}${inimigo.atk}${colors.reset})`
+    `\n🔥 Você encontrou um ${colors.bright}${colors.red}${inimigo.nome}!${colors.reset} (HP: ${colors.red}${inimigo.hp}${colors.reset}, ATK: ${colors.red}${inimigo.atk}${colors.reset})`
   );
+
   if (!inimigo.status) inimigo.status = [];
   let rodadas = 0;
   let esqueletosInvocados = [];
 
-  // O loop continua, mas agora ele é assíncrono.
-  // Ele aguarda a entrada do jogador.
   while (inimigo.hp > 0 && jogador.hp > 0) {
     rodadas++;
     curarDruida(jogador);
     aplicarStatusPorTurno(jogador, inimigo);
 
-    if (inimigo.hp <= 0) {
-      finalizarVitoria(inimigo, jogador, dificuldade, itens);
-      return true;
-    }
-
     exibirStatusBatalha(jogador, inimigo);
 
-    // Exibe as opções de ataque e aguarda a escolha do jogador
+    // Escolha do jogador
     console.log(
       `${colors.red}[1] Atacar${colors.reset}  ${colors.blue}[2] Usar Poção${colors.reset}  ${colors.gray}[3] Fugir${colors.reset}`
     );
     const escolha = await new Promise((resolve) => {
-      process.stdin.once("data", (key) => {
-        resolve(key.toString().trim());
-      });
+      process.stdin.once("data", (key) => resolve(key.toString().trim()));
     });
 
-    const resultado = await ataqueJogador(
+    const resultadoJogador = await ataqueJogador(
       inimigo,
       jogador,
       rodadas,
@@ -49,34 +41,31 @@ export async function batalha(inimigo, jogador, dificuldade, itens) {
       escolha
     );
 
-    if (resultado === "fuga") return false;
-    if (resultado === "invalido") {
-      continue;
-    }
+    if (resultadoJogador === "fuga") return false;
+    if (resultadoJogador === "invalido") continue;
 
-    if (inimigo.hp <= 0) {
-      finalizarVitoria(inimigo, jogador);
-      return true;
-    }
+    // Se inimigo morreu
+    if (inimigo.hp <= 0) break;
 
-    ataqueInimigo(inimigo, jogador, esqueletosInvocados);
-    if (verificarFimDeJogo(jogador)) {
-      console.log("💀 Você foi derrotado!");
-      return false;
-    }
+    // Ataque do inimigo (integrando habilidades especiais)
+    await ataqueInimigo(inimigo, jogador, esqueletosInvocados);
+
+    // Fim de jogo
+    if (verificarFimDeJogo(jogador)) break;
   }
 
-  // A batalha termina quando um dos HP chega a 0
+  // Resultado final
   if (jogador.hp <= 0) {
     console.log("💀 Você foi derrotado!");
     return false;
   }
 
-  // Condição para vitória caso o loop termine por outro motivo
   if (inimigo.hp <= 0) {
     finalizarVitoria(inimigo, jogador, dificuldade, itens);
     return true;
   }
+
+  return false;
 }
 
 export async function batalhaOnda(inimigo, jogador) {

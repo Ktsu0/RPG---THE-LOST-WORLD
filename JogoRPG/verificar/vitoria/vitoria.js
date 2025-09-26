@@ -1,3 +1,4 @@
+import { limparVenenoArauto } from "./../../batalha/ataqueInimigo/funcionAuxiliares/envenenamento.js";
 import { processarDropDeItem } from "./../../itens/dropItem/chanceDrop.js";
 import { checarLevelUp } from "./../../personagem/experiencia.js";
 import { rand, colors } from "./../../utilitarios.js";
@@ -73,7 +74,7 @@ export function finalizarVitoria(inimigo, jogador) {
 
   aplicarCoraçãoFlamejante(jogador);
   processarDrops(jogador, inimigo);
-
+  limparVenenoArauto(jogador);
   checarLevelUp(jogador);
   return true;
 }

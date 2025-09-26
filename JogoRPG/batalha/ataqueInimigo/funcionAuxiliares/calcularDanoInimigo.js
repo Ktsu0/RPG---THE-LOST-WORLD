@@ -2,62 +2,48 @@ import { calcularDefesaTotal } from "./../../ataqueJogador/calcular/calcularDef.
 import { rand, colors } from "./../../../utilitarios.js";
 
 export function calcularDanoInimigo(inimigo, jogador) {
+  // ------------------------
+  // 1️⃣ Cálculo base de dano
+  // ------------------------
   let danoBase = Math.max(
     1,
     inimigo.atk + rand(0, 3) - Math.floor(calcularDefesaTotal(jogador) / 5)
   );
 
-  let dano = danoBase;
+  let danoFinal = danoBase;
 
   // ------------------------
-  // ⚔️ STATUS DO INIMIGO
+  // 2️⃣ Modificadores de status do inimigo
   // ------------------------
   if (inimigo.status && inimigo.status.length > 0) {
-    for (let efeito of inimigo.status) {
+    inimigo.status.forEach((efeito) => {
       switch (efeito.tipo) {
-        case "esquiva":
-          // não altera dano, mas impede ataques recebidos (já tratado fora)
-          break;
-
-        case "invulneravel":
-          console.log(
-            `${colors.cyan}${inimigo.nome} está invulnerável e ignora danos físicos!${colors.reset}`
-          );
-          return 0;
-
         case "petrificado":
-          dano = Math.floor(dano * 0.5);
+          danoFinal = Math.floor(danoFinal * 0.5);
           console.log(
-            `${colors.gray}${inimigo.nome} está petrificado, seu ataque é reduzido.${colors.reset}`
+            `${colors.gray}${inimigo.nome} está petrificado, causando menos dano.${colors.reset}`
           );
           break;
 
         case "dano_extra":
-          dano = Math.floor(dano * 1.5);
+          danoFinal = Math.floor(danoFinal * 1.5);
           console.log(
             `${colors.red}${inimigo.nome} está furioso e causa mais dano!${colors.reset}`
           );
           break;
 
-        case "contra_ataque":
-          // Ele não ataca agora, só reage se for atingido
-          console.log(
-            `${colors.yellow}${inimigo.nome} espera para contra-atacar...${colors.reset}`
-          );
-          return 0;
-
+        // invulnerável e contra_ataque não afetam o dano do próprio inimigo
         default:
           break;
       }
-    }
+    });
   }
 
   // ------------------------
-  // 🛡️ DEFESAS DO JOGADOR
+  // 3️⃣ Defesa do jogador
   // ------------------------
-
   // Esquiva do jogador
-  let esquivaTotal =
+  const esquivaTotal =
     (jogador.bonusClasse?.esquiva || 0) +
     (jogador.armaEquipada?.efeito?.tipo === "esquiva"
       ? jogador.armaEquipada.efeito.chance
@@ -72,7 +58,7 @@ export function calcularDanoInimigo(inimigo, jogador) {
   }
 
   // Bloqueio do jogador
-  let chanceBloqueio =
+  const chanceBloqueio =
     (jogador.bonusClasse?.bloqueioChance || 0) +
     (jogador.armaEquipada?.efeito?.tipo === "bloqueio"
       ? jogador.armaEquipada.efeito.chance
@@ -85,6 +71,5 @@ export function calcularDanoInimigo(inimigo, jogador) {
     );
     return 0;
   }
-
-  return dano;
+  return danoFinal;
 }

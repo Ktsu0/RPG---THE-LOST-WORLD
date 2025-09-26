@@ -20,3 +20,7 @@ export function processarEnvenenamento(jogador) {
     return true; // mantém o efeito ativo
   });
 }
+
+export function limparVenenoArauto(jogador) {
+  jogador.status = jogador.status.filter((s) => s.tipo !== "envenenamento");
+}

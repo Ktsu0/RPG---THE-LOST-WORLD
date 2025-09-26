@@ -1,209 +1,161 @@
+import { rand, colors } from "./../utilitarios.js";
 import { calcularDanoInimigo } from "../batalha/ataqueInimigo/funcionAuxiliares/calcularDanoInimigo.js";
-import { rand } from "./../utilitarios.js";
 
 export function executarHabilidadeEspecial(inimigo, jogador) {
-  // ----------------------------------------
-  // MINI-BOSSES: Ataque Poderoso (20% de chance)
-  // ----------------------------------------
-  if (inimigo.tipo === "miniboss" && rand(1, 100) <= 20) {
-    const danoExtra = inimigo.atk * 0.5;
-    // Arredonda o dano total para baixo, garantindo um número inteiro.
-    const danoTotal = Math.floor(inimigo.atk + danoExtra);
+  // Função auxiliar para ataques de boss
+  const ataqueBoss = (nome, multiplicador = 0.1) => {
+    const danoTotal = Math.floor(inimigo.atk * (1 + multiplicador));
     jogador.hp -= danoTotal;
-    console.log(
-      `\n💥 O mini-chefe ${inimigo.nome} usa um ataque poderoso e causa ${danoTotal} de dano!`
-    );
-    return true;
+    console.log(`${nome} causa ${danoTotal} de dano ao jogador!`);
+  };
+
+  // ------------------------
+  // MINI-BOSSES
+  // ------------------------
+  if (inimigo.tipo === "miniboss" && rand(1, 100) <= 20) {
+    ataqueBoss(`💥 Mini-chefe ${inimigo.nome} usa Ataque Poderoso`, 0.5);
+    return { usado: true };
   }
 
-  // ----------------------------------------
-  // INIMIGOS COMUNS: Habilidades Variadas
-  // ----------------------------------------
+  // ------------------------
+  // INIMIGOS COMUNS
+  // ------------------------
   if (inimigo.habilidade) {
-    if (inimigo.habilidade === "roubo_e_fuga" && rand(1, 100) <= 100) {
-      const ouroRoubado = rand(20, 50);
-      if (jogador.ouro >= ouroRoubado) {
-        jogador.ouro -= ouroRoubado;
-        console.log(
-          `\n💰 O Goblin Ladrão roubou ${ouroRoubado} de ouro e fugiu!`
-        );
-        return "fuga";
-      }
-      return true;
-    } else if (inimigo.habilidade === "esquiva" && rand(1, 100) <= 150) {
-      console.log(
-        `\n💨 O Lobo das Sombras se moveu rapidamente e se esquivou do seu ataque!`
-      );
-      return "esquiva";
-    } else if (inimigo.habilidade === "ataque_duplo" && rand(1, 100) <= 150) {
-      console.log(`\n⚔️ O Bandido Veterano está preparando um ataque duplo!`);
-      return "ataque_duplo";
-    } else if (inimigo.habilidade === "envenenamento") {
-      // dano normal
-      const dano = calcularDanoInimigo(inimigo, jogador);
-      jogador.hp = Math.max(0, jogador.hp - dano);
-      console.log(`${inimigo.nome} atacou e causou ${dano} de dano.`);
+    switch (inimigo.habilidade) {
+      case "roubo_e_fuga":
+        if (rand(1, 100) <= 100) {
+          if (jogador.ouro > 0) {
+            const valor = Math.min(jogador.ouro, rand(20, 50));
+            jogador.ouro -= valor;
+            console.log(`💰 ${inimigo.nome} roubou ${valor} de ouro e fugiu!`);
+            return { usado: "fuga" };
+          } else {
+            console.log(
+              `💰 ${inimigo.nome} tentou roubar, mas você não tinha ouro!`
+            );
+          }
+        }
+        return { usado: true };
 
-      // chance de envenenar
-      if (rand(1, 100) <= 20) {
-        jogador.status.push({
-          tipo: "envenenamento",
-          duracao: rand(3, 5),
-          dano: 5,
-        });
-        console.log(`🤢 ${inimigo.nome} envenenou você!`);
-      }
-    } else if (inimigo.habilidade === "invulneravel" && rand(1, 100) <= 150) {
-      console.log(`\n👻 ${inimigo.nome} se tornou etéreo!`);
-      inimigo.status.push({ tipo: "invulneravel", duracao: 1 });
-    } else if (
-      inimigo.habilidade === "petrificar" &&
-      inimigo.hp < inimigo.hpMax * 0.3 &&
-      rand(1, 100) <= 20
-    ) {
-      console.log(
-        `\n🗿 A Gárgula de Pedra se petrificou, reduzindo o dano que recebe!`
-      );
-      return "petrificar";
-    } else if (inimigo.habilidade === "teia" && rand(1, 100) <= 250) {
-      console.log(
-        `\n🕸️ Você foi pego em uma teia! Não pode agir no próximo turno.`
-      );
-      return "teia";
-    } else if (
-      inimigo.habilidade === "dano_extra" &&
-      jogador.hp < jogador.hpMax * 0.5
-    ) {
-      console.log(
-        `\n🔥 O Elemental de Fogo está mais forte com sua vida baixa!`
-      );
-      return "dano_extra";
-    } else if (
-      inimigo.habilidade === "bloquear_e_contra_atacar" &&
-      rand(1, 100) <= 250
-    ) {
-      console.log(
-        `\n🛡️ O Cavaleiro Amaldiçoado se preparou para bloquear e contra-atacar!`
-      );
-      return "bloquear_e_contra_atacar";
-    } else if (inimigo.habilidade === "regeneracao") {
-      return true;
+      case "esquiva":
+        if (rand(1, 100) <= 15) {
+          console.log(`💨 ${inimigo.nome} se esquivou do seu ataque!`);
+          return { usado: "esquiva" };
+        }
+        break;
+
+      case "ataque_duplo":
+        if (rand(1, 100) <= 15) {
+          console.log(`⚔️ ${inimigo.nome} prepara ataque duplo!`);
+          return { usado: "ataque_duplo" };
+        }
+        break;
+
+      case "envenenamento":
+        if (rand(1, 100) <= 20) {
+          jogador.status.push({
+            tipo: "envenenamento",
+            duracao: rand(3, 5),
+            dano: 5,
+          });
+          console.log(`🤢 ${inimigo.nome} envenenou você!`);
+          return { usado: true };
+        }
+        break;
+
+      case "invulneravel":
+        if (rand(1, 100) <= 15) {
+          inimigo.status.push({ tipo: "invulneravel", duracao: 1 });
+          console.log(`👻 ${inimigo.nome} se tornou etéreo!`);
+          return { usado: true };
+        }
+        break;
+
+      case "petrificar":
+        if (inimigo.hp < inimigo.hpMax * 0.3 && rand(1, 100) <= 20) {
+          console.log(`🗿 ${inimigo.nome} se petrificou!`);
+          return { usado: "petrificar" };
+        }
+        break;
+
+      case "teia":
+        if (rand(1, 100) <= 25) {
+          console.log(`🕸️ Você foi pego em uma teia!`);
+          return { usado: "teia" };
+        }
+        break;
+
+      case "dano_extra":
+        if (
+          jogador.hp < jogador.hpMax * 0.5 &&
+          !inimigo.status.some((s) => s.tipo === "dano_extra")
+        ) {
+          console.log(`🔥 ${inimigo.nome} está mais forte com sua vida baixa!`);
+          inimigo.status.push({ tipo: "dano_extra", duracao: 3 });
+          return { usado: true };
+        }
+        break;
+
+      case "bloquear_e_contra_atacar":
+        if (rand(1, 100) <= 25) {
+          console.log(`🛡️ ${inimigo.nome} se prepara para contra-atacar!`);
+          inimigo.status.push({ tipo: "contra_ataque", duracao: 1 });
+          return { usado: true };
+        }
+        break;
+
+      case "regeneracao":
+        const hpRegen = Math.floor(inimigo.hpMax * 0.05);
+        inimigo.hp = Math.min(inimigo.hp + hpRegen, inimigo.hpMax);
+        console.log(`💚 ${inimigo.nome} regenerou ${hpRegen} HP!`);
+        return { usado: true };
     }
   }
 
-  // ----------------------------------------
-  // BOSSES: Habilidades Poderosas
-  // ----------------------------------------
+  // ------------------------
+  // BOSSES
+  // ------------------------
   if (inimigo.poder && rand(1, 100) <= 70) {
     console.log(
-      `\n🔥 ${inimigo.nome} usa sua habilidade especial: ${inimigo.poder}!`
+      `🔥 ${inimigo.nome} usa sua habilidade especial: ${inimigo.poder}!`
     );
-
     switch (inimigo.poder) {
       case "Necromancia":
-        console.log("💀 Ossos se levantam da terra para te atacar!");
-        const danoBaseNecro = inimigo.atk;
-        const danoTotalNecro = Math.floor(danoBaseNecro + inimigo.atk * 0.1);
-        jogador.hp -= danoTotalNecro;
-        console.log(
-          `Ossos esqueléticos te acertam, causando ${danoTotalNecro} de dano!`
-        );
+        ataqueBoss("💀 Ossos esqueléticos se levantam");
         break;
-
       case "Sopro Glaciar":
-        const danoBaseGelo = inimigo.atk;
-        const danoTotalGelo = Math.floor(danoBaseGelo + inimigo.atk * 0.1);
-        jogador.hp -= danoTotalGelo;
-        console.log(
-          `❄️ O sopro gélido te atinge, causando ${danoTotalGelo} de dano!`
-        );
+        ataqueBoss("❄️ Sopro gélido");
         break;
-
       case "Erupção Infernal":
-        const danoBaseFogo = inimigo.atk;
-        const danoTotalFogo = Math.floor(danoBaseFogo + inimigo.atk * 0.1);
-        jogador.hp -= danoTotalFogo;
-        console.log(
-          `🌋 Uma erupção de lava te queima, causando ${danoTotalFogo} de dano!`
-        );
+        ataqueBoss("🌋 Erupção de lava");
         break;
-
       case "Feitiços Antigos":
-        const danoBaseArcano = inimigo.atk;
-        const danoTotalArcano = Math.floor(danoBaseArcano + inimigo.atk * 0.1);
-        jogador.hp -= danoTotalArcano;
-        console.log(
-          `✨ Um feitiço ancestral te drena, causando ${danoTotalArcano} de dano!`
-        );
+        ataqueBoss("✨ Feitiço ancestral");
         break;
-
       case "Impacto Sísmico":
-        const danoBaseTerremoto = inimigo.atk;
-        const danoTotalTerremoto = Math.floor(
-          danoBaseTerremoto + inimigo.atk * 0.1
-        );
-        jogador.hp -= danoTotalTerremoto;
-        console.log(
-          `💥 Um terremoto te acerta, causando ${danoTotalTerremoto} de dano!`
-        );
+        ataqueBoss("💥 Impacto sísmico");
         break;
-
       case "Praga da Corrupção":
-        const danoBaseToxico = inimigo.atk;
-        const danoTotalToxico = Math.floor(danoBaseToxico + inimigo.atk * 0.1);
-        jogador.hp -= danoTotalToxico;
-        console.log(
-          `🤢 Uma nuvem tóxica te envolve, causando ${danoTotalToxico} de dano!`
-        );
+        ataqueBoss("🤢 Nuvem tóxica");
         break;
-
       case "Lâmina Etérea":
-        const danoBaseIgnorar = inimigo.atk;
-        const danoTotalIgnorar = Math.floor(
-          danoBaseIgnorar + inimigo.atk * 0.1
-        );
-        jogador.hp -= danoTotalIgnorar;
-        console.log(
-          `🔪 Uma lâmina sombria te atravessa, causando ${danoTotalIgnorar} de dano!`
-        );
+        ataqueBoss("🔪 Lâmina sombria");
         break;
-
       case "Martelo Incandescente":
-        const danoBaseMartelo = inimigo.atk;
-        const danoTotalMartelo = Math.floor(
-          danoBaseMartelo + inimigo.atk * 0.1
-        );
-        jogador.hp -= danoTotalMartelo;
-        console.log(
-          `🔨 O martelo incandescente te esmaga, causando ${danoTotalMartelo} de dano!`
-        );
+        ataqueBoss("🔨 Martelo incandescente");
         break;
-
       case "Ruptura Temporal":
-        const danoBaseRuptura = inimigo.atk;
-        const danoTotalRuptura = Math.floor(
-          danoBaseRuptura + inimigo.atk * 0.1
-        );
-        jogador.hp -= danoTotalRuptura;
-        console.log(
-          `⏳ O tempo ao seu redor se distorce, causando ${danoTotalRuptura} de dano!`
-        );
+        ataqueBoss("⏳ Ruptura temporal");
         break;
-
       case "Raízes Presas":
-        const danoBaseRaizes = inimigo.atk;
-        const danoTotalRaizes = Math.floor(danoBaseRaizes + inimigo.atk * 0.1);
-        jogador.hp -= danoTotalRaizes;
-        console.log(
-          `🌳 Raízes afiadas saem do chão e te perfuram, causando ${danoTotalRaizes} de dano!`
-        );
+        ataqueBoss("🌳 Raízes afiadas");
         break;
-
       default:
-        console.log(`\n${inimigo.nome} se prepara para um ataque especial!`);
+        console.log(`${inimigo.nome} se prepara para um ataque especial!`);
         break;
     }
-    return true; // Habilidade foi usada
+    return { usado: true };
   }
-  return false; // Nenhuma habilidade foi usad
+
+  return { usado: false }; // Nenhuma habilidade usada
 }

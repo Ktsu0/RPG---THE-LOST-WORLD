@@ -1,15 +1,14 @@
-import { aplicarEfeitoArma } from "../../itens/equipamentos/efeitos/armasEfeitos.js";
-import { usarPocao } from "./../../itens/pocaoCura.js";
-import { danoDoJogador } from "./calcular/danoJogador.js";
 import {
   aplicarFuria,
   criarEsqueleto,
 } from "./../../personagem/habilidades.js";
-import { rand, colors } from "./../../utilitarios.js";
-import { processarEnvenenamento } from "./../ataqueInimigo/funcionAuxiliares/envenenamento.js";
+import { colors, rand } from "./../../utilitarios.js";
+import { danoDoJogador } from "./calcular/danoJogador.js";
 import { processarInvulneravel } from "./../ataqueInimigo/funcionAuxiliares/invunerabilidade.js";
+import { aplicarEfeitoArma } from "./../../itens/equipamentos/efeitos/armasEfeitos.js";
+import { processarEnvenenamento } from "./../ataqueInimigo/funcionAuxiliares/envenenamento.js";
+import { usarPocao } from "./../../itens/pocaoCura.js";
 
-// --- ATAQUE DO JOGADOR ---
 export async function ataqueJogador(
   inimigo,
   jogador,
@@ -24,20 +23,14 @@ export async function ataqueJogador(
     jogador.stunned = false;
     return "continua";
   }
-  processarEnvenenamento(jogador);
-  processarInvulneravel(inimigo);
 
-  // Verifica se está invulnerável
-  if (inimigo.status.some((s) => s.tipo === "invulneravel")) {
-    console.log(
-      `${colors.cyan}👻 ${inimigo.nome} está etéreo e não sofreu dano!${colors.reset}`
-    );
-    return "continua"; // pula ataque
-  }
-
+  // ---------------------
+  // SWITCH DE ESCOLHA
+  // ---------------------
   switch (escolha) {
     case "1": {
-      // Lógica de ataque
+      // ATACAR
+      // Necromante invoca esqueletos a cada 4 rodadas
       if (jogador.classe === "Necromante" && rodadas % 4 === 0) {
         let numEsqueletos = 1;
         const chance = rand(1, 100);
@@ -47,16 +40,18 @@ export async function ataqueJogador(
         else numEsqueletos = 4;
 
         console.log(
-          `\n${colors.dim}💀 Você invocou ${numEsqueletos} esqueleto(s) para lutar ao seu lado!${colors.reset}`
+          `\n${colors.dim}💀 Você invocou ${numEsqueletos} esqueleto(s)!${colors.reset}`
         );
         for (let i = 0; i < numEsqueletos; i++) {
           esqueletosInvocados.push(criarEsqueleto(jogador));
         }
       }
 
+      // Calcula dano do jogador
       let danoFinal = danoDoJogador(jogador);
       danoFinal = aplicarFuria(jogador, danoFinal);
 
+      // Crítico
       const bonusCriticoArma =
         jogador.armaEquipada?.efeito?.tipo === "critico"
           ? jogador.armaEquipada.efeito.chance
@@ -75,30 +70,71 @@ export async function ataqueJogador(
         danoFinal *= 2;
       }
 
+      // ---------------------
+      // ESQUIVA DO INIMIGO
+      // ---------------------
+      if (inimigo.status.some((s) => s.tipo === "esquiva")) {
+        console.log(`\n💨 O ${inimigo.nome} se esquivou do seu ataque!`);
+        inimigo.status = inimigo.status
+          .map((s) =>
+            s.tipo === "esquiva" ? { ...s, duracao: s.duracao - 1 } : s
+          )
+          .filter((s) => s.duracao > 0);
+        return "continua";
+      }
+
+      // ---------------------
+      // INVULNERÁVEL
+      // ---------------------
+      processarInvulneravel(inimigo);
+      if (inimigo.status.some((s) => s.tipo === "invulneravel")) {
+        console.log(
+          `${colors.cyan}👻 ${inimigo.nome} está etéreo e não sofreu dano!${colors.reset}`
+        );
+        return "continua";
+      }
+
+      // ---------------------
+      // APLICAR DANO
+      // ---------------------
       inimigo.hp -= danoFinal;
       inimigo.hp = Math.max(0, inimigo.hp);
       console.log(
         `Você causou ${colors.red}${danoFinal}${colors.reset} de dano ao ${inimigo.nome}.`
       );
       aplicarEfeitoArma(jogador, inimigo);
+
+      // ---------------------
+      // CONTRA-ATAQUE
+      // ---------------------
+      if (inimigo.status.some((s) => s.tipo === "contra_ataque")) {
+        const contra = Math.floor(danoFinal / 2);
+        jogador.hp = Math.max(0, jogador.hp - contra);
+        console.log(
+          `\n🗡️ ${inimigo.nome} contra-atacou e causou ${contra} de dano!`
+        );
+
+        inimigo.status = inimigo.status
+          .map((s) =>
+            s.tipo === "contra_ataque" ? { ...s, duracao: s.duracao - 1 } : s
+          )
+          .filter((s) => s.duracao > 0);
+      }
+
+      processarEnvenenamento(jogador);
       return "continua";
     }
-    case "2": {
-      // Lógica de poção
+
+    case "2": // POÇÃO
       await usarPocao(jogador);
       return "continua";
-    }
-    case "3": {
-      // Lógica de fuga
-      if (rand(1, 100) <= 60) {
-        return "fuga";
-      } else {
-        console.log(`${colors.red}❌ Falha na fuga!${colors.reset}`);
-        return "continua";
-      }
-    }
-    default: {
+
+    case "3": // FUGA
+      if (rand(1, 100) <= 60) return "fuga";
+      console.log(`${colors.red}❌ Falha na fuga!${colors.reset}`);
+      return "continua";
+
+    default:
       return "invalido";
-    }
   }
 }
