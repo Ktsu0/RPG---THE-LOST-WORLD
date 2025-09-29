@@ -8,7 +8,7 @@ const prompt = promptSync({ sigint: true });
 export function criarPersonagem() {
   const { raca, bonusRaca, restricoes } = escolherRaca();
   const { classe, habilidadeClasse, bonusClasse } = escolherClasse();
-
+  const bonusRacaSeguro = bonusRaca || { critChance: 0, atk: 0, def: 0, hp: 0 };
   let nome;
   do {
     nome = prompt(
@@ -30,7 +30,7 @@ export function criarPersonagem() {
     ouro: 10000000000,
     ataque: 1 + bonusRaca.atk + bonusClasse.atk,
     defesa: 5 + bonusRaca.def + bonusClasse.def,
-    criticoExtra: bonusRaca.critChance || 0,
+    bonusRaca: bonusRacaSeguro,
     restricoes,
     equipamentos: {
       head: null,

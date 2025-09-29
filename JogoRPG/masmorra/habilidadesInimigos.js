@@ -1,20 +1,23 @@
 import { rand, colors } from "./../utilitarios.js";
-import { calcularDanoInimigo } from "../batalha/ataqueInimigo/funcionAuxiliares/calcularDanoInimigo.js";
 
 export function executarHabilidadeEspecial(inimigo, jogador) {
   // Função auxiliar para ataques de boss
   const ataqueBoss = (nome, multiplicador = 0.1) => {
+    // Nota: Essa função não aplica o dano no HP do jogador no código original,
+    // apenas no console.log, mas ela funciona como você a desenhou.
     const danoTotal = Math.floor(inimigo.atk * (1 + multiplicador));
-    jogador.hp -= danoTotal;
-    console.log(`${nome} causa ${danoTotal} de dano ao jogador!`);
+    jogador.hp = Math.max(0, jogador.hp - danoTotal); // Aplicando o dano de fato
+    console.log(
+      `${colors.red}💥 ${nome} causa ${danoTotal} de dano ao jogador!${colors.reset}`
+    );
   };
 
   // ------------------------
-  // MINI-BOSSES
+  // MINI-BOSSES (Chance fixa)
   // ------------------------
   if (inimigo.tipo === "miniboss" && rand(1, 100) <= 20) {
-    ataqueBoss(`💥 Mini-chefe ${inimigo.nome} usa Ataque Poderoso`, 0.5);
-    return { usado: true };
+    ataqueBoss(`Mini-chefe ${inimigo.nome} usa Ataque Poderoso`, 0.5);
+    return true; // Habilidade usada e já aplicou o dano
   }
 
   // ------------------------
@@ -22,93 +25,50 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
   // ------------------------
   if (inimigo.habilidade) {
     switch (inimigo.habilidade) {
-      case "roubo_e_fuga":
-        if (rand(1, 100) <= 100) {
-          if (jogador.ouro > 0) {
-            const valor = Math.min(jogador.ouro, rand(20, 50));
-            jogador.ouro -= valor;
-            console.log(`💰 ${inimigo.nome} roubou ${valor} de ouro e fugiu!`);
-            return { usado: "fuga" };
-          } else {
-            console.log(
-              `💰 ${inimigo.nome} tentou roubar, mas você não tinha ouro!`
-            );
-          }
-        }
-        return { usado: true };
-
-      case "esquiva":
-        if (rand(1, 100) <= 15) {
-          console.log(`💨 ${inimigo.nome} se esquivou do seu ataque!`);
-          return { usado: "esquiva" };
-        }
-        break;
-
       case "ataque_duplo":
         if (rand(1, 100) <= 15) {
-          console.log(`⚔️ ${inimigo.nome} prepara ataque duplo!`);
-          return { usado: "ataque_duplo" };
+          return "ataque_duplo";
         }
         break;
-
-      case "envenenamento":
-        if (rand(1, 100) <= 20) {
-          jogador.status.push({
-            tipo: "envenenamento",
-            duracao: rand(3, 5),
-            dano: 5,
-          });
-          console.log(`🤢 ${inimigo.nome} envenenou você!`);
-          return { usado: true };
-        }
-        break;
-
       case "invulneravel":
         if (rand(1, 100) <= 15) {
           inimigo.status.push({ tipo: "invulneravel", duracao: 1 });
-          console.log(`👻 ${inimigo.nome} se tornou etéreo!`);
-          return { usado: true };
+          console.log(`👻 ${inimigo.nome} se dissolveu nas sombras!`);
+          return true;
         }
         break;
-
-      case "petrificar":
-        if (inimigo.hp < inimigo.hpMax * 0.3 && rand(1, 100) <= 20) {
-          console.log(`🗿 ${inimigo.nome} se petrificou!`);
-          return { usado: "petrificar" };
-        }
-        break;
-
       case "teia":
-        if (rand(1, 100) <= 25) {
-          console.log(`🕸️ Você foi pego em uma teia!`);
-          return { usado: "teia" };
-        }
-        break;
+        if (rand(1, 100) <= 50) {
+          const duracaoTeia = rand(1, 10) <= 9 ? 2 : 3;
+          let duraTeia = duracaoTeia - 1;
+          // 2. Aplica o status de paralisia ao jogador
+          jogador.status.push({
+            tipo: "paralisado",
+            duracao: duracaoTeia,
+          });
 
+          console.log(
+            `\n🕸️ ${inimigo.nome} disparou uma teia! Você está imobilizado por ${duraTeia} turno(s)!`
+          );
+          return true;
+        }
+        break; // Se a chance falhar, o inimigo segue para o ataque normal
       case "dano_extra":
         if (
-          jogador.hp < jogador.hpMax * 0.5 &&
+          inimigo.hp < inimigo.hpMax * 0.35 &&
           !inimigo.status.some((s) => s.tipo === "dano_extra")
         ) {
           console.log(`🔥 ${inimigo.nome} está mais forte com sua vida baixa!`);
           inimigo.status.push({ tipo: "dano_extra", duracao: 3 });
-          return { usado: true };
+
+          break;
         }
         break;
+    }
 
-      case "bloquear_e_contra_atacar":
-        if (rand(1, 100) <= 25) {
-          console.log(`🛡️ ${inimigo.nome} se prepara para contra-atacar!`);
-          inimigo.status.push({ tipo: "contra_ataque", duracao: 1 });
-          return { usado: true };
-        }
-        break;
-
-      case "regeneracao":
-        const hpRegen = Math.floor(inimigo.hpMax * 0.05);
-        inimigo.hp = Math.min(inimigo.hp + hpRegen, inimigo.hpMax);
-        console.log(`💚 ${inimigo.nome} regenerou ${hpRegen} HP!`);
-        return { usado: true };
+    // Se o inimigo comum tem uma habilidade, mas a chance falhou, não vamos para o Boss
+    if (inimigo.habilidade) {
+      return false;
     }
   }
 
@@ -120,6 +80,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
       `🔥 ${inimigo.nome} usa sua habilidade especial: ${inimigo.poder}!`
     );
     switch (inimigo.poder) {
+      // Todos esses casos chamam ataqueBoss, que aplica dano no jogador.
       case "Necromancia":
         ataqueBoss("💀 Ossos esqueléticos se levantam");
         break;
@@ -154,8 +115,8 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         console.log(`${inimigo.nome} se prepara para um ataque especial!`);
         break;
     }
-    return { usado: true };
+    return true; // Retorna true para pular o ataque normal, pois Boss já atacou
   }
 
-  return { usado: false }; // Nenhuma habilidade usada
+  return false; // Nenhuma habilidade usada, deve prosseguir com o ataque normal
 }

@@ -24,16 +24,27 @@ export function aplicarFuria(jogador, dano) {
   return dano;
 }
 
-export function curarDruida(jogador) {
-  if (jogador.classe !== "Druida" || jogador.hp <= 0) return;
+export function processarCuraXama(jogador) {
+  if (jogador.classe !== "Xamã" || jogador.hp <= 0) return;
+
+  // A chance de 50% é equivalente a rand(1, 100) <= 50, ou Math.random() < 0.5
   const chance = Math.random();
+
   if (chance < 0.5) {
-    const cura = Math.floor(jogador.hpMax * 0.05);
+    // 50% de chance
+    const cura = Math.floor(jogador.hpMax * 0.05); // 5% do HP máximo
+
+    const hpAnterior = jogador.hp;
     jogador.hp = Math.min(jogador.hp + cura, jogador.hpMax);
-    console.log(
-      `\n🌿 Sua cura passiva de Druida restaurou ${colors.green}${cura}${colors.reset} de HP.`
-    );
+
+    const curaEfetiva = jogador.hp - hpAnterior;
+
+    if (curaEfetiva > 0) {
+      console.log(
+        `\n🌿 Sua conexão Xamã restaurou ${colors.green}${curaEfetiva}${colors.reset} de HP!`
+      );
+    }
   } else {
-    console.log(`\n🌿 A cura passiva do Druida não ativou neste turno.`);
+    console.log(`\n🌿 A energia Xamã não ativou a cura neste turno.`);
   }
 }

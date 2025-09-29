@@ -1,11 +1,18 @@
-export function processarDanoExtra(inimigo, jogador) {
-  // Aplica status se jogador estiver com vida baixa
-  if (
-    inimigo.habilidade === "dano_extra" &&
-    jogador.hp < jogador.hpMax * 0.5 &&
-    !inimigo.status.some((s) => s.tipo === "dano_extra")
-  ) {
-    console.log(`\n🔥 ${inimigo.nome} está mais forte com sua vida baixa!`);
-    inimigo.status.push({ tipo: "dano_extra", duracao: 3 });
-  }
+import { colors } from "./../../../utilitarios.js";
+
+export function processarDanoExtra(inimigo) {
+  if (!inimigo.status) return;
+
+  inimigo.status = inimigo.status.filter((efeito) => {
+    if (efeito.tipo === "dano_extra") {
+      efeito.duracao--;
+      if (efeito.duracao <= 0) {
+        console.log(
+          `\n🔥 ${colors.green}A fúria do ${inimigo.nome} se acalmou.${colors.reset}`
+        );
+        return false; // remove o efeito
+      }
+    }
+    return true; // mantém o efeito ativo
+  });
 }

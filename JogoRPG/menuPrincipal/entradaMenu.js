@@ -78,7 +78,7 @@ async function lidarComEntrada(jogador) {
             jogadaMasmorra(jogador, () => lidarComEntrada(jogador));
             trabalhando = false;
             return; // não continuar no listener atual
-          } else if (chance <= 85) {
+          } else if (chance <= 100) {
             // BATALHA
             if (rand(1, 100) <= 0) {
               const miniboss = criarMiniBoss(null, jogador.nivel);

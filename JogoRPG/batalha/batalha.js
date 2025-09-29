@@ -4,7 +4,7 @@ import { verificarFimDeJogo } from "./../verificar/derrota/derrota.js";
 import { finalizarVitoria } from "./../verificar/vitoria/vitoria.js";
 import { ataqueJogador } from "./ataqueJogador/ataqueJogador.js";
 import { ataqueInimigo } from "./ataqueInimigo/ataqueInimigo.js";
-import { curarDruida } from "./../personagem/habilidades.js";
+import { processarCuraXama } from "./../personagem/habilidades.js";
 import { exibirStatusBatalha } from "./../codigosUniversais.js";
 import { ataqueJogadorOndas } from "./ataqueJogador/ataqueOndaJogador.js";
 
@@ -20,7 +20,7 @@ export async function batalha(inimigo, jogador, dificuldade, itens) {
 
   while (inimigo.hp > 0 && jogador.hp > 0) {
     rodadas++;
-    curarDruida(jogador);
+    processarCuraXama(jogador);
     aplicarStatusPorTurno(jogador, inimigo);
 
     exibirStatusBatalha(jogador, inimigo);
@@ -79,7 +79,7 @@ export async function batalhaOnda(inimigo, jogador) {
   // O loop continua, mas agora ele é assíncrono
   while (inimigo.hp > 0 && jogador.hp > 0) {
     rodadas++;
-    curarDruida(jogador);
+    processarCuraXama(jogador);
     aplicarStatusPorTurno(jogador, inimigo);
 
     if (inimigo.hp <= 0) {

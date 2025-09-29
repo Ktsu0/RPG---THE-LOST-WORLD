@@ -1,3 +1,5 @@
+import { colors } from "./../../../utilitarios.js";
+
 export function processarInvulneravel(inimigo) {
   if (!inimigo.status) return;
   inimigo.status = inimigo.status.filter((efeito) => {
