@@ -1,12 +1,14 @@
+import { colors, rand } from "./../../../utilitarios.js";
 export function processarRegeneracao(inimigo) {
-  if (inimigo.habilidade !== "regeneracao") {
-    return; // Sai se o inimigo não tem a habilidade
-  }
-
-  // 30% de chance de ativação
-  if (rand(1, 100) <= 100) {
-    const hpRegen = Math.floor(inimigo.hpMax * 0.05);
-    inimigo.hp = Math.min(inimigo.hp + hpRegen, inimigo.hpMax);
-    console.log(`\n💚 ${inimigo.nome} regenerou ${hpRegen} HP!`);
+  if (inimigo.habilidade === "regeneracao") {
+    if (rand(1, 100) <= 30) {
+      const hpRegen = Math.floor(inimigo.hpMax * 0.07);
+      inimigo.hp = Math.min(inimigo.hp + hpRegen, inimigo.hpMax);
+      console.log(
+        `\n💚 ${inimigo.nome} regenerou ${colors.green}${hpRegen}${colors.reset} HP!`
+      );
+    }
+  } else {
+    return;
   }
 }

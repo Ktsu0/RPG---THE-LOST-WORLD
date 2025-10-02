@@ -1,15 +1,9 @@
-// Localização: calcularDefesaFinal.js
-
+// --- Calcular defesa total do inimigo ---
 export function calcularDefesaFinal(inimigo) {
-  let defesaBase = Number(inimigo.def) || 0;
-  let totalBuffDefesa = 0;
+  let def = Number(inimigo.defesa) || 0;
 
-  inimigo.status.forEach((s) => {
-    if (s.tipo === "defesa_extra") {
-      const valorBuff = s.valor || 0;
-      totalBuffDefesa += valorBuff;
-    }
-  });
+  // Caso queira adicionar outros bônus fixos no futuro
+  def += inimigo.bonusDef || 0;
 
-  return Math.floor(defesaBase * (1 + totalBuffDefesa));
+  return def;
 }

@@ -1,52 +1,6 @@
 export const templates = [
   {
-    nome: "Aranha Venenosa Gigante", // OK
-    minNivel: 3,
-    baseHp: 45,
-    baseAtk: 14,
-    escalaHp: 7.5,
-    escalaAtk: 2,
-    xp: 35,
-    ouro: 20,
-    habilidade: "teia",
-  },
-  {
-    nome: "Gárgula de Pedra",
-    minNivel: 4,
-    baseHp: 55,
-    baseAtk: 12,
-    escalaHp: 9.0,
-    escalaAtk: 2.1,
-    xp: 45,
-    ouro: 25,
-    habilidade: "petrificar",
-  },
-  {
-    nome: "Cavaleiro Amaldiçoado",
-    minNivel: 5,
-    baseHp: 65,
-    baseAtk: 15,
-    escalaHp: 10.0,
-    escalaAtk: 2.5,
-    xp: 50,
-    ouro: 30,
-    habilidade: "bloquear_e_contra_atacar",
-  },
-  {
-    nome: "Súcubo",
-    minNivel: 5,
-    baseHp: 60,
-    baseAtk: 17,
-    escalaHp: 9.5,
-    escalaAtk: 2.7,
-    xp: 60,
-    ouro: 35,
-    habilidade: { tipo: "regeneracao", valor: 5 },
-  },
-];
-const mosnt = [
-  {
-    nome: "Goblin Ladrão", // OK
+    nome: "Goblin Ladrão", // ok
     minNivel: 1,
     baseHp: 20,
     baseAtk: 5,
@@ -57,7 +11,7 @@ const mosnt = [
     habilidade: "roubo_e_fuga",
   },
   {
-    nome: "Lobo das Sombras", // OK
+    nome: "Lobo das Sombras", // ok
     minNivel: 1,
     baseHp: 28,
     baseAtk: 7,
@@ -68,7 +22,7 @@ const mosnt = [
     habilidade: "esquiva",
   },
   {
-    nome: "Bandido Veterano", // OK
+    nome: "Bandido Veterano", // ok
     minNivel: 2,
     baseHp: 35,
     baseAtk: 8,
@@ -79,7 +33,7 @@ const mosnt = [
     habilidade: "ataque_duplo",
   },
   {
-    nome: "Arauto do Pântano", // OK
+    nome: "Arauto do Pântano", // ok
     minNivel: 2,
     baseHp: 32,
     baseAtk: 9,
@@ -90,7 +44,7 @@ const mosnt = [
     habilidade: "envenenamento",
   },
   {
-    nome: "Espectro Errante", // OK
+    nome: "Espectro Errante", // ok
     minNivel: 3,
     baseHp: 40,
     baseAtk: 10,
@@ -101,7 +55,7 @@ const mosnt = [
     habilidade: "invulneravel",
   },
   {
-    nome: "Elemental de Fogo", // OK
+    nome: "Elemental de Fogo", // ok
     minNivel: 4,
     baseHp: 48,
     baseAtk: 16,
@@ -110,5 +64,50 @@ const mosnt = [
     xp: 40,
     ouro: 22,
     habilidade: "dano_extra",
+  },
+  {
+    nome: "Aranha Venenosa Gigante", // ok
+    minNivel: 3,
+    baseHp: 45,
+    baseAtk: 14,
+    escalaHp: 7.5,
+    escalaAtk: 2,
+    xp: 35,
+    ouro: 20,
+    habilidade: "teia",
+  },
+  {
+    nome: "Cavaleiro Amaldiçoado", // ok
+    minNivel: 5,
+    baseHp: 65,
+    baseAtk: 15,
+    escalaHp: 10.0,
+    escalaAtk: 2.5,
+    xp: 50,
+    ouro: 30,
+    habilidade: "bloquear_e_contra_atacar",
+  },
+  {
+    nome: "Gárgula de Pedra", // ok
+    minNivel: 4,
+    baseHp: 55,
+    baseAtk: 12,
+    escalaHp: 9.0,
+    escalaAtk: 2.1,
+    defesa: 10,
+    xp: 45,
+    ouro: 25,
+    habilidade: "petrificar",
+  },
+  {
+    nome: "Súcubo", // ok
+    minNivel: 6,
+    baseHp: 60,
+    baseAtk: 17,
+    escalaHp: 9.5,
+    escalaAtk: 2.7,
+    xp: 60,
+    ouro: 35,
+    habilidade: "regeneracao",
   },
 ];

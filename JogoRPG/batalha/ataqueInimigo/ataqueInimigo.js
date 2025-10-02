@@ -74,14 +74,11 @@ export function ataqueInimigo(inimigo, jogador, esqueletosInvocados) {
     );
   }
   if (inimigo.habilidade === "petrificar" && rand(1, 100) <= 20) {
-    inimigo.status.push({
-      tipo: "defesa_extra",
-      duracao: 3, // Duração de 2 turnos
-      valor: 0.1, // 10% de aumento (acumulativo)
-    });
+    const bonus = Math.floor(inimigo.defesa * 0.05) + 1;
+    inimigo.defesa += bonus;
 
     console.log(
-      `\n🗿 ${inimigo.nome} se petrificou e ganhou mais ${colors.blue}10% de Defesa extra por 2 turnos!${colors.reset}`
+      `\n🗿 ${inimigo.nome} se petrificou e ganhou mais ${colors.blue}10% de Defesa extra!${colors.reset}`
     );
   }
 }

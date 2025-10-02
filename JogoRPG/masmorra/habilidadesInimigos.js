@@ -2,7 +2,7 @@ import { rand, colors } from "./../utilitarios.js";
 
 export function executarHabilidadeEspecial(inimigo, jogador) {
   // Função auxiliar para ataques de boss
-  const ataqueBoss = (nome, multiplicador = 0.1) => {
+  const ataqueBoss = (nome, multiplicador = 0.15) => {
     // Nota: Essa função não aplica o dano no HP do jogador no código original,
     // apenas no console.log, mas ela funciona como você a desenhou.
     const danoTotal = Math.floor(inimigo.atk * (1 + multiplicador));
@@ -31,14 +31,14 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
         }
         break;
       case "invulneravel":
-        if (rand(1, 100) <= 15) {
+        if (rand(1, 100) <= 12) {
           inimigo.status.push({ tipo: "invulneravel", duracao: 1 });
           console.log(`👻 ${inimigo.nome} se dissolveu nas sombras!`);
           return true;
         }
         break;
       case "teia":
-        if (rand(1, 100) <= 50) {
+        if (rand(1, 100) <= 12) {
           const duracaoTeia = rand(1, 10) <= 9 ? 2 : 3;
           let duraTeia = duracaoTeia - 1;
           // 2. Aplica o status de paralisia ao jogador
@@ -75,7 +75,7 @@ export function executarHabilidadeEspecial(inimigo, jogador) {
   // ------------------------
   // BOSSES
   // ------------------------
-  if (inimigo.poder && rand(1, 100) <= 70) {
+  if (inimigo.poder && rand(1, 100) <= 40) {
     console.log(
       `🔥 ${inimigo.nome} usa sua habilidade especial: ${inimigo.poder}!`
     );

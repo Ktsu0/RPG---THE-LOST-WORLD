@@ -30,6 +30,7 @@ export function criarInimigo(jogador) {
     xp: t.xp,
     ouro: t.ouro,
     habilidade: t.habilidade,
+    defesa: t.defesa,
     status: [],
     turno: 0,
   };

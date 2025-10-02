@@ -53,7 +53,6 @@ export async function ataqueJogador(
       let defesaEfetiva = calcularDefesaFinal(inimigo);
       let danoFinal = Math.max(1, danoBruto - defesaEfetiva);
       danoFinal = aplicarFuria(jogador, danoFinal);
-
       // Crítico
       const bonusCriticoArma =
         jogador.armaEquipada?.efeito?.tipo === "critico"
@@ -78,7 +77,7 @@ export async function ataqueJogador(
         console.log(
           `\n💨 ${inimigo.nome} reagiu rapidamente e esquivou do seu ataque!`
         );
-        return "continua"; // Pula o dano e passa para o turno do inimigo
+        return "continua";
       }
 
       // ---------------------
@@ -92,46 +91,17 @@ export async function ataqueJogador(
         processarInvulneravel(inimigo);
         return "continua";
       }
-
-      // ---------------------
-      // APLICAR DANO
-      // ---------------------
-      inimigo.hp -= danoFinal;
-      inimigo.hp = Math.max(0, inimigo.hp);
-      console.log(
-        `Você causou ${colors.red}${danoFinal}${colors.reset} de dano ao ${inimigo.nome}.`
-      );
-      if (inimigo.hp <= 0) {
-        aplicarEfeitoArma(jogador, inimigo);
-        return "continua";
-      }
-      if (inimigo.habilidade === "roubo_e_fuga" && rand(1, 100) <= 15) {
-        if (jogador.ouro > 0) {
-          const valor = Math.min(jogador.ouro, rand(20, 50));
-          jogador.ouro -= valor;
-          console.log(`\n💰 ${inimigo.nome} roubou ${valor} de ouro e fugiu!`);
-          return "fuga";
-        } else {
-          console.log(
-            `\n💰 ${inimigo.nome} tentou roubar, mas você não tinha ouro! Inimigo não fugiu.`
-          );
-        }
-      }
-      aplicarEfeitoArma(jogador, inimigo);
-
       // 1. Verifica se o status está presente
       if (
         inimigo.habilidade === "bloquear_e_contra_atacar" &&
-        rand(1, 100) <= 100
+        rand(1, 100) <= 10
       ) {
-        const multiplicador = 0.8; // 80% do dano recebido
-
+        const multiplicador = 0.9; // 90% do dano recebido
         // 2. Calcula o dano de contra-ataque
         const danoContraAtaque = Math.floor(danoFinal * multiplicador);
-
         // 3. Bloqueia o dano do jogador e notifica
         console.log(
-          `\n🛡️ ${inimigo.nome} bloqueou seu ataque e contra-atacou!`
+          `\n🛡️ ${colors.bright}${inimigo.nome} ${colors.gray}bloqueou seu ataque e contra-atacou!${colors.reset}`
         );
 
         // 4. Aplica o dano ao jogador
@@ -144,7 +114,31 @@ export async function ataqueJogador(
         // 5. Retorna para pular a aplicação normal do danoFinal no inimigo
         return "continua";
       }
-
+      // ---------------------
+      // APLICAR DANO
+      // ---------------------
+      inimigo.hp -= danoFinal;
+      inimigo.hp = Math.max(0, inimigo.hp);
+      console.log(
+        `Você causou ${colors.red}${danoFinal}${colors.reset} de dano ao ${inimigo.nome}.`
+      );
+      if (inimigo.hp <= 0) {
+        aplicarEfeitoArma(jogador, inimigo);
+        return "continua";
+      }
+      if (inimigo.habilidade === "roubo_e_fuga" && rand(1, 100) <= 20) {
+        if (jogador.ouro > 0) {
+          const valor = Math.min(jogador.ouro, rand(20, 50));
+          jogador.ouro -= valor;
+          console.log(`\n💰 ${inimigo.nome} roubou ${valor} de ouro e fugiu!`);
+          return "fuga";
+        } else {
+          console.log(
+            `\n💰 ${inimigo.nome} tentou roubar, mas você não tinha ouro! Inimigo não fugiu.`
+          );
+        }
+      }
+      aplicarEfeitoArma(jogador, inimigo);
       processarEnvenenamento(jogador);
       processarDanoExtra(inimigo);
       processarBuffDefesa(inimigo);
