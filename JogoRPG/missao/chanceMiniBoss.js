@@ -1,4 +1,4 @@
-import { batalha } from "./../batalha/batalha.js";
+import { sistemaBatalha } from "./../batalha/sistemaBatalha.js";
 import { criarMiniBoss } from "./../inimigos/miniBoss.js";
 import { colors, rand } from "./../utilitarios.js";
 import { aplicarPenalidade } from "./penalidade.js";
@@ -7,7 +7,7 @@ export async function createMiniBoss(jogador, missao) {
   if (rand(1, 100) <= missao.chanceMiniBoss) {
     const miniboss = criarMiniBoss(missao.tipo, jogador.nivel);
     // --- LÓGICA DA BATALHA DO MINIBOSS ---
-    const venceuBatalha = await batalha(miniboss, jogador);
+    const venceuBatalha = await sistemaBatalha(miniboss, jogador);
 
     if (!venceuBatalha) {
       console.log(

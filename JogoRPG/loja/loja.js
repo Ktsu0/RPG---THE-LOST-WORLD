@@ -4,6 +4,7 @@ import { getRaridadeCor } from "./../codigosUniversais.js";
 import { armasDisponiveis } from "./itensLoja/armas.js";
 import { loja } from "./itensLoja/itensLoja.js";
 import { consumiveis } from "./itensLoja/consumiveis.js";
+import { venderItens } from "./venderItens.js";
 
 function exibirOuro(jogador) {
   console.log(
@@ -47,11 +48,28 @@ async function menuArmaduras(jogador) {
     });
     console.log(`${colors.red}[0] Voltar${colors.reset}`);
 
+    // Aguarda entrada completa (com Enter)
     const setEscolhaRaw = await new Promise((resolve) => {
-      process.stdin.once("data", (key) => {
-        resolve(key.toString().trim());
-      });
+      let buffer = "";
+      const handler = (key) => {
+        const char = key.toString();
+        if (char === "\r" || char === "\n") {
+          process.stdin.removeListener("data", handler);
+          resolve(buffer.trim());
+        } else if (char === "\u0003") {
+          process.exit();
+        } else if (char === "\u007f" || char === "\b") {
+          buffer = buffer.slice(0, -1);
+          process.stdout.write("\b \b");
+        } else if (char.match(/[0-9]/)) {
+          buffer += char;
+          process.stdout.write(char);
+        }
+      };
+      process.stdin.on("data", handler);
     });
+    
+    console.log(); // Nova linha após o input
     const setEscolhaNum = parseInt(setEscolhaRaw);
     let setNome;
 
@@ -102,11 +120,29 @@ async function menuArmaduras(jogador) {
       });
 
       console.log(`${colors.red}[0] Voltar${colors.reset}`);
+      
+      // Aguarda entrada completa (com Enter)
       const escolhaPecaRaw = await new Promise((resolve) => {
-        process.stdin.once("data", (key) => {
-          resolve(key.toString().trim());
-        });
+        let buffer = "";
+        const handler = (key) => {
+          const char = key.toString();
+          if (char === "\r" || char === "\n") {
+            process.stdin.removeListener("data", handler);
+            resolve(buffer.trim());
+          } else if (char === "\u0003") {
+            process.exit();
+          } else if (char === "\u007f" || char === "\b") {
+            buffer = buffer.slice(0, -1);
+            process.stdout.write("\b \b");
+          } else if (char.match(/[0-9]/)) {
+            buffer += char;
+            process.stdout.write(char);
+          }
+        };
+        process.stdin.on("data", handler);
       });
+      
+      console.log(); // Nova linha após o input
       const escolhaPeca = parseInt(escolhaPecaRaw);
 
       if (escolhaPeca === 0) {
@@ -145,11 +181,30 @@ async function menuArmas(jogador) {
     });
 
     console.log(`${colors.red}[0] Voltar${colors.reset}`);
+    
+    // Aguarda entrada completa (com Enter)
     const escolhaArmaRaw = await new Promise((resolve) => {
-      process.stdin.once("data", (key) => {
-        resolve(key.toString().trim());
-      });
+      let buffer = "";
+      const handler = (key) => {
+        const char = key.toString();
+        if (char === "\r" || char === "\n") {
+          process.stdin.removeListener("data", handler);
+          resolve(buffer.trim());
+        } else if (char === "\u0003") {
+          process.exit();
+        } else if (char === "\u007f" || char === "\b") {
+          // Backspace
+          buffer = buffer.slice(0, -1);
+          process.stdout.write("\b \b");
+        } else if (char.match(/[0-9]/)) {
+          buffer += char;
+          process.stdout.write(char);
+        }
+      };
+      process.stdin.on("data", handler);
     });
+    
+    console.log(); // Nova linha após o input
     const escolhaArma = parseInt(escolhaArmaRaw);
 
     if (escolhaArma === 0) {
@@ -222,6 +277,7 @@ export async function abrirLoja(jogador) {
     console.log(`[1] ${colors.cyan}Armaduras${colors.reset}`);
     console.log(`[2] ${colors.cyan}Armas${colors.reset}`);
     console.log(`[3] ${colors.cyan}Poções de Cura${colors.reset}`);
+    console.log(`[4] ${colors.yellow}Vender Itens${colors.reset}`);
     console.log(`🚪 ${colors.red}[0] Sair${colors.reset}`);
 
     const escolha = await new Promise((resolve) => {
@@ -233,6 +289,7 @@ export async function abrirLoja(jogador) {
     if (escolha === "1") await menuArmaduras(jogador);
     else if (escolha === "2") await menuArmas(jogador);
     else if (escolha === "3") await menuPocoes(jogador);
+    else if (escolha === "4") await venderItens(jogador);
     else if (escolha === "0") {
       sairLoja = true;
       console.log(`${colors.cyan}Saindo da loja.${colors.reset}`);

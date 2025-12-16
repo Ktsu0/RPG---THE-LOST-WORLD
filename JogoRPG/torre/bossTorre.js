@@ -1,9 +1,11 @@
-import { colors, rand } from "./../utilitarios.js";
+import { colors, rand, lerInput } from "./../utilitarios.js";
+import { ENEMIES_CONFIG } from "./../config/enemies.js";
 import { usarPocao } from "./../itens/pocaoCura.js";
 import { criarMiniBoss } from "./../inimigos/miniBoss.js";
 import { calcularDefesaTotal } from "../batalha/ataqueJogador/calcular/calcularDef.js";
 import { danoDoJogador } from "./../batalha/ataqueJogador/calcular/danoJogador.js";
 import { aplicarFuria } from "./../personagem/habilidades.js";
+import { aplicarStatusPorTurno } from "../itens/equipamentos/efeitos/armasEfeitos.js";
 
 export const torreBosses = [
   {
@@ -287,9 +289,12 @@ function bossOnDeath(boss, jogador) {
 
 export function criarBossTorre(indice, jogador) {
   const base = torreBosses[indice];
-  const hp = base.hpBase + Math.floor(jogador.nivel * 7) + rand(-10, 10);
-  const atk = base.atkBase + Math.floor(jogador.nivel * 2.2) + rand(0, 4);
-  const def = base.defBase + Math.floor(jogador.nivel * 1.5) + rand(0, 2);
+  // Balanceamento: Limita o escalonamento ao nível configurado para não punir grind excessivo
+  const nivelCalculo = Math.min(jogador.nivel, ENEMIES_CONFIG.torre.levelCap);
+  
+  const hp = base.hpBase + Math.floor(nivelCalculo * 7) + rand(-10, 10);
+  const atk = base.atkBase + Math.floor(nivelCalculo * 2.2) + rand(0, 4);
+  const def = base.defBase + Math.floor(nivelCalculo * 1.5) + rand(0, 2);
   const xp = Math.floor(hp / 2.5);
   const ouro = Math.floor(hp / 3);
 
@@ -327,14 +332,8 @@ export async function batalhaBossTorre(boss, jogador) {
       );
       jogador.petrificadoTurns--;
     } else {
-      console.log("[1] Atacar  [2] Usar Poção  [3] Fugir");
-
       // Substituindo o prompt síncrono
-      const escolha = await new Promise((resolve) => {
-        process.stdin.once("data", (key) => {
-          resolve(key.toString().trim());
-        });
-      });
+      const escolha = await lerInput("[1] Atacar  [2] Usar Poção  [3] Fugir: ");
 
       if (escolha === "1") {
         const preAttack = bossPreAttackChecagens(boss, jogador);
@@ -387,16 +386,11 @@ export async function batalhaBossTorre(boss, jogador) {
 
     // ... (o restante do código permanece o mesmo, a menos que outras funções
     // auxiliares também precisem de await, o que não parece ser o caso aqui)
-    boss.status.forEach((status) => {
-      if (status.tipo === "veneno") {
-        aplicarDanoAoJogador(jogador, status.danoPorTurno);
-        console.log(
-          `${colors.red}☠️ Você sofreu ${status.danoPorTurno} de dano por veneno!${colors.reset}`
-        );
-      }
-      status.duracao--;
-    });
-    boss.status = boss.status.filter((s) => s.duracao > 0);
+    
+    // Usando a função centralizada para aplicar status (veneno, etc)
+    // Nota: O bossTorre usava lógica manual para veneno, agora usa a centralizada.
+    // É importante passar status: boss.status para o inimigo.
+    aplicarStatusPorTurno(jogador, boss);
 
     if (boss.hp <= 0) {
       const resurrected = bossOnDeath(boss, jogador);
@@ -436,12 +430,7 @@ export async function batalhaBossTorre(boss, jogador) {
         aplicarDanoAoJogador(jogador, mini.atk || 10);
 
         // Substituindo o prompt síncrono aqui também
-        console.log("[1] Atacar o mini-boss  [2] Usar Poção: ");
-        const escolhaMini = await new Promise((resolve) => {
-          process.stdin.once("data", (key) => {
-            resolve(key.toString().trim());
-          });
-        });
+        const escolhaMini = await lerInput("[1] Atacar o mini-boss  [2] Usar Poção: ");
 
         if (escolhaMini === "1") {
           let danoAoMini = danoDoJogador(jogador);

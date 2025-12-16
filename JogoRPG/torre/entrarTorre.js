@@ -1,6 +1,7 @@
 import { batalhaBossTorre, criarBossTorre, torreBosses } from "./bossTorre.js";
-import { colors } from "./../utilitarios.js";
+import { colors, lerInput } from "./../utilitarios.js";
 import { tentarSairTorre } from "../masmorra/sairMasmorra.js";
+import { ICONS } from "./../icons.js";
 
 export async function entrarNaTorre(jogador) {
   if (!jogador.inventario.includes("Talismã da Torre")) {
@@ -13,7 +14,7 @@ export async function entrarNaTorre(jogador) {
   jogador.inventario.splice(talismaIndex, 1);
 
   console.log(
-    `\n🏰 Você entrou na Torre do Destino! O Talismã se desfez na entrada.`
+    `\n🏰 ${colors.magenta}A energia densa da Torre reage ao Talismã. O amuleto brilha intensamente e se desintegra, transformando-se na chave etérea que abre os portões.${colors.reset}`
   );
 
   for (let i = 0; i < torreBosses.length; i++) {
@@ -23,39 +24,51 @@ export async function entrarNaTorre(jogador) {
       `\n⚔️ Boss ${i + 1}: ${boss.nome} (HP: ${boss.hp}, ATK: ${boss.atk})`
     );
 
-    // Adicionamos 'await' aqui, pois a batalha será assíncrona
     const venceu = await batalhaBossTorre(boss, jogador);
     if (!venceu) {
       console.log("❌ Você foi derrotado e expulso da torre!");
       return;
     }
 
-    const heal = Math.floor(jogador.hpMax * 0.75);
+    // Cura reduzida para 35%
+    const heal = Math.floor(jogador.hpMax * 0.35);
     jogador.hp = Math.min(jogador.hpMax, jogador.hp + heal);
-    console.log(`✅ Você recupera ${heal} HP após o combate.`);
+    console.log(`✅ Você recupera ${heal} HP (35%) após o combate.`);
 
-    // Substituímos o prompt por uma Promise assíncrona
-    console.log("[1] Continuar | [2] Sair da Torre: ");
-    const opcao = await new Promise((resolve) => {
-      process.stdin.once("data", (key) => {
-        resolve(key.toString().trim());
-      });
-    });
-
-    if (opcao === "2") {
-      console.log("Você tenta sair da torre...");
-
-      // Corrigimos aqui, pois a função tentarSairTorre também é assíncrona
-      const saiuComSucesso = await tentarSairTorre(jogador);
-
-      if (saiuComSucesso) {
-        console.log("Os bosses da torre serão resetados!");
-        return; // Sai da função de loop da torre
-      }
+    if (i < torreBosses.length - 1) { // Só pergunta se quer sair se NÃO for o último boss
+        const opcao = await lerInput("[1] Continuar | [2] Sair da Torre: ");
+    
+        if (opcao === "2") {
+          console.log("Você tenta sair da torre...");
+          const saiuComSucesso = await tentarSairTorre(jogador);
+    
+          if (saiuComSucesso) {
+            console.log("Os bosses da torre serão resetados!");
+            return; 
+          }
+        }
     }
   }
+  
+  // Final de Jogo Melhorado
   console.log(
-    `${colors.blue}🎉 Você derrotou todos os bosses e salvou a princesa! FIM DE JOGO!${colors.reset}`
+    `\n${colors.bright}${colors.yellow}🎉 PARABÉNS! VOCÊ DERROTOU O LORDE DO CAOS! 🎉${colors.reset}`
   );
-  process.exit();
+  console.log(`${colors.cyan}A maldição da Torre foi quebrada. O mundo começa a se curar.${colors.reset}`);
+  console.log(`${colors.green}Você recebe o "Cálice da Vitória" como prova de sua conquista suprema!${colors.reset}`);
+  
+  jogador.inventario.push({ 
+      nome: "Cálice da Vitória", 
+      tipo: "item_chave", 
+      descricao: "Prova de que você conquistou a Torre do Destino." 
+  });
+  
+  // Bônus final
+  jogador.ouro += 10000;
+  console.log(`${ICONS.OURO} +10000 Ouro!`);
+  
+  await lerInput(`\n${colors.gray}Pressione ENTER para retornar ao mundo e continuar sua jornada...${colors.reset}`);
+  
+  // Não encerra o processo, apenas retorna ao menu principal
+  return; 
 }

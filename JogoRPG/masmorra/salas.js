@@ -1,4 +1,4 @@
-import { batalha } from "./../../batalha/batalha.js";
+import { sistemaBatalha } from "./../../batalha/sistemaBatalha.js";
 import { colors } from "./../../utilitarios.js";
 
 // Função para gerar número aleatório (caso não tenha global)
@@ -17,7 +17,7 @@ export function interagirComSala(jogador, sala) {
         `\n${colors.red}⚔ Você se depara com um monstro! Prepare-se para a batalha!${colors.reset}`
       );
       const inimigo = sala.content.mobs[rand(0, sala.content.mobs.length - 1)];
-      batalha(inimigo, jogador);
+      sistemaBatalha(inimigo, jogador);
       // Limpa a sala após a luta
       sala.roomType = "vazio";
       sala.content = null;
@@ -28,10 +28,9 @@ export function interagirComSala(jogador, sala) {
         `\n${colors.red}💀 Você se depara com o mini-chefe: ${sala.content.nome}!${colors.reset}`
       );
       const inimigo = sala.content;
-      batalha(inimigo, jogador);
+      sistemaBatalha(inimigo, jogador);
       // Limpa a sala
       sala.roomType = "vazio";
-      sala.content = null;
       break;
     }
     case "boss": {
@@ -39,7 +38,7 @@ export function interagirComSala(jogador, sala) {
         `\n${colors.red}👹 Você chegou ao fim da masmorra e se depara com o CHEFE: ${sala.content.nome}!${colors.reset}`
       );
       const inimigo = sala.content;
-      batalha(inimigo, jogador);
+      sistemaBatalha(inimigo, jogador);
       // Limpa a sala
       sala.roomType = "vazio";
       sala.content = null;

@@ -1,4 +1,4 @@
-import { batalhaOnda } from "./../batalha/batalha.js";
+import { sistemaBatalha } from "./../batalha/sistemaBatalha.js";
 import { criarMiniBoss } from "./../inimigos/miniBoss.js";
 import { criarInimigo } from "./../inimigos/monstros.js";
 import { checarLevelUp } from "./../personagem/experiencia.js";
@@ -15,7 +15,8 @@ export async function batalhaOndas(jogador) {
   for (let onda = 1; onda <= 10; onda++) {
     console.log(`\n--- Onda ${onda} de 10 ---`);
     const inimigo = criarInimigo(jogador);
-    const venceuOnda = await batalhaOnda(inimigo, jogador);
+    // Modo onda impede fuga
+    const venceuOnda = await sistemaBatalha(inimigo, jogador, { modo: 'onda' });
 
     // Se o jogador perdeu a onda, a missão inteira falha.
     if (!venceuOnda) {
@@ -33,7 +34,7 @@ export async function batalhaOndas(jogador) {
       );
       jogador.inventario.push("Fragmento Antigo");
     }
-    jogador.hp = Math.floor(jogador.hp + jogador.hpMax * 0.1);
+    jogador.hp = Math.min(jogador.hpMax, Math.floor(jogador.hp + jogador.hpMax * 0.1));
     console.log(
       `Seu HP foi restaurado para ${colors.green}${jogador.hp}${colors.reset}`
     );
@@ -43,13 +44,13 @@ export async function batalhaOndas(jogador) {
   console.log(
     `\n${colors.bright}${colors.red}O portal se fecha e um MiniBoss lendário surge!${colors.reset}`
   );
-  jogador.hp = Math.floor(jogador.hp + jogador.hpMax * 0.3);
+  jogador.hp = Math.min(jogador.hpMax, Math.floor(jogador.hp + jogador.hpMax * 0.3));
   console.log(
     `${colors.green}Seu HP foi restaurado para ${jogador.hp} antes da luta com o MiniBoss.${colors.reset}`
   );
 
   const miniboss = criarMiniBoss("lendario", jogador.nivel);
-  const venceuBoss = await batalhaOnda(miniboss, jogador, false);
+  const venceuBoss = await sistemaBatalha(miniboss, jogador, { modo: 'onda' });
 
   if (venceuBoss) {
     console.log(

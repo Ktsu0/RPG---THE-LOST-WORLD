@@ -5,7 +5,7 @@ import { colors, rand } from "./../utilitarios.js";
 import { criarInimigo } from "./../inimigos/monstros.js";
 import { criarMiniBoss } from "./../inimigos/miniBoss.js";
 import { fazerMissao } from "./../missao/missoes.js";
-import { batalha } from "./../batalha/batalha.js";
+import { sistemaBatalha } from "./../batalha/sistemaBatalha.js";
 import { entrarNaTorre } from "./../torre/entrarTorre.js";
 import { descansar } from "./../personagem/descansar.js";
 import { encontrarTesouro } from "./../tesouro/tesouro.js";
@@ -50,7 +50,7 @@ async function lidarComEntrada(jogador) {
           // Antes de entrar em fluxos que consomem input, remove listeners
           process.stdin.removeAllListeners("data");
 
-          if (chance <= 0) {
+          if (chance <= 20) {
             // MASMORRA
             console.log(
               `\n${colors.red}⚠ Durante sua exploração, você encontrou a entrada de uma MASMORRA!${colors.reset}`
@@ -78,17 +78,17 @@ async function lidarComEntrada(jogador) {
             jogadaMasmorra(jogador, () => lidarComEntrada(jogador));
             trabalhando = false;
             return; // não continuar no listener atual
-          } else if (chance <= 100) {
+          } else if (chance <= 85) {
             // BATALHA
-            if (rand(1, 100) <= 0) {
+            if (rand(1, 100) <= 20) {
               const miniboss = criarMiniBoss(null, jogador.nivel);
               console.log(
                 `\n${colors.red}⚠️ Atenção! Um MINI-BOSS apareceu!${colors.reset}`
               );
-              await batalha(miniboss, jogador);
+              await sistemaBatalha(miniboss, jogador);
             } else {
               let inimigo = criarInimigo(jogador);
-              await batalha(inimigo, jogador);
+              await sistemaBatalha(inimigo, jogador);
             }
 
             // Ao terminar a batalha, reexibe o menu principal

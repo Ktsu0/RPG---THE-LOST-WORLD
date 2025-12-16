@@ -5,6 +5,7 @@ import { filtroMissao } from "./filtroMissao.js";
 import { createMiniBoss } from "./chanceMiniBoss.js";
 import { resultadoMissao } from "./resultadoMissao.js";
 import { batalhaOndas } from "./missaoOndas.js";
+import { arenaInfinita } from "./arena/arenaInfinita.js";
 import { printCharByChar, gerarHistoria } from "./createHistoria.js";
 import { lidarComEntrada } from "../menuPrincipal/entradaMenu.js";
 
@@ -21,6 +22,12 @@ export async function fazerMissao(jogador) {
 
   if (missao.tipoBatalha === "ondas") {
     await batalhaOndas(jogador); // Usa await para esperar a batalha
+    lidarComEntrada(jogador);
+    return;
+  }
+
+  if (missao.tipoBatalha === "arena_infinita") {
+    await arenaInfinita(jogador); // Executa a Arena Infinita
     lidarComEntrada(jogador);
     return;
   }

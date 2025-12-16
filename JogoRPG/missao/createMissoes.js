@@ -23,6 +23,22 @@ export const missoes = [
     },
   },
   {
+    descricao: "Arena Infinita - Desafio dos Deuses",
+    historia:
+      "Os deuses da arena te convocam para um desafio sem fim. Sobreviva o máximo possível, colete fragmentos e prove seu valor. Seu inventário será isolado - não há risco para seus itens reais!",
+    tipo: "lendario",
+    nivelMinimo: 5,
+    chanceSucesso: 100, // Sempre pode tentar
+    xp: (nivel) => 0, // XP vem dos inimigos derrotados
+    ouro: (nivel) => 0, // Ouro não é dado, usa pontos da arena
+    item: null, // Fragmentos são ganhos durante a arena
+    chanceMiniBoss: 0,
+    chanceMissaoExtra: 0,
+    chanceMasmorra: 0,
+    falha: { tipo: "nenhum" }, // Não perde nada ao morrer
+    tipoBatalha: "arena_infinita",
+  },
+  {
     descricao: "Escoltar um mercador até a cidade",
     historia:
       "O mercador teme bandidos na estrada. Sua escolta é discreta, mas precisa ser rápida e firme.",

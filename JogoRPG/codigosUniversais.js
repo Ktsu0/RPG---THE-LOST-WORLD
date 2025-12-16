@@ -1,4 +1,4 @@
-import { colors } from "./utilitarios.js";
+import { colors, barraDeVida } from "./utilitarios.js";
 import promptSync from "prompt-sync";
 const prompt = promptSync({ sigint: true });
 
@@ -12,9 +12,18 @@ export function escolherOpcao(promptMsg, opcoesValidas) {
 }
 
 export function exibirStatusBatalha(jogador, inimigo) {
-  console.log(
-    `\nSeu HP: ${colors.green}${jogador.hp}/${jogador.hpMax}${colors.reset} | ${inimigo.nome} HP: ${colors.red}${inimigo.hp}${colors.reset}`
-  );
+  const hpMaxInimigo = inimigo.hpMax || inimigo.hp; // Fallback caso não tenha hpMax
+  console.log(`\n${colors.bright}--- STATUS DE BATALHA ---${colors.reset}`);
+  
+  // INIMIGO (Vermelho)
+  console.log(`INIMIGO: ${barraDeVida(inimigo.hp, hpMaxInimigo, 20, colors.red, colors.gray)}`);
+  
+  console.log(""); // Espaço
+
+  // JOGADOR (Verde)
+  console.log(`JOGADOR: ${barraDeVida(jogador.hp, jogador.hpMax, 20, colors.green, colors.gray)}`);
+  
+  console.log("-".repeat(40));
 }
 
 export function getRaridadeCor(raridade) {

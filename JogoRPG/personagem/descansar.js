@@ -1,5 +1,5 @@
 import { rand, colors } from "./../utilitarios.js";
-import { batalha } from "./../batalha/batalha.js";
+import { sistemaBatalha } from "./../batalha/sistemaBatalha.js";
 import { criarInimigo } from "./../inimigos/monstros.js";
 
 // --- Descansar ---
@@ -19,6 +19,6 @@ export async function descansar(jogador) {
       `${colors.red}⚠ Durante o descanso você foi surpreendido!${colors.reset}`
     );
     const inimigo = criarInimigo(jogador);
-    await batalha(inimigo, jogador);
+    await sistemaBatalha(inimigo, jogador);
   }
 }

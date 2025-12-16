@@ -1,0 +1,44 @@
+{
+  "nome": "1",
+  "raca": "Anão",
+  "classe": "Arqueiro",
+  "habilidadeClasse": "esquiva",
+  "bonusClasse": {
+    "habilidade": "esquiva",
+    "atk": 0,
+    "def": 0,
+    "dropOuro": 10,
+    "dropItem": 0,
+    "critChance": 0,
+    "esquiva": 10,
+    "bloqueioChance": 0
+  },
+  "hp": 45,
+  "hpMax": 100,
+  "nivel": 1,
+  "xp": 30,
+  "ouro": 37,
+  "ataque": 2,
+  "defesa": 20,
+  "bonusRaca": {
+    "hp": 0,
+    "atk": -3,
+    "def": 15,
+    "critChance": 0
+  },
+  "restricoes": {},
+  "equipamentos": {
+    "head": null,
+    "chest": null,
+    "hands": null,
+    "legs": null,
+    "feet": null
+  },
+  "itens": [],
+  "inventario": [],
+  "armas": [],
+  "armaEquipada": null,
+  "amuletoEquipado": false,
+  "status": [],
+  "ativarHistoria": true
+}

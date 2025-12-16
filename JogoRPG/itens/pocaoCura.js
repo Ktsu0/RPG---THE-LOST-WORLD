@@ -1,4 +1,5 @@
 import { colors, rand } from "./../utilitarios.js";
+import { ITEMS_CONFIG } from "./../config/items.js";
 
 // A função agora é assíncrona
 export async function usarPocao(jogador) {
@@ -50,8 +51,8 @@ export async function usarPocao(jogador) {
       );
       jogador.inventario.splice(indexPocao, 1);
 
-      const curaMin = Math.floor(jogador.hpMax * 0.15);
-      const curaMax = Math.floor(jogador.hpMax * 0.25);
+      const curaMin = Math.floor(jogador.hpMax * ITEMS_CONFIG.potions.cura.minPercent);
+      const curaMax = Math.floor(jogador.hpMax * ITEMS_CONFIG.potions.cura.maxPercent);
       const cura = rand(curaMin, curaMax);
 
       jogador.hp = Math.min(jogador.hp + cura, jogador.hpMax);

@@ -4,6 +4,12 @@ import { processarSangramento } from "./funcionAuxiliares/sangramento.js";
 import { ataqueEsqueletos } from "./funcionAuxiliares/esqueletos.js";
 import { calcularDanoInimigo } from "./funcionAuxiliares/calcularDanoInimigo.js";
 import { processarRegeneracao } from "./funcionAuxiliares/regen.js";
+import {
+  verificarEsquivaArma,
+  verificarBloqueioArma,
+  verificarCongelamento,
+  verificarConfusao,
+} from "./../../itens/equipamentos/efeitos/armasEfeitos.js";
 
 export function ataqueInimigo(inimigo, jogador, esqueletosInvocados) {
   if (inimigo.hp <= 0) return; // 1️⃣ Processa efeitos do inimigo
@@ -14,12 +20,35 @@ export function ataqueInimigo(inimigo, jogador, esqueletosInvocados) {
   processarRegeneracao(inimigo);
 
   esqueletosInvocados = ataqueEsqueletos(inimigo, esqueletosInvocados);
-  if (inimigo.hp <= 0) return; // 3️⃣ Executar habilidade especial do inimigo
+  if (inimigo.hp <= 0) return;
 
+  // 🆕 Verifica se o inimigo está congelado
+  if (verificarCongelamento(inimigo)) {
+    return; // Inimigo não pode atacar
+  }
+
+  // 🆕 Verifica se o inimigo está confuso e ataca a si mesmo
+  if (verificarConfusao(inimigo)) {
+    return; // Inimigo atacou a si mesmo e perde o turno
+  }
+
+  // 3️⃣ Executar habilidade especial do inimigo
   const resultado = executarHabilidadeEspecial(inimigo, jogador);
 
   switch (resultado) {
     case "ataque_duplo": {
+      // 🆕 Verifica esquiva para o primeiro ataque
+      if (verificarEsquivaArma(jogador)) {
+        console.log(`${colors.green}Você esquivou do primeiro ataque!${colors.reset}`);
+        return;
+      }
+
+      // 🆕 Verifica bloqueio para o primeiro ataque
+      if (verificarBloqueioArma(jogador)) {
+        console.log(`${colors.blue}Você bloqueou o primeiro ataque!${colors.reset}`);
+        return;
+      }
+
       const dano1 = calcularDanoInimigo(inimigo, jogador);
       const dano2 = calcularDanoInimigo(inimigo, jogador);
 
@@ -39,6 +68,16 @@ export function ataqueInimigo(inimigo, jogador, esqueletosInvocados) {
     default:
       break;
   } // 4️⃣ Ataque normal do inimigo (se não foi impedido por habilidade especial)
+
+  // 🆕 Verifica se o jogador esquiva do ataque
+  if (verificarEsquivaArma(jogador)) {
+    return; // Jogador esquivou, não recebe dano
+  }
+
+  // 🆕 Verifica se o jogador bloqueia o ataque
+  if (verificarBloqueioArma(jogador)) {
+    return; // Jogador bloqueou, não recebe dano
+  }
 
   let danoInimigo = calcularDanoInimigo(inimigo, jogador); // 5️⃣ Absorção por esqueletos
 
@@ -64,6 +103,7 @@ export function ataqueInimigo(inimigo, jogador, esqueletosInvocados) {
   );
 
   if (inimigo.habilidade === "envenenamento" && rand(1, 100) <= 20) {
+    if (!jogador.status) jogador.status = [];
     jogador.status.push({
       tipo: "envenenamento",
       duracao: rand(3, 5),
@@ -82,3 +122,4 @@ export function ataqueInimigo(inimigo, jogador, esqueletosInvocados) {
     );
   }
 }
+

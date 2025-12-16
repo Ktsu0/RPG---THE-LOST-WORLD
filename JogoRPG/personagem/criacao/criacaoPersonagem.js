@@ -23,12 +23,12 @@ export function criarPersonagem() {
     classe,
     habilidadeClasse,
     bonusClasse,
-    hp: 100000 + bonusRaca.hp,
-    hpMax: 100000 + bonusRaca.hp,
-    nivel: 10,
+    hp: 100 + bonusRaca.hp,
+    hpMax: 100 + bonusRaca.hp,
+    nivel: 1,
     xp: 0,
-    ouro: 10000000000,
-    ataque: 1 + bonusRaca.atk + bonusClasse.atk,
+    ouro: 50,
+    ataque: 5 + bonusRaca.atk + bonusClasse.atk,
     defesa: 5 + bonusRaca.def + bonusClasse.def,
     bonusRaca: bonusRacaSeguro,
     restricoes,
@@ -44,6 +44,7 @@ export function criarPersonagem() {
     armas: [],
     armaEquipada: null,
     amuletoEquipado: false,
+    status: [], 
   };
 
   return jogador;

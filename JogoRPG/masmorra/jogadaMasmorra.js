@@ -1,4 +1,4 @@
-import { batalha } from "./../batalha/batalha.js";
+import { sistemaBatalha } from "./../batalha/sistemaBatalha.js";
 import { colors } from "./../utilitarios.js";
 import { limparSalaMasmorra } from "./limparSala.js";
 import { tentarSairMasmorra } from "./sairMasmorra.js";
@@ -98,7 +98,7 @@ export function jogadaMasmorra(jogador, sairCallback) {
         process.stdin.removeListener("data", handleKey);
 
         // Executa a batalha
-        const vitoria = await batalha(resultado.inimigo, jogador);
+        const vitoria = await sistemaBatalha(resultado.inimigo, jogador);
 
         if (vitoria) {
           limparSalaMasmorra(jogador);
