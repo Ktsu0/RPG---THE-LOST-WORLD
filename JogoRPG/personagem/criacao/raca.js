@@ -2,7 +2,7 @@ import { escolherOpcao } from "../../codigosUniversais.js";
 import { colors } from "./../../utilitarios.js";
 
 // --- Dados das raças ---
-const racasDisponiveis = [
+export const racasDisponiveis = [
   {
     nome: "Anão",
     desc: "+15 DEF, -3 ATK",

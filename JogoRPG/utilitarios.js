@@ -33,18 +33,22 @@ export const colors = {
   bgWhite: "\x1b[47m",
 };
 
-
 export function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 export function lerInput(mensagem) {
-  if (mensagem) process.stdout.write(mensagem);
-  return new Promise((resolve) => {
-    process.stdin.once("data", (key) => {
-      resolve(key.toString().trim());
+  if (typeof process !== "undefined" && process.stdout && process.stdin) {
+    if (mensagem) process.stdout.write(mensagem);
+    return new Promise((resolve) => {
+      process.stdin.once("data", (key) => {
+        resolve(key.toString().trim());
+      });
     });
-  });
+  } else {
+    // Modo Navegador
+    return Promise.resolve(window.prompt(mensagem));
+  }
 }
 
 export function exibirTitulo(texto, cor = colors.cyan) {
@@ -55,17 +59,23 @@ export function exibirTitulo(texto, cor = colors.cyan) {
 }
 
 export function esperar(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function barraDeVida(atual, max, tamanho = 20, corCheia = colors.green, corVazia = colors.red) {
+export function barraDeVida(
+  atual,
+  max,
+  tamanho = 20,
+  corCheia = colors.green,
+  corVazia = colors.red
+) {
   const porcentagem = Math.max(0, Math.min(1, atual / max));
   const preenchido = Math.round(tamanho * porcentagem);
   const vazio = tamanho - preenchido;
-  
+
   // Barra ultra sólida (█)
   const parteCheia = `${corCheia}${"█".repeat(preenchido)}${colors.reset}`;
   const parteVazia = `${corVazia}${"█".repeat(vazio)}${colors.reset}`;
-  
+
   return `${parteCheia}${parteVazia} ${atual}/${max}`;
 }

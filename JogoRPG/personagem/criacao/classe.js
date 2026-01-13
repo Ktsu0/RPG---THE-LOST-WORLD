@@ -2,7 +2,7 @@ import { escolherOpcao } from "../../codigosUniversais.js";
 import { colors } from "./../../utilitarios.js";
 
 // --- Dados das classes ---
-const classesDisponiveis = [
+export const classesDisponiveis = [
   { nome: "Arqueiro", desc: "Esquiva + bônus drop de ouro" },
   { nome: "Paladino", desc: "Crítico + chance de bloquear ataques" },
   { nome: "Assassino", desc: "Sangramento + bônus drop de itens" },
@@ -11,7 +11,7 @@ const classesDisponiveis = [
   { nome: "Xamã", desc: "Chance de cura de 5% HP por turno + bônus esquiva" },
 ];
 
-const classesBonus = {
+export const classesBonus = {
   1: {
     habilidade: "esquiva",
     atk: 0,

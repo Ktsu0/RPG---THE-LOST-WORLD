@@ -1,4 +1,5 @@
 // === Armas Disponíveis ===
+
 function criarArma({
   id,
   nome,

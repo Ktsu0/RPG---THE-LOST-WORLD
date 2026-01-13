@@ -12,6 +12,6 @@ export const GAME_CONFIG = {
   
   // Configurações Globais
   ui: {
-    slowTextSpeed: 30, // ms entre caracteres (uso futuro)
+    slowTextSpeed: 30, 
   }
 };

@@ -12,8 +12,7 @@ export function criarItem({
   return { id, nome, slot, defesa, atkBonus, preco, set, raridade };
 }
 
-let idCounter = 1;
-
+// === Conjuntos de Armadura ===
 export const conjuntos = {
   Ferro: [
     { nome: "Elmo de Ferro", slot: "head", defesa: 6, preco: 2050 },

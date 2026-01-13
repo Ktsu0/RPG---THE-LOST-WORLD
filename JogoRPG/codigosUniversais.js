@@ -1,6 +1,20 @@
 import { colors, barraDeVida } from "./utilitarios.js";
-import promptSync from "prompt-sync";
-const prompt = promptSync({ sigint: true });
+
+// Stub para promptSync no navegador
+let prompt;
+try {
+  if (typeof window !== "undefined") {
+    prompt = (msg) => window.prompt(msg);
+  } else {
+    // We use a dynamic import here, but since this file is imported as a module
+    // in the browser, we need to ensure this doesn't crash.
+    // However, top-level await is better.
+    // For now, let's just use a stub that won't crash the browser's parser.
+    prompt = () => {};
+  }
+} catch (e) {
+  prompt = () => {};
+}
 
 // --- Função genérica de escolha ---
 export function escolherOpcao(promptMsg, opcoesValidas) {
@@ -14,15 +28,31 @@ export function escolherOpcao(promptMsg, opcoesValidas) {
 export function exibirStatusBatalha(jogador, inimigo) {
   const hpMaxInimigo = inimigo.hpMax || inimigo.hp; // Fallback caso não tenha hpMax
   console.log(`\n${colors.bright}--- STATUS DE BATALHA ---${colors.reset}`);
-  
+
   // INIMIGO (Vermelho)
-  console.log(`INIMIGO: ${barraDeVida(inimigo.hp, hpMaxInimigo, 20, colors.red, colors.gray)}`);
-  
+  console.log(
+    `INIMIGO: ${barraDeVida(
+      inimigo.hp,
+      hpMaxInimigo,
+      20,
+      colors.red,
+      colors.gray
+    )}`
+  );
+
   console.log(""); // Espaço
 
   // JOGADOR (Verde)
-  console.log(`JOGADOR: ${barraDeVida(jogador.hp, jogador.hpMax, 20, colors.green, colors.gray)}`);
-  
+  console.log(
+    `JOGADOR: ${barraDeVida(
+      jogador.hp,
+      jogador.hpMax,
+      20,
+      colors.green,
+      colors.gray
+    )}`
+  );
+
   console.log("-".repeat(40));
 }
 

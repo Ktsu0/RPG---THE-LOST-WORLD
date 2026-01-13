@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lost World - Visual RPG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Tela de Abertura -->
+        <div id="title-screen" class="screen">
+            <h1 class="pixel-text color-animate">THE LOST WORLD</h1>
+            <div class="menu-options">
+                <button id="btn-start" class="pixel-button">Novo Jogo</button>
+                <button id="btn-load" class="pixel-button">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Tela de Criação de Personagem -->
+        <div id="creation-screen" class="screen hidden">
+            <div class="creation-layout-v2">
+                
+                <!-- LADO ESQUERDO: Atributos e Herói -->
+                <div class="left-side-creation">
+                    <div class="attributes-panel glass-panel">
+                        <h3 class="pixel-text-small centered">ATRIBUTOS PERSONAGEM</h3>
+                        <div class="stats-preview-v2">
+                            <div class="stat-col">
+                                <span class="stat-label">ATAQUE</span>
+                                <span id="stat-atk" class="stat-value">5</span>
+                            </div>
+                            <div class="stat-col">
+                                <span class="stat-label">DEFESA</span>
+                                <span id="stat-def" class="stat-value">5</span>
+                            </div>
+                            <div class="stat-col">
+                                <span class="stat-label">HP</span>
+                                <span id="stat-hp" class="stat-value">100</span>
+                            </div>
+                            <div class="stat-col">
+                                <span class="stat-label">CRIT</span>
+                                <span id="stat-crit" class="stat-value">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hero-showcase">
+                        <!-- Vantagens e Status Icons (Esquerda) -->
+                        <div id="hero-advantages" class="hero-perks-side glass-panel"></div>
+                        
+                        <div class="hero-main-group">
+                            <div id="hero-preview-sprite" class="hero-visual-v2"></div>
+                            <div class="hero-platform-v2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LADO DIREITO: Painel de Controle -->
+                <div class="right-side-creation glass-panel">
+                    <div class="creation-section">
+                        <label class="pixel-text-small">Nome do viajante</label>
+                        <input type="text" id="hero-name-input" class="modern-pixel-input" placeholder="Digite seu nome...">
+                    </div>
+
+                    <div class="creation-tabs-v2">
+                        <button id="tab-race" class="tab-v2 active">Raça</button>
+                        <div class="tab-separator"></div>
+                        <button id="tab-class" class="tab-v2">Classe</button>
+                    </div>
+
+                    <div class="selection-container-v2">
+                        <h4 id="selection-title-v2" class="pixel-text-small white-text">Linhagem disponível</h4>
+                        
+                        <div id="race-selection-view" class="step-view">
+                            <div id="race-options" class="modern-grid-2"></div>
+                        </div>
+
+                        <div id="class-selection-view" class="step-view hidden">
+                            <div id="class-options" class="modern-grid-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="creation-footer-v2">
+                        <button id="btn-confirm-creation" class="pixel-button">CRIAR PERSONAGEM</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Tela de Mapa / Hub -->
+        <div id="map-screen" class="screen hidden">
+            <div class="hub-header glass-panel">
+                <div class="hero-mini-status">
+                    <span id="map-hero-name" class="pixel-text-small">Nome</span>
+                    <span id="map-hero-lv" class="pixel-text-small">LV: 1</span>
+                    <div class="mini-hp-bar"><div id="map-hp-fill" class="hp-fill"></div></div>
+                </div>
+                <div id="currency-display" class="pixel-text-small">Ouro: 50</div>
+            </div>
+            <div class="map-container">
+                <button id="btn-go-forest" class="map-location" data-loc="Florest">Floresta</button>
+                <!-- Mais locais serão adicionados -->
+            </div>
+        </div>
+
+        <!-- Tela de Batalha -->
+        <div id="battle-screen" class="screen hidden">
+            <div class="battle-scene">
+                <!-- Área do Inimigo (Direita/Topo) -->
+                <div class="enemy-area">
+                    <div class="battle-unit-info">
+                        <span id="enemy-name" class="pixel-text-small red-text">Inimigo</span>
+                        <div class="health-bar-container">
+                            <div id="enemy-hp-fill" class="health-bar-fill red-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <!-- Sprite do Inimigo será setado via JS -->
+                    <div id="enemy-sprite" class="unit-sprite"></div>
+                </div>
+
+                <!-- Área do Jogador (Esquerda/Baixo) -->
+                <div class="player-area">
+                    <!-- O Sprite do jogador agora é o hero_model_v2 -->
+                    <div id="player-battle-sprite" class="unit-sprite hero-battle-model"></div>
+                    <div class="battle-unit-info">
+                        <span id="player-battle-name" class="pixel-text-small white-text">Herói</span>
+                        <div class="health-bar-container">
+                            <div id="player-hp-fill" class="health-bar-fill green-fill" style="width: 100%;"></div>
+                        </div>
+                        <span id="player-hp-text" class="pixel-text-tiny white-text">100/100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interface de Combate (Rodapé) -->
+            <div class="battle-ui glass-panel">
+                <div id="battle-log" class="battle-log-area">
+                    <p>> A batalha começou!</p>
+                </div>
+                <div class="battle-actions">
+                    <button id="action-attack" class="battle-btn">
+                        <i class="fa-solid fa-sword"></i> ATACAR
+                    </button>
+                    <button id="action-item" class="battle-btn">
+                        <i class="fa-solid fa-flask"></i> ITEM
+                    </button>
+                    <button id="action-flee" class="battle-btn">
+                        <i class="fa-solid fa-person-running"></i> FUGIR
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Modal de Inventário (INSERIDO AQUI) -->
+            <div id="inventory-modal" class="hidden">
+                <div class="inventory-box glass-panel">
+                    <h3 class="inv-title pixel-text-small">Mochila</h3>
+                    <div id="inv-list" class="inv-list">
+                        <!-- Itens gerados via JS -->
+                    </div>
+                    <button id="btn-close-inv" class="btn-close-inv">FECHAR</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- TELA DO HUB (CIDADE) -->
+    <div id="hub-screen" class="screen hidden">
+        <!-- Background da Cidade ocupando toda a tela -->
+        <div class="hub-city-background"></div>
+
+        <!-- HUD Superior -->
+        <div class="hub-header glass-panel">
+            <div class="player-info-mini">
+                <span id="hub-player-name" class="pixel-text-small white-text">Nome do Viajante</span>
+                <span id="hub-player-level" class="pixel-text-tiny white-text">LVL: 1</span>
+            </div>
+            <div class="resource-bar">
+                <div class="resource-item">
+                    <i class="fa-solid fa-heart red-text"></i>
+                    <span id="hub-hp-val" class="white-text">100/100</span>
+                </div>
+                <div class="resource-item">
+                    <i class="fa-solid fa-coins gold-text"></i>
+                    <span id="hub-gold-val" class="white-text">500</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hub-main-layout">
+            <!-- Visual do Personagem no Centro -->
+            <div class="hub-view-area">
+                <div class="hero-hub-preview">
+                    <div id="hero-hub-sprite" class="hero-visual-v2 small-hero"></div>
+                </div>
+            </div>
+
+            <!-- Menu Inferior de Opções -->
+            <div class="hub-bottom-menu glass-panel">
+                <h3 class="pixel-text-small centered white-text" style="margin-bottom: 10px;">MENU CIDADE</h3>
+                <div class="hub-options-grid">
+                    <button id="hub-btn-explore" class="hub-opt-btn">
+                        <i class="fa-solid fa-compass"></i>
+                        <span>EXPLORAR</span>
+                    </button>
+                    <button id="hub-btn-quests" class="hub-opt-btn">
+                        <i class="fa-solid fa-scroll"></i>
+                        <span>GUILDA</span>
+                    </button>
+                    <button id="hub-btn-rest" class="hub-opt-btn">
+                        <i class="fa-solid fa-bed"></i>
+                        <span>DESCANSAR</span>
+                    </button>
+                    <button id="hub-btn-shop" class="hub-opt-btn">
+                        <i class="fa-solid fa-shop"></i>
+                        <span>LOJA</span>
+                    </button>
+                    <button id="hub-btn-tower" class="hub-opt-btn">
+                        <i class="fa-solid fa-chess-rook"></i>
+                        <span>TORRE</span>
+                    </button>
+                    <button id="hub-btn-inventory" class="hub-opt-btn">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>INVENTÁRIO</span>
+                    </button>
+                    <button id="hub-btn-exit" class="hub-opt-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>SAIR</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TELA DE MISSÃO -->
+    <div id="mission-screen" class="screen hidden">
+        <!-- Background da Missão -->
+        <div class="mission-background"></div>
+
+        <!-- HUD Superior (Igual ao Hub para consistência) -->
+        <div class="hub-header glass-panel">
+            <div class="player-info-mini">
+                <span id="mission-player-name" class="pixel-text-small white-text">Nome do Viajante</span>
+                <span id="mission-player-level" class="pixel-text-tiny white-text">LVL: 1</span>
+            </div>
+            <div class="resource-bar">
+                <div class="resource-item">
+                    <i class="fa-solid fa-heart red-text"></i>
+                    <span id="mission-hp-val" class="white-text">100/100</span>
+                </div>
+                <div class="resource-item">
+                    <i class="fa-solid fa-coins gold-text"></i>
+                    <span id="mission-gold-val" class="white-text">500</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mission-main-layout">
+            <!-- Visual do Personagem à Esquerda -->
+            <div class="mission-view-area">
+                <div class="hero-mission-preview">
+                    <div id="hero-mission-sprite" class="hero-visual-v2 small-hero"></div>
+                </div>
+            </div>
+
+            <!-- Janela de Missão Temática (Inicia escondida no centro) -->
+            <div id="mission-details-container" class="mission-details-overlay hidden">
+                <div class="mission-quest-card stone-panel">
+                    <h2 class="pixel-text" style="font-size: 1rem; color: #4a4336; margin-bottom: 10px;">QUADRO DE MISSÕES</h2>
+                    <div class="stone-divider"></div>
+                    <h3 class="pixel-text-small" style="color: #2e2b25; margin-bottom: 15px;">Nome da Missão</h3>
+                    <p class="mission-desc-stone">História da missão será carregada aqui...</p>
+                    <div class="mission-rewards-stone">
+                        <!-- Recompensas -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Inferior de Opções Especial -->
+            <div class="mission-bottom-menu glass-panel">
+                <div class="mission-options-flex">
+                    <button id="mission-btn-back" class="hub-opt-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>VOLTAR</span>
+                    </button>
+                    <button id="mission-btn-start" class="hub-opt-btn">
+                        <i class="fa-solid fa-scroll"></i>
+                        <span>MISSÃO</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA DA LOJA -->
+    <div id="shop-screen" class="game-screen hidden">
+        <div class="shop-container wood-panel">
+            <div class="shop-header">
+                <h2 class="pixel-text dark-text">LOJA DE ITENS</h2>
+                <div class="shop-gold-display">
+                    <i class="fa-solid fa-coins gold-text"></i>
+                    <span id="shop-gold-val" class="pixel-text-small dark-text">0</span>
+                </div>
+            </div>
+
+            <!-- Abas da Loja -->
+            <div class="shop-tabs">
+                <button class="shop-tab-btn active" data-tab="diversos">DIVERSOS</button>
+                <button class="shop-tab-btn" data-tab="armas">ARMAS</button>
+                <button class="shop-tab-btn" data-tab="armaduras">ARMADURAS</button>
+            </div>
+
+            <!-- Área de Conteúdo da Loja -->
+            <div id="shop-content" class="shop-content-area">
+                <!-- Itens serão renderizados aqui via JS -->
+            </div>
+
+            <div class="shop-footer">
+                <button id="shop-btn-back" class="pixel-button">
+                    <i class="fa-solid fa-arrow-left"></i> VOLTAR
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificações Globais Personalizadas -->
+    <div id="global-notification" class="hidden">
+        <div class="notification-box glass-panel">
+            <h2 id="notification-title" class="pixel-text color-animate">RECOMPENSA</h2>
+            <div class="notification-content">
+                <p id="notification-msg" class="pixel-text-small white-text centered"></p>
+            </div>
+            <div class="notification-footer">
+                <button id="btn-notification-ok" class="pixel-button">CONTINUAR</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
