@@ -1,0 +1,75 @@
+import { criarEstadoBatalha, executarAcaoJogador } from "@engine/combate/index.js";
+import { montarTelaBatalha, atualizarBarras, registrarNoLog } from "./telaBatalha.js";
+import { reproduzirEventos } from "./animacoes.js";
+
+function descreverEvento(evento) {
+  switch (evento.tipo) {
+    case "dano":
+      return evento.critico
+        ? `Golpe crítico! Causou ${evento.valor} de dano.`
+        : `${evento.autor === "jogador" ? "Você causou" : "O inimigo causou"} ${evento.valor} de dano.`;
+    case "esquiva":
+      return evento.autor === "inimigo"
+        ? "O inimigo esquivou do seu ataque!"
+        : "Você esquivou do ataque!";
+    case "bloqueio":
+      return "Você bloqueou o ataque!";
+    case "sangramento_tick":
+      return `O inimigo sangra e perde ${evento.dano} HP.`;
+    case "envenenamento_tick":
+      return `Você sofre ${evento.dano} de dano por veneno.`;
+    case "sangramento_aplicado":
+      return "Seu ataque causou sangramento no inimigo!";
+    case "envenenamento_aplicado":
+      return "O ataque do inimigo te envenenou!";
+    case "cura_xama":
+      return evento.valor > 0 ? `Sua conexão Xamã restaurou ${evento.valor} HP!` : null;
+    case "fuga":
+      return evento.sucesso ? "Você fugiu com sucesso!" : "A fuga falhou!";
+    case "vitoria":
+      return `Vitória! +${evento.xpGanho} XP, +${evento.ouroGanho} ouro.`;
+    case "derrota":
+      return "Você foi derrotado...";
+    default:
+      return null;
+  }
+}
+
+export function iniciarBatalha(container, jogador, inimigoOriginal) {
+  let estado = criarEstadoBatalha(jogador, inimigoOriginal);
+  const elementos = montarTelaBatalha(container, {
+    jogador: estado.jogador,
+    inimigo: estado.inimigo,
+  });
+
+  let processando = false;
+
+  async function executar(acao) {
+    if (processando || estado.fim) return;
+    processando = true;
+    elementos.botaoAtacar.disabled = true;
+    elementos.botaoFugir.disabled = true;
+
+    const resultado = executarAcaoJogador(estado, acao);
+    estado = { ...resultado.estado, fim: resultado.fim };
+
+    await reproduzirEventos(resultado.eventos, elementos);
+    atualizarBarras(elementos, estado.jogador, estado.inimigo);
+
+    for (const evento of resultado.eventos) {
+      const mensagem = descreverEvento(evento);
+      if (mensagem) registrarNoLog(elementos, mensagem);
+    }
+
+    processando = false;
+    if (!resultado.fim) {
+      elementos.botaoAtacar.disabled = false;
+      elementos.botaoFugir.disabled = false;
+    }
+  }
+
+  elementos.botaoAtacar.addEventListener("click", () => executar("atacar"));
+  elementos.botaoFugir.addEventListener("click", () => executar("fugir"));
+
+  return { ...elementos, executarAcao: executar };
+}
