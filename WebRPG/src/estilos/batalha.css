@@ -1,0 +1,144 @@
+.tela-batalha {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
+}
+
+.palco-batalha {
+  position: relative;
+  flex: 1;
+  min-height: 320px;
+  background: linear-gradient(180deg, #241f33 0%, #14121a 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: var(--espaco-lg);
+}
+
+.palco-batalha--tremendo {
+  animation: tremor 0.3s ease-in-out;
+}
+
+@keyframes tremor {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.combatente {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espaco-sm);
+}
+
+.painel-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 160px;
+}
+
+.nome-combatente {
+  font-size: 14px;
+}
+
+.sprite {
+  width: 100px;
+  height: 100px;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  transform: scale(2.4);
+  transform-origin: bottom center;
+}
+
+@keyframes sprite-play {
+  from {
+    background-position-x: 0;
+  }
+  to {
+    background-position-x: calc(var(--sprite-frames) * -100px);
+  }
+}
+
+.sprite--tocando {
+  animation-name: sprite-play;
+  animation-timing-function: steps(var(--sprite-frames));
+  animation-duration: var(--sprite-duration, 0.6s);
+  animation-iteration-count: var(--sprite-loop, 1);
+}
+
+.sprite--flash {
+  animation: flash-dano 0.25s ease-in-out;
+}
+
+@keyframes flash-dano {
+  0%,
+  100% {
+    filter: none;
+  }
+  50% {
+    filter: brightness(3) saturate(0);
+  }
+}
+
+.numero-dano {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--fonte-pixel);
+  font-size: 18px;
+  color: var(--cor-perigo);
+  pointer-events: none;
+  animation: subir-e-sumir 0.9s ease-out forwards;
+}
+
+.numero-dano--critico {
+  color: var(--cor-destaque);
+  font-size: 26px;
+}
+
+@keyframes subir-e-sumir {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -40px);
+  }
+}
+
+.log-batalha {
+  max-height: 140px;
+  overflow-y: auto;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.barra-acoes {
+  display: flex;
+  gap: var(--espaco-sm);
+  padding: var(--espaco-md);
+  justify-content: center;
+}
