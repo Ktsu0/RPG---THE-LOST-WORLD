@@ -6,7 +6,7 @@ Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum 
 
 - **Tiny RPG Character Asset Pack v1.03 — Free Soldier & Orc**
   Local original: `WebRPG/assets/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/`
-  Organizado em: `WebRPG/assets/personagens/soldado/` e `WebRPG/assets/personagens/orc/` (Task 13 do plano de implementação).
+  Organizado em: `WebRPG/assets/personagens/soldado/` (idle, ataque, dano, morte) e `WebRPG/assets/personagens/orc/` (idle, ataque, dano, morte) — concluído na Task 13.
   Uso: sprites de batalha do herói (classe base) e do inimigo Orc.
   Licença: conferir o arquivo de licença original dentro da pasta do pack antes de redistribuir o jogo publicamente.
 
