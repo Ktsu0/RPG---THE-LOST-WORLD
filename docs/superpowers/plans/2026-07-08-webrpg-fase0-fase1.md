@@ -1,6 +1,6 @@
 # WebRPG — Fase 0 (Fundação) e Fase 1 (Batalha) — Plano de Implementação
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Construir a fundação técnica do WebRPG (Vite + Vitest + design system + roteador) e a primeira fatia vertical jogável: uma batalha completa Soldado vs Orc em pixel art, com sangramento e envenenamento funcionando visualmente, conforme `docs/superpowers/specs/2026-07-08-webrpg-visual-design.md`.
 
@@ -46,12 +46,12 @@ Seguindo a spec seção 3.3 ("extrai-se apenas o que a fase atual precisa"), o `
 **Interfaces:**
 - Produces: comando `npm run dev` (servidor Vite servindo `WebRPG/`), `npm run test` (roda Vitest uma vez), `npm run test:watch` (modo watch), alias de import `@engine` apontando para `./engine` (usado a partir da Task 17).
 
-- [ ] **Step 1: Instalar as dependências de desenvolvimento**
+- [x] **Step 1: Instalar as dependências de desenvolvimento**
 
 Run: `npm install -D vite@^6 vitest@^3 jsdom@^25`
 Expected: comando termina sem erro, `vite`, `vitest` e `jsdom` aparecem em `package.json` -> `devDependencies`.
 
-- [ ] **Step 2: Criar `vite.config.js` na raiz do repositório**
+- [x] **Step 2: Criar `vite.config.js` na raiz do repositório**
 
 ```js
 import { defineConfig } from "vite";
@@ -76,7 +76,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 3: Criar `vitest.config.js` na raiz do repositório**
+- [x] **Step 3: Criar `vitest.config.js` na raiz do repositório**
 
 ```js
 import { defineConfig } from "vitest/config";
@@ -95,7 +95,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 4: Atualizar os scripts em `package.json`**
+- [x] **Step 4: Atualizar os scripts em `package.json`**
 
 Substituir o bloco `"scripts"` existente por:
 
@@ -109,7 +109,7 @@ Substituir o bloco `"scripts"` existente por:
 }
 ```
 
-- [ ] **Step 5: Verificar a instalação**
+- [x] **Step 5: Verificar a instalação**
 
 Run: `npx vite --version`
 Expected: imprime algo como `vite/6.x.x ...` sem erro.
@@ -117,7 +117,7 @@ Expected: imprime algo como `vite/6.x.x ...` sem erro.
 Run: `npx vitest --version`
 Expected: imprime a versão do Vitest sem erro.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add package.json package-lock.json vite.config.js vitest.config.js
@@ -141,7 +141,7 @@ git commit -m "chore: instalar Vite e Vitest para o WebRPG"
 **Interfaces:**
 - Produces: `WebRPG/index.html` servido pelo Vite, carregando `WebRPG/src/main.js` como módulo (criado na Task 5).
 
-- [ ] **Step 1: Mover o protótipo atual para `WebRPG/legado/` preservando histórico**
+- [x] **Step 1: Mover o protótipo atual para `WebRPG/legado/` preservando histórico**
 
 ```bash
 mkdir -p WebRPG/legado
@@ -151,13 +151,13 @@ git mv WebRPG/data.js WebRPG/legado/data.js
 git mv WebRPG/style.css WebRPG/legado/style.css
 ```
 
-- [ ] **Step 2: Criar a estrutura de pastas nova**
+- [x] **Step 2: Criar a estrutura de pastas nova**
 
 ```bash
 mkdir -p WebRPG/src/estilos WebRPG/src/rotas WebRPG/src/telas engine/combate
 ```
 
-- [ ] **Step 3: Criar o novo `WebRPG/index.html`**
+- [x] **Step 3: Criar o novo `WebRPG/index.html`**
 
 ```html
 <!DOCTYPE html>
@@ -179,12 +179,12 @@ mkdir -p WebRPG/src/estilos WebRPG/src/rotas WebRPG/src/telas engine/combate
 </html>
 ```
 
-- [ ] **Step 4: Verificar que a pasta legado preserva o protótipo antigo**
+- [x] **Step 4: Verificar que a pasta legado preserva o protótipo antigo**
 
 Run: `ls WebRPG/legado`
 Expected: lista `index.html`, `main.js`, `data.js`, `style.css`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add -A WebRPG engine
@@ -205,7 +205,7 @@ git commit -m "refactor: mover protótipo do WebRPG para legado/ e criar esquele
 
 Esta task é puramente CSS (sem lógica testável); a verificação é visual, feita na Task 5 quando a tela inicial existir.
 
-- [ ] **Step 1: Criar `WebRPG/src/estilos/variaveis.css`**
+- [x] **Step 1: Criar `WebRPG/src/estilos/variaveis.css`**
 
 ```css
 :root {
@@ -231,7 +231,7 @@ Esta task é puramente CSS (sem lógica testável); a verificação é visual, f
 }
 ```
 
-- [ ] **Step 2: Criar `WebRPG/src/estilos/base.css`**
+- [x] **Step 2: Criar `WebRPG/src/estilos/base.css`**
 
 ```css
 * {
@@ -269,7 +269,7 @@ h3,
 }
 ```
 
-- [ ] **Step 3: Criar `WebRPG/src/estilos/paineis.css`**
+- [x] **Step 3: Criar `WebRPG/src/estilos/paineis.css`**
 
 ```css
 .painel {
@@ -332,7 +332,7 @@ h3,
 }
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add WebRPG/src/estilos
@@ -350,7 +350,7 @@ git commit -m "feat: design system CSS base do WebRPG (tokens, reset, painéis)"
 **Interfaces:**
 - Produces: `inicializarRoteador(container)`, `registrarTela(nome, montar)`, `mostrarTela(nome, props)`, `telaAtualNome()` — usados por `WebRPG/src/main.js` (Task 5) e por todas as telas futuras.
 
-- [ ] **Step 1: Escrever o teste `WebRPG/src/rotas/roteador.test.js`**
+- [x] **Step 1: Escrever o teste `WebRPG/src/rotas/roteador.test.js`**
 
 ```js
 import { describe, it, expect, beforeEach } from "vitest";
@@ -413,12 +413,12 @@ describe("roteador", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar os testes para confirmar que falham**
+- [x] **Step 2: Rodar os testes para confirmar que falham**
 
 Run: `npm run test -- roteador`
 Expected: FAIL — `Cannot find module './roteador.js'` (o arquivo ainda não existe).
 
-- [ ] **Step 3: Implementar `WebRPG/src/rotas/roteador.js`**
+- [x] **Step 3: Implementar `WebRPG/src/rotas/roteador.js`**
 
 ```js
 const telas = new Map();
@@ -455,12 +455,12 @@ export function telaAtualNome() {
 }
 ```
 
-- [ ] **Step 4: Rodar os testes para confirmar que passam**
+- [x] **Step 4: Rodar os testes para confirmar que passam**
 
 Run: `npm run test -- roteador`
 Expected: PASS — 5 testes verdes.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add WebRPG/src/rotas
@@ -480,7 +480,7 @@ git commit -m "feat: roteador de telas do WebRPG"
 - Consumes: `inicializarRoteador`, `registrarTela`, `mostrarTela` (Task 4).
 - Produces: `montarTelaInicial(container)`, registrada no roteador como `'inicial'` (será substituída como tela padrão de boot na Task 17, mas continua registrada).
 
-- [ ] **Step 1: Escrever o teste `WebRPG/src/telas/inicial.test.js`**
+- [x] **Step 1: Escrever o teste `WebRPG/src/telas/inicial.test.js`**
 
 ```js
 import { describe, it, expect } from "vitest";
@@ -495,12 +495,12 @@ describe("tela inicial", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar o teste para confirmar que falha**
+- [x] **Step 2: Rodar o teste para confirmar que falha**
 
 Run: `npm run test -- inicial`
 Expected: FAIL — `Cannot find module './inicial.js'`.
 
-- [ ] **Step 3: Implementar `WebRPG/src/telas/inicial.js`**
+- [x] **Step 3: Implementar `WebRPG/src/telas/inicial.js`**
 
 ```js
 export function montarTelaInicial(container) {
@@ -513,12 +513,12 @@ export function montarTelaInicial(container) {
 }
 ```
 
-- [ ] **Step 4: Rodar o teste para confirmar que passa**
+- [x] **Step 4: Rodar o teste para confirmar que passa**
 
 Run: `npm run test -- inicial`
 Expected: PASS — 1 teste verde.
 
-- [ ] **Step 5: Criar `WebRPG/src/main.js`**
+- [x] **Step 5: Criar `WebRPG/src/main.js`**
 
 ```js
 import "./estilos/variaveis.css";
@@ -533,12 +533,12 @@ registrarTela("inicial", montarTelaInicial);
 mostrarTela("inicial");
 ```
 
-- [ ] **Step 6: Verificar manualmente no navegador**
+- [x] **Step 6: Verificar manualmente no navegador**
 
 Run: `npm run dev`
 Expected: terminal imprime uma URL local (ex: `http://localhost:5173`). Abrir no navegador e confirmar: fundo escuro, painel centralizado com o título "THE LOST WORLD" em fonte pixel e o parágrafo abaixo.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add WebRPG/src/main.js WebRPG/src/telas
@@ -559,14 +559,14 @@ git commit -m "feat: bootstrap do WebRPG com tela inicial mínima"
 **Interfaces:**
 - Produces: pastas de destino para os assets organizados na Task 13, e um checklist manual para o usuário baixar os packs externos listados na spec seção 5.
 
-- [ ] **Step 1: Criar as pastas de destino**
+- [x] **Step 1: Criar as pastas de destino**
 
 ```bash
 mkdir -p WebRPG/assets/personagens WebRPG/assets/cenarios WebRPG/assets/ui WebRPG/assets/audio
 touch WebRPG/assets/personagens/.gitkeep WebRPG/assets/cenarios/.gitkeep WebRPG/assets/ui/.gitkeep WebRPG/assets/audio/.gitkeep
 ```
 
-- [ ] **Step 2: Criar `WebRPG/assets/CREDITS.md`**
+- [x] **Step 2: Criar `WebRPG/assets/CREDITS.md`**
 
 ```markdown
 # Créditos de Assets — WebRPG
@@ -594,7 +594,7 @@ Estes packs ainda não estão no repositório. Cada um precisa ser baixado manua
 Ao baixar um pack, adicione uma entrada acima com: nome exato do pack, autor, URL da página específica do pack, e a licença declarada.
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add WebRPG/assets/CREDITS.md WebRPG/assets/personagens/.gitkeep WebRPG/assets/cenarios/.gitkeep WebRPG/assets/ui/.gitkeep WebRPG/assets/audio/.gitkeep
@@ -618,7 +618,7 @@ git commit -m "docs: estrutura de assets e checklist de créditos do WebRPG"
 
 Fiel a `JogoRPG/utilitarios.js` (função `rand`), `JogoRPG/batalha/ataqueJogador/calcular/{calcularAtk,calcularDef,danoJogador}.js`, `JogoRPG/batalha/ataqueInimigo/funcionAuxiliares/calcularDanoInimigo.js` (defesa do inimigo) e `JogoRPG/personagem/habilidades.js` (`aplicarFuria`), removendo apenas os `console.log`.
 
-- [ ] **Step 1: Escrever o teste `engine/combate/aleatorio.test.js`**
+- [x] **Step 1: Escrever o teste `engine/combate/aleatorio.test.js`**
 
 ```js
 import { describe, it, expect, vi, afterEach } from "vitest";
@@ -646,12 +646,12 @@ describe("rand", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- aleatorio`
 Expected: FAIL — `Cannot find module './aleatorio.js'`.
 
-- [ ] **Step 3: Implementar `engine/combate/aleatorio.js`**
+- [x] **Step 3: Implementar `engine/combate/aleatorio.js`**
 
 ```js
 export function rand(min, max) {
@@ -659,12 +659,12 @@ export function rand(min, max) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- aleatorio`
 Expected: PASS — 3 testes verdes.
 
-- [ ] **Step 5: Escrever o teste `engine/combate/calculoDano.test.js`**
+- [x] **Step 5: Escrever o teste `engine/combate/calculoDano.test.js`**
 
 ```js
 import { describe, it, expect, vi, afterEach } from "vitest";
@@ -769,12 +769,12 @@ describe("calcularDefesaInimigo", () => {
 });
 ```
 
-- [ ] **Step 6: Rodar e confirmar falha**
+- [x] **Step 6: Rodar e confirmar falha**
 
 Run: `npm run test -- calculoDano`
 Expected: FAIL — `Cannot find module './calculoDano.js'`.
 
-- [ ] **Step 7: Implementar `engine/combate/calculoDano.js`**
+- [x] **Step 7: Implementar `engine/combate/calculoDano.js`**
 
 ```js
 import { rand } from "./aleatorio.js";
@@ -844,12 +844,12 @@ export function calcularDefesaInimigo(inimigo) {
 }
 ```
 
-- [ ] **Step 8: Rodar e confirmar sucesso**
+- [x] **Step 8: Rodar e confirmar sucesso**
 
 Run: `npm run test -- calculoDano`
 Expected: PASS — 7 testes verdes.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add engine/combate/aleatorio.js engine/combate/aleatorio.test.js engine/combate/calculoDano.js engine/combate/calculoDano.test.js
@@ -870,7 +870,7 @@ git commit -m "feat: cálculos básicos de dano do engine de combate"
 
 Fiel a `JogoRPG/batalha/ataqueJogador/ataqueJogador.js` (linhas 51-81: cálculo de dano, fúria, crítico, esquiva do inimigo) e `JogoRPG/batalha/ataqueInimigo/funcionAuxiliares/calcularDanoInimigo.js` (esquiva/bloqueio do jogador), removendo os `console.log` e os ramos de `dano_extra`/`petrificado`/efeitos de arma de esquiva-bloqueio (fora de escopo — ver seção "Fora de escopo desta fase").
 
-- [ ] **Step 1: Adicionar os testes de `resolverAtaqueJogador` e `resolverAtaqueInimigo` ao final de `engine/combate/calculoDano.test.js`**
+- [x] **Step 1: Adicionar os testes de `resolverAtaqueJogador` e `resolverAtaqueInimigo` ao final de `engine/combate/calculoDano.test.js`**
 
 ```js
 describe("resolverAtaqueJogador", () => {
@@ -965,12 +965,12 @@ describe("resolverAtaqueInimigo", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- calculoDano`
 Expected: FAIL — `resolverAtaqueJogador is not a function`.
 
-- [ ] **Step 3: Adicionar as funções ao final de `engine/combate/calculoDano.js`**
+- [x] **Step 3: Adicionar as funções ao final de `engine/combate/calculoDano.js`**
 
 ```js
 export function resolverAtaqueJogador(jogador, inimigo) {
@@ -1015,12 +1015,12 @@ export function resolverAtaqueInimigo(inimigo, jogador) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- calculoDano`
 Expected: PASS — 13 testes verdes no total do arquivo.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add engine/combate/calculoDano.js engine/combate/calculoDano.test.js
@@ -1040,7 +1040,7 @@ git commit -m "feat: resolução de ataque do jogador e do inimigo (crítico, es
 
 Fiel a `JogoRPG/personagem/habilidades.js` (`processarCuraXama`), `JogoRPG/batalha/ataqueInimigo/funcionAuxiliares/sangramento.js`, `JogoRPG/batalha/ataqueInimigo/funcionAuxiliares/envenenamento.js` e ao caso `sangramento` de `JogoRPG/itens/equipamentos/efeitos/armasEfeitos.js` (`aplicarEfeitoArma`), removendo os `console.log`. **Correção documentada:** o código original tem um bug onde o envenenamento do jogador tiquita duas vezes por rodada (uma vez em `aplicarStatusPorTurno` e outra em `processarEnvenenamento`, chamado separadamente em `ataqueJogador.js`); este motor tiquita exatamente uma vez por rodada via `processarEnvenenamentoDoTurno`.
 
-- [ ] **Step 1: Escrever o teste `engine/combate/efeitosDeStatus.test.js`**
+- [x] **Step 1: Escrever o teste `engine/combate/efeitosDeStatus.test.js`**
 
 ```js
 import { describe, it, expect, vi, afterEach } from "vitest";
@@ -1167,12 +1167,12 @@ describe("aplicarEfeitoDaArmaAoAcertar", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- efeitosDeStatus`
 Expected: FAIL — `Cannot find module './efeitosDeStatus.js'`.
 
-- [ ] **Step 3: Implementar `engine/combate/efeitosDeStatus.js`**
+- [x] **Step 3: Implementar `engine/combate/efeitosDeStatus.js`**
 
 ```js
 import { rand } from "./aleatorio.js";
@@ -1241,12 +1241,12 @@ export function aplicarEfeitoDaArmaAoAcertar(jogador, inimigo) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- efeitosDeStatus`
 Expected: PASS — 12 testes verdes.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add engine/combate/efeitosDeStatus.js engine/combate/efeitosDeStatus.test.js
@@ -1269,7 +1269,7 @@ git commit -m "feat: efeitos de status por turno (sangramento, envenenamento, cu
 
 Fiel a `JogoRPG/masmorra/habilidadesInimigos.js` (casos `ataque_duplo` e `envenenamento` de `executarHabilidadeEspecial`/`ataqueInimigo.js` linhas 105-115) e `JogoRPG/verificar/vitoria/vitoria.js` (fórmula de XP/ouro de `finalizarVitoria`, sem drops nem level up — fora de escopo desta fase).
 
-- [ ] **Step 1: Escrever o teste `engine/combate/habilidadesInimigo.test.js`**
+- [x] **Step 1: Escrever o teste `engine/combate/habilidadesInimigo.test.js`**
 
 ```js
 import { describe, it, expect, vi, afterEach } from "vitest";
@@ -1341,12 +1341,12 @@ describe("verificarEnvenenamentoAoAtacar", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- habilidadesInimigo`
 Expected: FAIL — `Cannot find module './habilidadesInimigo.js'`.
 
-- [ ] **Step 3: Implementar `engine/combate/habilidadesInimigo.js`**
+- [x] **Step 3: Implementar `engine/combate/habilidadesInimigo.js`**
 
 ```js
 import { rand } from "./aleatorio.js";
@@ -1367,12 +1367,12 @@ export function verificarEnvenenamentoAoAtacar(inimigo, jogador) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- habilidadesInimigo`
 Expected: PASS — 8 testes verdes.
 
-- [ ] **Step 5: Escrever o teste `engine/combate/recompensas.test.js`**
+- [x] **Step 5: Escrever o teste `engine/combate/recompensas.test.js`**
 
 ```js
 import { describe, it, expect, vi, afterEach } from "vitest";
@@ -1405,12 +1405,12 @@ describe("concederRecompensaVitoria", () => {
 });
 ```
 
-- [ ] **Step 6: Rodar e confirmar falha**
+- [x] **Step 6: Rodar e confirmar falha**
 
 Run: `npm run test -- recompensas`
 Expected: FAIL — `Cannot find module './recompensas.js'`.
 
-- [ ] **Step 7: Implementar `engine/combate/recompensas.js`**
+- [x] **Step 7: Implementar `engine/combate/recompensas.js`**
 
 ```js
 import { rand } from "./aleatorio.js";
@@ -1425,12 +1425,12 @@ export function concederRecompensaVitoria(jogador, inimigo) {
 }
 ```
 
-- [ ] **Step 8: Rodar e confirmar sucesso**
+- [x] **Step 8: Rodar e confirmar sucesso**
 
 Run: `npm run test -- recompensas`
 Expected: PASS — 2 testes verdes.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add engine/combate/habilidadesInimigo.js engine/combate/habilidadesInimigo.test.js engine/combate/recompensas.js engine/combate/recompensas.test.js
@@ -1451,7 +1451,7 @@ git commit -m "feat: habilidades de inimigo (esquiva, ataque duplo, envenenament
 
 Fiel à ordem de execução de `JogoRPG/batalha/sistemaBatalha.js` (processamento passivo -> ação do jogador -> ação do inimigo -> checagens de fim de jogo) e `JogoRPG/batalha/ataqueJogador/ataqueJogador.js`/`ataqueInimigo.js`.
 
-- [ ] **Step 1: Escrever o teste `engine/combate/turno.test.js`**
+- [x] **Step 1: Escrever o teste `engine/combate/turno.test.js`**
 
 ```js
 import { describe, it, expect, vi, afterEach } from "vitest";
@@ -1615,12 +1615,12 @@ describe("executarRodada", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- turno`
 Expected: FAIL — `Cannot find module './turno.js'`.
 
-- [ ] **Step 3: Implementar `engine/combate/turno.js`**
+- [x] **Step 3: Implementar `engine/combate/turno.js`**
 
 ```js
 import { rand } from "./aleatorio.js";
@@ -1765,12 +1765,12 @@ export function executarRodada(estado, acao) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- turno`
 Expected: PASS — 7 testes verdes.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add engine/combate/turno.js engine/combate/turno.test.js
@@ -1789,7 +1789,7 @@ git commit -m "feat: orquestração da rodada de combate (executarRodada)"
 - Consumes: `executarRodada` (Task 11).
 - Produces: `criarEstadoBatalha(jogador, inimigo) -> estado`, `executarAcaoJogador(estado, acao) -> { estado, eventos, fim }` — API pública consumida pela Task 17 (`controladorBatalha.js`) via `@engine/combate/index.js`.
 
-- [ ] **Step 1: Escrever o teste `engine/combate/index.test.js`**
+- [x] **Step 1: Escrever o teste `engine/combate/index.test.js`**
 
 ```js
 import { describe, it, expect, vi, afterEach } from "vitest";
@@ -1861,12 +1861,12 @@ describe("executarAcaoJogador", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- combate/index`
 Expected: FAIL — `Cannot find module './index.js'`.
 
-- [ ] **Step 3: Implementar `engine/combate/index.js`**
+- [x] **Step 3: Implementar `engine/combate/index.js`**
 
 ```js
 import { executarRodada } from "./turno.js";
@@ -1885,17 +1885,17 @@ export function executarAcaoJogador(estado, acao) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- combate/index`
 Expected: PASS — 3 testes verdes.
 
-- [ ] **Step 5: Rodar a suíte completa do engine para garantir que nada quebrou**
+- [x] **Step 5: Rodar a suíte completa do engine para garantir que nada quebrou**
 
 Run: `npm run test -- engine`
 Expected: PASS — todos os testes de `engine/combate/*.test.js` verdes (aleatorio, calculoDano, efeitosDeStatus, habilidadesInimigo, recompensas, turno, index).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add engine/combate/index.js engine/combate/index.test.js
@@ -1914,7 +1914,7 @@ git commit -m "feat: API pública do engine de combate (criarEstadoBatalha, exec
 **Interfaces:**
 - Produces: sprite sheets em caminhos previsíveis (`/assets/personagens/<personagem>/<animacao>.png`) consumidos pela Task 14 (`sprites.js`). Cada sheet tem células de 100x100px: `idle.png` e `ataque.png` têm 6 quadros (600x100), `dano.png` e `morte.png` têm 4 quadros (400x100) — confirmado via inspeção das imagens de origem.
 
-- [ ] **Step 1: Copiar os sprites do Soldado**
+- [x] **Step 1: Copiar os sprites do Soldado**
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "WebRPG\assets\personagens\soldado" | Out-Null
@@ -1924,7 +1924,7 @@ Copy-Item "WebRPG\assets\Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc\C
 Copy-Item "WebRPG\assets\Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc\Characters(100x100)\Soldier\Soldier\Soldier-Death.png" "WebRPG\assets\personagens\soldado\morte.png"
 ```
 
-- [ ] **Step 2: Copiar os sprites do Orc**
+- [x] **Step 2: Copiar os sprites do Orc**
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "WebRPG\assets\personagens\orc" | Out-Null
@@ -1934,12 +1934,12 @@ Copy-Item "WebRPG\assets\Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc\C
 Copy-Item "WebRPG\assets\Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc\Characters(100x100)\Orc\Orc\Orc-Death.png" "WebRPG\assets\personagens\orc\morte.png"
 ```
 
-- [ ] **Step 3: Verificar que os 8 arquivos existem**
+- [x] **Step 3: Verificar que os 8 arquivos existem**
 
 Run: `ls WebRPG/assets/personagens/soldado WebRPG/assets/personagens/orc`
 Expected: cada pasta lista `idle.png`, `ataque.png`, `dano.png`, `morte.png`.
 
-- [ ] **Step 4: Atualizar `WebRPG/assets/CREDITS.md`**
+- [x] **Step 4: Atualizar `WebRPG/assets/CREDITS.md`**
 
 Editar a seção "Já no repositório" adicionando a linha:
 
@@ -1949,7 +1949,7 @@ Editar a seção "Já no repositório" adicionando a linha:
 
 (substitui a linha "Organizado em: ..." que já existia como pendência).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add WebRPG/assets/personagens WebRPG/assets/CREDITS.md
@@ -1969,7 +1969,7 @@ git commit -m "feat: organizar sprites de Soldado e Orc para a tela de batalha"
 **Interfaces:**
 - Produces: `definirSprite(elemento, personagem, nomeAnimacao)`, `tocarAnimacao(elemento, personagem, nomeAnimacao) -> Promise<void>` — usados pela Task 15 (`animacoes.js`). Classes CSS `.palco-batalha`, `.palco-batalha--tremendo`, `.combatente`, `.sprite`, `.sprite--tocando`, `.sprite--flash`, `.numero-dano`, `.numero-dano--critico` — usadas pelas Tasks 15 e 16.
 
-- [ ] **Step 1: Escrever o teste `WebRPG/src/telas/batalha/sprites.test.js`**
+- [x] **Step 1: Escrever o teste `WebRPG/src/telas/batalha/sprites.test.js`**
 
 ```js
 import { describe, it, expect } from "vitest";
@@ -2009,12 +2009,12 @@ describe("tocarAnimacao", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- sprites`
 Expected: FAIL — `Cannot find module './sprites.js'`.
 
-- [ ] **Step 3: Implementar `WebRPG/src/telas/batalha/sprites.js`**
+- [x] **Step 3: Implementar `WebRPG/src/telas/batalha/sprites.js`**
 
 ```js
 const ANIMACOES = {
@@ -2052,12 +2052,12 @@ export function tocarAnimacao(elemento, personagem, nomeAnimacao) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- sprites`
 Expected: PASS — 4 testes verdes.
 
-- [ ] **Step 5: Criar `WebRPG/src/estilos/batalha.css`**
+- [x] **Step 5: Criar `WebRPG/src/estilos/batalha.css`**
 
 ```css
 .tela-batalha {
@@ -2206,7 +2206,7 @@ Expected: PASS — 4 testes verdes.
 }
 ```
 
-- [ ] **Step 6: Importar o novo CSS em `WebRPG/src/main.js`**
+- [x] **Step 6: Importar o novo CSS em `WebRPG/src/main.js`**
 
 Adicionar a linha abaixo do bloco de imports de estilo existente em `WebRPG/src/main.js`:
 
@@ -2214,7 +2214,7 @@ Adicionar a linha abaixo do bloco de imports de estilo existente em `WebRPG/src/
 import "./estilos/batalha.css";
 ```
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add WebRPG/src/telas/batalha/sprites.js WebRPG/src/telas/batalha/sprites.test.js WebRPG/src/estilos/batalha.css WebRPG/src/main.js
@@ -2233,7 +2233,7 @@ git commit -m "feat: motor de animação de sprite e CSS da tela de batalha"
 - Consumes: `tocarAnimacao` (Task 14).
 - Produces: `reproduzirEventos(eventos, elementos) -> Promise<void>`, onde `elementos = { palco, spriteJogador, spriteInimigo, combatenteJogador, combatenteInimigo }` — usado pela Task 17 (`controladorBatalha.js`). Consome exatamente os tipos de evento emitidos por `executarRodada` (Task 11): `dano`, `esquiva`, `bloqueio`, `sangramento_tick`, `envenenamento_tick`, `sangramento_aplicado`, `envenenamento_aplicado`, `cura_xama`, `morte`, `fuga`, `vitoria`, `derrota`.
 
-- [ ] **Step 1: Escrever o teste `WebRPG/src/telas/batalha/animacoes.test.js`**
+- [x] **Step 1: Escrever o teste `WebRPG/src/telas/batalha/animacoes.test.js`**
 
 ```js
 import { describe, it, expect, vi } from "vitest";
@@ -2293,12 +2293,12 @@ describe("reproduzirEventos", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- animacoes`
 Expected: FAIL — `Cannot find module './animacoes.js'`.
 
-- [ ] **Step 3: Implementar `WebRPG/src/telas/batalha/animacoes.js`**
+- [x] **Step 3: Implementar `WebRPG/src/telas/batalha/animacoes.js`**
 
 ```js
 import { tocarAnimacao } from "./sprites.js";
@@ -2381,12 +2381,12 @@ export async function reproduzirEventos(eventos, elementos) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- animacoes`
 Expected: PASS — 3 testes verdes.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add WebRPG/src/telas/batalha/animacoes.js WebRPG/src/telas/batalha/animacoes.test.js
@@ -2404,7 +2404,7 @@ git commit -m "feat: fila de eventos para animação da batalha"
 **Interfaces:**
 - Produces: `montarTelaBatalha(container, { jogador, inimigo }) -> elementos`, `atualizarBarras(elementos, jogador, inimigo)`, `registrarNoLog(elementos, mensagem)` — usados pela Task 17 (`controladorBatalha.js`). `elementos` inclui: `palco`, `combatenteJogador`, `combatenteInimigo`, `spriteJogador`, `spriteInimigo`, `barraHpJogador`, `barraHpInimigo`, `log`, `botaoAtacar`, `botaoFugir`.
 
-- [ ] **Step 1: Escrever o teste `WebRPG/src/telas/batalha/telaBatalha.test.js`**
+- [x] **Step 1: Escrever o teste `WebRPG/src/telas/batalha/telaBatalha.test.js`**
 
 ```js
 import { describe, it, expect } from "vitest";
@@ -2476,12 +2476,12 @@ describe("registrarNoLog", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- telaBatalha`
 Expected: FAIL — `Cannot find module './telaBatalha.js'`.
 
-- [ ] **Step 3: Implementar `WebRPG/src/telas/batalha/telaBatalha.js`**
+- [x] **Step 3: Implementar `WebRPG/src/telas/batalha/telaBatalha.js`**
 
 ```js
 function criarCombatente(nome, classeSprite) {
@@ -2547,12 +2547,12 @@ export function registrarNoLog(elementos, mensagem) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- telaBatalha`
 Expected: PASS — 6 testes verdes.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add WebRPG/src/telas/batalha/telaBatalha.js WebRPG/src/telas/batalha/telaBatalha.test.js
@@ -2572,7 +2572,7 @@ git commit -m "feat: estrutura DOM da tela de batalha"
 - Consumes: `criarEstadoBatalha`, `executarAcaoJogador` (`@engine/combate/index.js`, Task 12); `montarTelaBatalha`, `atualizarBarras`, `registrarNoLog` (Task 16); `reproduzirEventos` (Task 15).
 - Produces: `iniciarBatalha(container, jogador, inimigo) -> elementos` (com `elementos.executarAcao` exposto para testes e reuso), registrado no roteador como a tela padrão de boot desta fase.
 
-- [ ] **Step 1: Escrever o teste `WebRPG/src/telas/batalha/controladorBatalha.test.js`**
+- [x] **Step 1: Escrever o teste `WebRPG/src/telas/batalha/controladorBatalha.test.js`**
 
 ```js
 import { describe, it, expect, vi } from "vitest";
@@ -2642,12 +2642,12 @@ describe("iniciarBatalha", () => {
 });
 ```
 
-- [ ] **Step 2: Rodar e confirmar falha**
+- [x] **Step 2: Rodar e confirmar falha**
 
 Run: `npm run test -- controladorBatalha`
 Expected: FAIL — `Cannot find module './controladorBatalha.js'`.
 
-- [ ] **Step 3: Implementar `WebRPG/src/telas/batalha/controladorBatalha.js`**
+- [x] **Step 3: Implementar `WebRPG/src/telas/batalha/controladorBatalha.js`**
 
 ```js
 import { criarEstadoBatalha, executarAcaoJogador } from "@engine/combate/index.js";
@@ -2727,12 +2727,12 @@ export function iniciarBatalha(container, jogador, inimigoOriginal) {
 }
 ```
 
-- [ ] **Step 4: Rodar e confirmar sucesso**
+- [x] **Step 4: Rodar e confirmar sucesso**
 
 Run: `npm run test -- controladorBatalha`
 Expected: PASS — 3 testes verdes.
 
-- [ ] **Step 5: Atualizar `WebRPG/src/main.js` para iniciar a batalha de demonstração Soldado vs Orc**
+- [x] **Step 5: Atualizar `WebRPG/src/main.js` para iniciar a batalha de demonstração Soldado vs Orc**
 
 Substituir o conteúdo de `WebRPG/src/main.js` por:
 
@@ -2790,12 +2790,12 @@ registrarTela("batalha", (container) => iniciarBatalha(container, jogadorDeTeste
 mostrarTela("batalha");
 ```
 
-- [ ] **Step 6: Rodar a suíte completa de testes**
+- [x] **Step 6: Rodar a suíte completa de testes**
 
 Run: `npm run test`
 Expected: PASS — todos os testes de `engine/**` e `WebRPG/src/**` verdes (aproximadamente 45 testes no total desta Fase 1).
 
-- [ ] **Step 7: Verificação manual jogável (critério de pronto da Fase 1)**
+- [x] **Step 7: Verificação manual jogável (critério de pronto da Fase 1)**
 
 Run: `npm run dev`
 
@@ -2807,7 +2807,7 @@ No navegador, confirmar:
 5. Ao zerar o HP do Orc, o log mostra "Vitória! +N XP, +N ouro." e os botões ficam desabilitados. Ao recarregar a página (F5) uma nova batalha começa (sem persistência — save é Fase 2).
 6. Se o HP do jogador zerar primeiro, o log mostra "Você foi derrotado..." e os botões ficam desabilitados.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add WebRPG/src/telas/batalha/controladorBatalha.js WebRPG/src/telas/batalha/controladorBatalha.test.js WebRPG/src/main.js
