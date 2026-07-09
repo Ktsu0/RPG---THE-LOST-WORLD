@@ -4,7 +4,11 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "repository": {
         "type": "git",
@@ -24,5 +28,10 @@
         "dotenv": "^17.2.2",
         "promisify": "^0.0.3",
         "prompt-sync": "^4.2.0"
+    },
+    "devDependencies": {
+        "jsdom": "^25.0.1",
+        "vite": "^6.4.3",
+        "vitest": "^3.2.7"
     }
 }
