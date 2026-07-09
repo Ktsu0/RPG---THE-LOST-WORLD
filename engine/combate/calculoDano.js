@@ -63,3 +63,44 @@ export function calcularDefesaInimigo(inimigo) {
   def += inimigo.bonusDef || 0;
   return def;
 }
+
+export function resolverAtaqueJogador(jogador, inimigo) {
+  const danoBruto = calcularDanoBaseJogador(jogador);
+  const defesaEfetiva = calcularDefesaInimigo(inimigo);
+  let dano = Math.max(1, danoBruto - defesaEfetiva);
+  dano = aplicarFuriaBarbaro(jogador, dano);
+
+  const chanceCritica = calcularChanceCriticaJogador(jogador);
+  let critico = false;
+  if (chanceCritica > 0 && rand(1, 100) <= chanceCritica) {
+    critico = true;
+    dano *= 2;
+  }
+
+  if (inimigo.habilidade === "esquiva" && rand(1, 100) <= 15) {
+    return { dano: 0, critico: false, esquivou: true };
+  }
+
+  return { dano, critico, esquivou: false };
+}
+
+export function resolverAtaqueInimigo(inimigo, jogador) {
+  const danoBase = Math.max(
+    1,
+    inimigo.atk + rand(0, 3) - Math.floor(calcularDefesaJogador(jogador) / 5)
+  );
+
+  const esquivaTotal =
+    (jogador.bonusClasse?.esquiva || 0) + (jogador.bonusEsquiva || 0);
+  if (rand(1, 100) <= esquivaTotal) {
+    return { resultado: "esquiva", dano: 0 };
+  }
+
+  const chanceBloqueio =
+    (jogador.bonusClasse?.bloqueioChance || 0) + (jogador.bonusBloqueio || 0);
+  if (rand(1, 100) <= chanceBloqueio) {
+    return { resultado: "bloqueio", dano: 0 };
+  }
+
+  return { resultado: "dano", dano: danoBase };
+}
