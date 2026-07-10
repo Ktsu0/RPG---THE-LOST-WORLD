@@ -47,6 +47,9 @@ describe("montarTelaPersonagem", () => {
 
     expect(jogador.equipamentos.head.nome).toBe("Elmo de Ferro");
     expect(jogador.inventario.some((i) => i.nome === "Elmo de Ferro")).toBe(false);
+    // A tela precisa refletir o bônus de defesa do item recém-equipado (+6),
+    // não só o atributo base do jogador.
+    expect(container.querySelector(".painel-atributos").textContent).toContain("Defesa: 26");
   });
 
   it("equipa uma arma do inventário ao clicar", () => {
@@ -60,6 +63,15 @@ describe("montarTelaPersonagem", () => {
     linhaArma.querySelector("[data-acao='equipar']").click();
 
     expect(jogador.armaEquipada.nome).toBe("Espada Longa");
+  });
+
+  it("não lista materiais de craft (strings soltas, ex. recompensa de missão) como equipáveis", () => {
+    const container = document.createElement("div");
+    const jogador = { ...jogadorDeTeste(), inventario: [...jogadorDeTeste().inventario, "Pena do Corvo Sombrio"] };
+    montarTelaPersonagem(container, { jogador, aoSair: vi.fn() });
+    const itens = [...container.querySelectorAll("[data-inventario-item]")];
+    expect(itens.some((el) => el.textContent.includes("undefined"))).toBe(false);
+    expect(itens).toHaveLength(2); // só Elmo de Ferro e Espada Longa, não a string solta
   });
 
   it("chama aoSair ao clicar em Voltar", () => {
