@@ -1,0 +1,16 @@
+.tela-personagem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-md);
+  padding: var(--espaco-lg);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.item-inventario {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espaco-sm);
+  margin-bottom: var(--espaco-sm);
+}
