@@ -2,6 +2,9 @@ import { criarEstadoBatalha, executarAcaoJogador } from "@engine/combate/index.j
 import { montarTelaBatalha, atualizarBarras, registrarNoLog, mostrarOverlayFim } from "./telaBatalha.js";
 import { reproduzirEventos } from "./animacoes.js";
 
+const PAUSA_OVERLAY_FIM_MS = 1500;
+const espera = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 function descreverEvento(evento) {
   switch (evento.tipo) {
     case "dano":
@@ -73,6 +76,12 @@ export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim } = 
           xpGanho: eventoVitoria?.xpGanho,
           ouroGanho: eventoVitoria?.ouroGanho,
         });
+        // Sem essa pausa, onFim() troca de tela (roteador limpa o container)
+        // antes do navegador sequer pintar o overlay — ele nunca chega a ser
+        // visto de fato (achado na verificação manual da Fase 5, não coberto
+        // pelos testes unitários porque eles checam a classe CSS de forma
+        // síncrona, sem esperar a troca de tela real acontecer).
+        await espera(PAUSA_OVERLAY_FIM_MS);
       }
       if (onFim) onFim(resultado.fim, estado);
     }
