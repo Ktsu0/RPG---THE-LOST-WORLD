@@ -9,6 +9,7 @@ import "./estilos/personagem.css";
 import "./estilos/guilda.css";
 import "./estilos/torre.css";
 import "./estilos/masmorra.css";
+import "./estilos/arena.css";
 import { inicializarRoteador, registrarTela, mostrarTela } from "./rotas/roteador.js";
 import { montarTelaCriacao } from "./telas/criacao/telaCriacao.js";
 import { montarTelaCidade } from "./telas/cidade/telaCidade.js";
