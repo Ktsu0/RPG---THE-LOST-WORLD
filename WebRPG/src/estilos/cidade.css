@@ -1,0 +1,26 @@
+.tela-cidade {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-lg);
+  padding: var(--espaco-lg);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.cabecalho-cidade {
+  display: flex;
+  gap: var(--espaco-md);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.grade-locais {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaco-sm);
+}
+
+.local-cidade {
+  padding: var(--espaco-md);
+  text-align: left;
+}

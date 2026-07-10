@@ -3,6 +3,7 @@ import "./estilos/base.css";
 import "./estilos/paineis.css";
 import "./estilos/batalha.css";
 import "./estilos/criacao.css";
+import "./estilos/cidade.css";
 import { inicializarRoteador, registrarTela, mostrarTela } from "./rotas/roteador.js";
 import { montarTelaInicial } from "./telas/inicial.js";
 import { iniciarBatalha } from "./telas/batalha/controladorBatalha.js";
