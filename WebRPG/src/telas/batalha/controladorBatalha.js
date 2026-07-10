@@ -35,7 +35,7 @@ function descreverEvento(evento) {
   }
 }
 
-export function iniciarBatalha(container, jogador, inimigoOriginal) {
+export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim } = {}) {
   let estado = criarEstadoBatalha(jogador, inimigoOriginal);
   const elementos = montarTelaBatalha(container, {
     jogador: estado.jogador,
@@ -65,6 +65,8 @@ export function iniciarBatalha(container, jogador, inimigoOriginal) {
     if (!resultado.fim) {
       elementos.botaoAtacar.disabled = false;
       elementos.botaoFugir.disabled = false;
+    } else if (onFim) {
+      onFim(resultado.fim, estado);
     }
   }
 
