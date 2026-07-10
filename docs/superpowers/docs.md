@@ -10,7 +10,7 @@ Cada fase tem um plano de implementação detalhado em `plans/`.
 | 1 — Batalha | `engine/combate/` com eventos, console adaptado, tela de batalha completa | [2026-07-08-webrpg-fase0-fase1.md](./plans/2026-07-08-webrpg-fase0-fase1.md) | ✅ Concluída |
 | 2 — Identidade | Wizard de criação, cidade hub, save/load localStorage, auto-save | [2026-07-09-webrpg-fase2-identidade.md](./plans/2026-07-09-webrpg-fase2-identidade.md) | ✅ Concluída |
 | 3 — Economia | Missões da guilda, loja com sets, tela de personagem (equipar) | [2026-07-09-webrpg-fase3-economia.md](./plans/2026-07-09-webrpg-fase3-economia.md) | ✅ Concluída |
-| 4 — Profundidade | Torre, masmorra em grade, arena infinita | [2026-07-09-webrpg-fase4-profundidade.md](./plans/2026-07-09-webrpg-fase4-profundidade.md) | ⬜ Não iniciada |
+| 4 — Profundidade | Torre, masmorra em grade, arena infinita | [2026-07-09-webrpg-fase4-profundidade.md](./plans/2026-07-09-webrpg-fase4-profundidade.md) | ✅ Concluída |
 | 5 — Polimento | Sons, música, transições, responsividade mobile, onboarding | [2026-07-09-webrpg-fase5-polimento.md](./plans/2026-07-09-webrpg-fase5-polimento.md) | ⬜ Não iniciada |
 
 **Critério de pronto de cada fase:** ver a coluna "Critério de pronto" da tabela na spec (seção 6).
