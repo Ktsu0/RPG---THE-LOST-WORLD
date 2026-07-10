@@ -14,3 +14,9 @@
   gap: var(--espaco-sm);
   margin-bottom: var(--espaco-sm);
 }
+
+@media (max-width: 480px) {
+  .item-inventario {
+    flex-wrap: wrap;
+  }
+}

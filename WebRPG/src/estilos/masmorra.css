@@ -37,3 +37,9 @@
   grid-template-columns: repeat(4, 1fr);
   gap: var(--espaco-sm);
 }
+
+@media (max-width: 480px) {
+  .celula-masmorra {
+    font-size: 8px;
+  }
+}

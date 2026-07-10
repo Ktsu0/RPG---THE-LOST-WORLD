@@ -176,3 +176,12 @@
   padding: var(--espaco-md);
   justify-content: center;
 }
+
+@media (max-width: 480px) {
+  .sprite {
+    transform: scale(1.6);
+  }
+  .barra-acoes {
+    flex-wrap: wrap;
+  }
+}

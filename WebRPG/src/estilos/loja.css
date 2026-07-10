@@ -29,3 +29,9 @@
 .raridade--raro { color: var(--cor-mp); }
 .raridade--lendario { color: var(--cor-destaque); }
 .raridade--padrao { color: var(--cor-texto); }
+
+@media (max-width: 480px) {
+  .item-loja {
+    flex-wrap: wrap;
+  }
+}

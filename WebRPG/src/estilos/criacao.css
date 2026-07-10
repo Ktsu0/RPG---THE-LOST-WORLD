@@ -57,3 +57,9 @@
 #botao-confirmar {
   grid-column: 1 / -1;
 }
+
+@media (max-width: 480px) {
+  .tela-criacao {
+    grid-template-columns: 1fr;
+  }
+}

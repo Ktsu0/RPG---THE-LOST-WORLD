@@ -56,3 +56,9 @@
 .barra__preenchimento--mp {
   background: var(--cor-mp);
 }
+
+@media (max-width: 480px) {
+  .botao {
+    min-height: 44px;
+  }
+}

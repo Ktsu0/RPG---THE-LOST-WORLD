@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+:root {
+  --largura-mobile: 480px;
+}
+
 body {
   background: var(--cor-fundo);
   color: var(--cor-texto);

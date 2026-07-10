@@ -24,3 +24,9 @@
   padding: var(--espaco-md);
   text-align: left;
 }
+
+@media (max-width: 480px) {
+  .grade-locais {
+    grid-template-columns: 1fr;
+  }
+}
