@@ -17,6 +17,9 @@ import { iniciarBatalha } from "./telas/batalha/controladorBatalha.js";
 import { montarTelaLoja } from "./telas/loja/telaLoja.js";
 import { montarTelaPersonagem } from "./telas/personagem/telaPersonagem.js";
 import { montarTelaGuilda } from "./telas/guilda/telaGuilda.js";
+import { montarTelaTorre } from "./telas/torre/telaTorre.js";
+import { montarTelaMasmorra } from "./telas/masmorra/telaMasmorra.js";
+import { montarTelaArena } from "./telas/arena/telaArena.js";
 import { criarInimigoTreino } from "@engine/geradores/inimigoTreino.js";
 import { checarLevelUp } from "@engine/personagem/experiencia.js";
 import { salvarNoNavegador, carregarDoNavegador, existeSaveNoNavegador } from "./armazenamento/localStorage.js";
@@ -46,6 +49,24 @@ export function bootstrap(container) {
             montarTelaPersonagem(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
           );
           mostrarTela("personagem");
+        },
+        aoAbrirTorre: () => {
+          registrarTela("torre", (el2) =>
+            montarTelaTorre(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
+          );
+          mostrarTela("torre");
+        },
+        aoAbrirMasmorra: () => {
+          registrarTela("masmorra", (el2) =>
+            montarTelaMasmorra(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
+          );
+          mostrarTela("masmorra");
+        },
+        aoAbrirArena: () => {
+          registrarTela("arena", (el2) =>
+            montarTelaArena(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
+          );
+          mostrarTela("arena");
         },
       })
     );

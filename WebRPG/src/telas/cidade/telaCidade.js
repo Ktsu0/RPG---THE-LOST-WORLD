@@ -1,4 +1,7 @@
-export function montarTelaCidade(container, { jogador, aoExplorar, aoAbrirGuilda, aoAbrirLoja, aoAbrirPersonagem }) {
+export function montarTelaCidade(container, {
+  jogador, aoExplorar, aoAbrirGuilda, aoAbrirLoja, aoAbrirPersonagem,
+  aoAbrirTorre, aoAbrirMasmorra, aoAbrirArena,
+}) {
   container.innerHTML = `
     <div class="tela-cidade">
       <div class="painel cabecalho-cidade">
@@ -12,9 +15,9 @@ export function montarTelaCidade(container, { jogador, aoExplorar, aoAbrirGuilda
         <button class="botao local-cidade" data-local="guilda">📝 Guilda</button>
         <button class="botao local-cidade" data-local="loja">💰 Loja</button>
         <button class="botao local-cidade" data-local="personagem">🧑 Personagem</button>
-        <button class="botao local-cidade" data-local="torre" disabled>🏰 Torre — Em breve</button>
-        <button class="botao local-cidade" data-local="masmorra" disabled>🗝️ Masmorra — Em breve</button>
-        <button class="botao local-cidade" data-local="arena" disabled>⚔️ Arena — Em breve</button>
+        <button class="botao local-cidade" data-local="torre">🏰 Torre</button>
+        <button class="botao local-cidade" data-local="masmorra">🗝️ Masmorra</button>
+        <button class="botao local-cidade" data-local="arena">⚔️ Arena</button>
       </div>
     </div>
   `;
@@ -25,6 +28,9 @@ export function montarTelaCidade(container, { jogador, aoExplorar, aoAbrirGuilda
   container.querySelector('[data-local="guilda"]').addEventListener("click", () => aoAbrirGuilda());
   container.querySelector('[data-local="loja"]').addEventListener("click", () => aoAbrirLoja());
   container.querySelector('[data-local="personagem"]').addEventListener("click", () => aoAbrirPersonagem());
+  container.querySelector('[data-local="torre"]').addEventListener("click", () => aoAbrirTorre());
+  container.querySelector('[data-local="masmorra"]').addEventListener("click", () => aoAbrirMasmorra());
+  container.querySelector('[data-local="arena"]').addEventListener("click", () => aoAbrirArena());
 
   return { botaoExplorar, cabecalho: container.querySelector(".cabecalho-cidade") };
 }

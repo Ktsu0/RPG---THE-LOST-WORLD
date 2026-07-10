@@ -16,18 +16,32 @@ describe("montarTelaCidade", () => {
     expect(texto).toContain("120");
   });
 
-  it("desabilita apenas os locais que ainda não foram implementados (torre, masmorra, arena)", () => {
+  it("nenhum local está mais desabilitado (Fase 4 completa todos os modos)", () => {
     const container = document.createElement("div");
     montarTelaCidade(container, {
-      jogador: jogadorDeTeste(),
-      aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(), aoAbrirPersonagem: vi.fn(),
+      jogador: jogadorDeTeste(), aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(),
+      aoAbrirPersonagem: vi.fn(), aoAbrirTorre: vi.fn(), aoAbrirMasmorra: vi.fn(), aoAbrirArena: vi.fn(),
     });
-    for (const local of ["torre", "masmorra", "arena"]) {
-      expect(container.querySelector(`[data-local="${local}"]`).disabled).toBe(true);
-    }
-    for (const local of ["guilda", "loja", "personagem"]) {
+    for (const local of ["guilda", "loja", "personagem", "torre", "masmorra", "arena"]) {
       expect(container.querySelector(`[data-local="${local}"]`).disabled).toBe(false);
     }
+  });
+
+  it("chama aoAbrirTorre, aoAbrirMasmorra e aoAbrirArena ao clicar nos respectivos botões", () => {
+    const aoAbrirTorre = vi.fn();
+    const aoAbrirMasmorra = vi.fn();
+    const aoAbrirArena = vi.fn();
+    const container = document.createElement("div");
+    montarTelaCidade(container, {
+      jogador: jogadorDeTeste(), aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(),
+      aoAbrirPersonagem: vi.fn(), aoAbrirTorre, aoAbrirMasmorra, aoAbrirArena,
+    });
+    container.querySelector('[data-local="torre"]').click();
+    container.querySelector('[data-local="masmorra"]').click();
+    container.querySelector('[data-local="arena"]').click();
+    expect(aoAbrirTorre).toHaveBeenCalledOnce();
+    expect(aoAbrirMasmorra).toHaveBeenCalledOnce();
+    expect(aoAbrirArena).toHaveBeenCalledOnce();
   });
 
   it("chama aoAbrirGuilda, aoAbrirLoja e aoAbrirPersonagem ao clicar nos respectivos botões", () => {
