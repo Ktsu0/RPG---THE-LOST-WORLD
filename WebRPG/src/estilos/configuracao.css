@@ -1,0 +1,12 @@
+.tela-configuracao {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-md);
+  padding: var(--espaco-lg);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tela-configuracao input[type="range"] {
+  width: 100%;
+}

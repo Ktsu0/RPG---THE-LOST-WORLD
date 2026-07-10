@@ -21,10 +21,23 @@ describe("montarTelaCidade", () => {
     montarTelaCidade(container, {
       jogador: jogadorDeTeste(), aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(),
       aoAbrirPersonagem: vi.fn(), aoAbrirTorre: vi.fn(), aoAbrirMasmorra: vi.fn(), aoAbrirArena: vi.fn(),
+      aoAbrirConfiguracao: vi.fn(),
     });
-    for (const local of ["guilda", "loja", "personagem", "torre", "masmorra", "arena"]) {
+    for (const local of ["guilda", "loja", "personagem", "torre", "masmorra", "arena", "configuracao"]) {
       expect(container.querySelector(`[data-local="${local}"]`).disabled).toBe(false);
     }
+  });
+
+  it("chama aoAbrirConfiguracao ao clicar no botão de configurações", () => {
+    const aoAbrirConfiguracao = vi.fn();
+    const container = document.createElement("div");
+    montarTelaCidade(container, {
+      jogador: jogadorDeTeste(), aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(),
+      aoAbrirPersonagem: vi.fn(), aoAbrirTorre: vi.fn(), aoAbrirMasmorra: vi.fn(), aoAbrirArena: vi.fn(),
+      aoAbrirConfiguracao,
+    });
+    container.querySelector('[data-local="configuracao"]').click();
+    expect(aoAbrirConfiguracao).toHaveBeenCalledOnce();
   });
 
   it("chama aoAbrirTorre, aoAbrirMasmorra e aoAbrirArena ao clicar nos respectivos botões", () => {

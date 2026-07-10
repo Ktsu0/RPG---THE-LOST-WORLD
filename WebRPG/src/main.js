@@ -10,6 +10,7 @@ import "./estilos/guilda.css";
 import "./estilos/torre.css";
 import "./estilos/masmorra.css";
 import "./estilos/arena.css";
+import "./estilos/configuracao.css";
 import { inicializarRoteador, registrarTela, mostrarTela } from "./rotas/roteador.js";
 import { montarTelaCriacao } from "./telas/criacao/telaCriacao.js";
 import { montarTelaCidade } from "./telas/cidade/telaCidade.js";
@@ -20,6 +21,7 @@ import { montarTelaGuilda } from "./telas/guilda/telaGuilda.js";
 import { montarTelaTorre } from "./telas/torre/telaTorre.js";
 import { montarTelaMasmorra } from "./telas/masmorra/telaMasmorra.js";
 import { montarTelaArena } from "./telas/arena/telaArena.js";
+import { montarTelaConfiguracoes } from "./telas/configuracao/telaConfiguracoes.js";
 import { tocarMusica } from "@audio/musica.js";
 import { criarInimigoTreino } from "@engine/geradores/inimigoTreino.js";
 import { checarLevelUp } from "@engine/personagem/experiencia.js";
@@ -69,6 +71,12 @@ export function bootstrap(container) {
             montarTelaArena(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
           );
           mostrarTela("arena");
+        },
+        aoAbrirConfiguracao: () => {
+          registrarTela("configuracao", (el2) =>
+            montarTelaConfiguracoes(el2, { jogador, aoSair: () => irParaCidade(jogador) })
+          );
+          mostrarTela("configuracao");
         },
       })
     );

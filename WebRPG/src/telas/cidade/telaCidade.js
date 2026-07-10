@@ -1,6 +1,6 @@
 export function montarTelaCidade(container, {
   jogador, aoExplorar, aoAbrirGuilda, aoAbrirLoja, aoAbrirPersonagem,
-  aoAbrirTorre, aoAbrirMasmorra, aoAbrirArena,
+  aoAbrirTorre, aoAbrirMasmorra, aoAbrirArena, aoAbrirConfiguracao,
 }) {
   container.innerHTML = `
     <div class="tela-cidade">
@@ -18,6 +18,7 @@ export function montarTelaCidade(container, {
         <button class="botao local-cidade" data-local="torre">🏰 Torre</button>
         <button class="botao local-cidade" data-local="masmorra">🗝️ Masmorra</button>
         <button class="botao local-cidade" data-local="arena">⚔️ Arena</button>
+        <button class="botao local-cidade" data-local="configuracao">⚙️ Configurações</button>
       </div>
     </div>
   `;
@@ -31,6 +32,7 @@ export function montarTelaCidade(container, {
   container.querySelector('[data-local="torre"]').addEventListener("click", () => aoAbrirTorre());
   container.querySelector('[data-local="masmorra"]').addEventListener("click", () => aoAbrirMasmorra());
   container.querySelector('[data-local="arena"]').addEventListener("click", () => aoAbrirArena());
+  container.querySelector('[data-local="configuracao"]').addEventListener("click", () => aoAbrirConfiguracao());
 
   return { botaoExplorar, cabecalho: container.querySelector(".cabecalho-cidade") };
 }
