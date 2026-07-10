@@ -1,0 +1,39 @@
+.tela-masmorra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-md);
+  padding: var(--espaco-lg);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.grade-masmorra {
+  gap: 2px;
+}
+
+.celula-masmorra {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cor-barra-vazia);
+  border: 1px solid var(--cor-borda);
+  font-family: var(--fonte-pixel);
+  font-size: 10px;
+}
+
+.celula--oculta {
+  background: var(--cor-fundo);
+  color: transparent;
+}
+
+.celula--jogador {
+  background: var(--cor-destaque);
+  color: var(--cor-fundo);
+}
+
+.controles-masmorra {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--espaco-sm);
+}
