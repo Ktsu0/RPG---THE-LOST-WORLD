@@ -9,6 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    setupFiles: ["./vitest.setup.js"],
     include: ["engine/**/*.test.js", "WebRPG/src/**/*.test.js"],
   },
 });
