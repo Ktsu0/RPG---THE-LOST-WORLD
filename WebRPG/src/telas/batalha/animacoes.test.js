@@ -5,6 +5,10 @@ vi.mock("./sprites.js", () => ({
   tocarAnimacao: vi.fn(() => Promise.resolve()),
 }));
 
+vi.mock("@audio/tocador.js", () => ({
+  tocarEfeito: vi.fn(),
+}));
+
 function criarElementosDeTeste() {
   return {
     palco: document.createElement("div"),
@@ -51,5 +55,30 @@ describe("reproduzirEventos", () => {
     ];
 
     await expect(reproduzirEventos(eventos, elementos)).resolves.toBeUndefined();
+  });
+});
+
+describe("reproduzirEventos toca efeitos sonoros", () => {
+  it("toca 'golpe' para dano normal e 'critico' para dano crítico", async () => {
+    const { tocarEfeito } = await import("@audio/tocador.js");
+    const elementos = criarElementosDeTeste();
+
+    await reproduzirEventos([
+      { tipo: "dano", autor: "jogador", alvo: "inimigo", valor: 7, critico: false },
+    ], elementos);
+    expect(tocarEfeito).toHaveBeenCalledWith("golpe");
+
+    tocarEfeito.mockClear();
+    await reproduzirEventos([
+      { tipo: "dano", autor: "jogador", alvo: "inimigo", valor: 14, critico: true },
+    ], elementos);
+    expect(tocarEfeito).toHaveBeenCalledWith("critico");
+  });
+
+  it("toca 'moeda' ao vencer a batalha", async () => {
+    const { tocarEfeito } = await import("@audio/tocador.js");
+    const elementos = criarElementosDeTeste();
+    await reproduzirEventos([{ tipo: "vitoria", xpGanho: 10, ouroGanho: 5 }], elementos);
+    expect(tocarEfeito).toHaveBeenCalledWith("moeda");
   });
 });

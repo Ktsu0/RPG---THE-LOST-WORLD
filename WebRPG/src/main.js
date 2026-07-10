@@ -20,6 +20,7 @@ import { montarTelaGuilda } from "./telas/guilda/telaGuilda.js";
 import { montarTelaTorre } from "./telas/torre/telaTorre.js";
 import { montarTelaMasmorra } from "./telas/masmorra/telaMasmorra.js";
 import { montarTelaArena } from "./telas/arena/telaArena.js";
+import { tocarMusica } from "@audio/musica.js";
 import { criarInimigoTreino } from "@engine/geradores/inimigoTreino.js";
 import { checarLevelUp } from "@engine/personagem/experiencia.js";
 import { salvarNoNavegador, carregarDoNavegador, existeSaveNoNavegador } from "./armazenamento/localStorage.js";
@@ -28,6 +29,7 @@ export function bootstrap(container) {
   inicializarRoteador(container);
 
   function irParaCidade(jogador) {
+    tocarMusica("cidade");
     registrarTela("cidade", (el) =>
       montarTelaCidade(el, {
         jogador,
@@ -74,6 +76,7 @@ export function bootstrap(container) {
   }
 
   function irParaBatalhaDeTreino(jogador) {
+    tocarMusica("batalha");
     registrarTela("batalha", (el) =>
       iniciarBatalha(el, jogador, criarInimigoTreino(), {
         onFim: (fim) => {

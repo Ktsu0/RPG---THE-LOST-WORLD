@@ -1,4 +1,5 @@
 import { tocarAnimacao } from "./sprites.js";
+import { tocarEfeito } from "@audio/tocador.js";
 
 function mostrarNumeroDano(elementoCombatente, valor, critico) {
   const numero = document.createElement("div");
@@ -39,6 +40,7 @@ export async function reproduzirEventos(eventos, elementos) {
         await tocarAnimacao(autorSprite, personagemAutor, "ataque");
         flashDano(alvoSprite);
         mostrarNumeroDano(alvoCombatente, evento.valor, evento.critico);
+        tocarEfeito(evento.critico ? "critico" : "golpe");
         if (evento.critico) tremerPalco(palco);
         await tocarAnimacao(alvoSprite, personagemAlvo, "dano");
         break;
@@ -66,8 +68,11 @@ export async function reproduzirEventos(eventos, elementos) {
         await tocarAnimacao(sprite, personagem, "morte");
         break;
       }
-      case "fuga":
       case "vitoria":
+        tocarEfeito("moeda");
+        await espera(500);
+        break;
+      case "fuga":
       case "derrota":
         await espera(500);
         break;

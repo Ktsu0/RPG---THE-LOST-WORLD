@@ -18,7 +18,7 @@ export function tocarMusica(nome) {
   faixaAtual = new Audio(`/assets/audio/musica/${nome}.mp3`);
   faixaAtual.loop = true;
   faixaAtual.volume = obterVolumeMusica();
-  faixaAtual.play().catch(() => {});
+  faixaAtual.play()?.catch?.(() => {});
 }
 
 export function pararMusica() {
