@@ -21,10 +21,19 @@ export function mostrarTela(nome, props = {}) {
       "Roteador não foi inicializado. Chame inicializarRoteador primeiro."
     );
   }
+
   elementoContainer.innerHTML = "";
+  const wrapper = document.createElement("div");
+  wrapper.className = "tela-wrapper tela--entrando";
+  elementoContainer.appendChild(wrapper);
+
   const montar = telas.get(nome);
-  montar(elementoContainer, props);
+  montar(wrapper, props);
   telaAtual = nome;
+
+  requestAnimationFrame(() => {
+    wrapper.classList.remove("tela--entrando");
+  });
 }
 
 export function telaAtualNome() {

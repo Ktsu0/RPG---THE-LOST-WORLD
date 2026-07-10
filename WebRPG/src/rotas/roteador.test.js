@@ -55,4 +55,14 @@ describe("roteador", () => {
     mostrarTela("titulo");
     expect(telaAtualNome()).toBe("titulo");
   });
+
+  describe("transição de fade", () => {
+    it("aplica e remove a classe tela--entrando na tela recém-montada", async () => {
+      registrarTela("a", (el) => { el.innerHTML = "<p>A</p>"; });
+      await mostrarTela("a");
+      // logo após montar, a classe de entrada é removida no próximo frame (via rAF/microtask)
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      expect(container.querySelector("p").parentElement.classList.contains("tela--entrando")).toBe(false);
+    });
+  });
 });
