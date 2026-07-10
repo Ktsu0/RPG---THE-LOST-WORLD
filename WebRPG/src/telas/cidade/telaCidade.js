@@ -34,5 +34,19 @@ export function montarTelaCidade(container, {
   container.querySelector('[data-local="arena"]').addEventListener("click", () => aoAbrirArena());
   container.querySelector('[data-local="configuracao"]').addEventListener("click", () => aoAbrirConfiguracao());
 
+  if (!localStorage.getItem("webrpg_onboarding_visto")) {
+    const dica = document.createElement("div");
+    dica.className = "painel dica-onboarding";
+    dica.innerHTML = `
+      <p>Bem-vindo a The Lost World! Clique em Explorar para sua primeira batalha, ou visite a Guilda para aceitar uma missão.</p>
+      <button class="botao botao--destaque" id="botao-onboarding-ok">Entendi</button>
+    `;
+    container.querySelector(".tela-cidade").prepend(dica);
+    dica.querySelector("#botao-onboarding-ok").addEventListener("click", () => {
+      localStorage.setItem("webrpg_onboarding_visto", "1");
+      dica.remove();
+    });
+  }
+
   return { botaoExplorar, cabecalho: container.querySelector(".cabecalho-cidade") };
 }

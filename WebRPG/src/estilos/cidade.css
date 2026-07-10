@@ -25,6 +25,13 @@
   text-align: left;
 }
 
+.dica-onboarding {
+  border-color: var(--cor-destaque);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-sm);
+}
+
 @media (max-width: 480px) {
   .grade-locais {
     grid-template-columns: 1fr;

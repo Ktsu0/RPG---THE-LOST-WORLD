@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { montarTelaCidade } from "./telaCidade.js";
 
 function jogadorDeTeste() {
@@ -81,5 +81,44 @@ describe("montarTelaCidade", () => {
     const elementos = montarTelaCidade(container, { jogador: jogadorDeTeste(), aoExplorar });
     elementos.botaoExplorar.click();
     expect(aoExplorar).toHaveBeenCalledOnce();
+  });
+});
+
+describe("onboarding", () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it("mostra a dica de boas-vindas na primeira visita", () => {
+    const container = document.createElement("div");
+    montarTelaCidade(container, {
+      jogador: jogadorDeTeste(), aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(),
+      aoAbrirPersonagem: vi.fn(), aoAbrirTorre: vi.fn(), aoAbrirMasmorra: vi.fn(), aoAbrirArena: vi.fn(),
+      aoAbrirConfiguracao: vi.fn(),
+    });
+    expect(container.querySelector(".dica-onboarding")).not.toBeNull();
+  });
+
+  it("não mostra a dica depois de confirmada", () => {
+    localStorage.setItem("webrpg_onboarding_visto", "1");
+    const container = document.createElement("div");
+    montarTelaCidade(container, {
+      jogador: jogadorDeTeste(), aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(),
+      aoAbrirPersonagem: vi.fn(), aoAbrirTorre: vi.fn(), aoAbrirMasmorra: vi.fn(), aoAbrirArena: vi.fn(),
+      aoAbrirConfiguracao: vi.fn(),
+    });
+    expect(container.querySelector(".dica-onboarding")).toBeNull();
+  });
+
+  it("clicar em Entendi remove a dica e grava a flag", () => {
+    const container = document.createElement("div");
+    montarTelaCidade(container, {
+      jogador: jogadorDeTeste(), aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(),
+      aoAbrirPersonagem: vi.fn(), aoAbrirTorre: vi.fn(), aoAbrirMasmorra: vi.fn(), aoAbrirArena: vi.fn(),
+      aoAbrirConfiguracao: vi.fn(),
+    });
+    container.querySelector("#botao-onboarding-ok").click();
+    expect(container.querySelector(".dica-onboarding")).toBeNull();
+    expect(localStorage.getItem("webrpg_onboarding_visto")).toBe("1");
   });
 });
