@@ -11,6 +11,9 @@ import { inicializarRoteador, registrarTela, mostrarTela } from "./rotas/roteado
 import { montarTelaCriacao } from "./telas/criacao/telaCriacao.js";
 import { montarTelaCidade } from "./telas/cidade/telaCidade.js";
 import { iniciarBatalha } from "./telas/batalha/controladorBatalha.js";
+import { montarTelaLoja } from "./telas/loja/telaLoja.js";
+import { montarTelaPersonagem } from "./telas/personagem/telaPersonagem.js";
+import { montarTelaGuilda } from "./telas/guilda/telaGuilda.js";
 import { criarInimigoTreino } from "@engine/geradores/inimigoTreino.js";
 import { checarLevelUp } from "@engine/personagem/experiencia.js";
 import { salvarNoNavegador, carregarDoNavegador, existeSaveNoNavegador } from "./armazenamento/localStorage.js";
@@ -23,6 +26,24 @@ export function bootstrap(container) {
       montarTelaCidade(el, {
         jogador,
         aoExplorar: () => irParaBatalhaDeTreino(jogador),
+        aoAbrirGuilda: () => {
+          registrarTela("guilda", (el2) =>
+            montarTelaGuilda(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
+          );
+          mostrarTela("guilda");
+        },
+        aoAbrirLoja: () => {
+          registrarTela("loja", (el2) =>
+            montarTelaLoja(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
+          );
+          mostrarTela("loja");
+        },
+        aoAbrirPersonagem: () => {
+          registrarTela("personagem", (el2) =>
+            montarTelaPersonagem(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
+          );
+          mostrarTela("personagem");
+        },
       })
     );
     mostrarTela("cidade");

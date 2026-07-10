@@ -16,14 +16,36 @@ describe("montarTelaCidade", () => {
     expect(texto).toContain("120");
   });
 
-  it("desabilita os locais ainda não implementados", () => {
+  it("desabilita apenas os locais que ainda não foram implementados (torre, masmorra, arena)", () => {
     const container = document.createElement("div");
-    montarTelaCidade(container, { jogador: jogadorDeTeste(), aoExplorar: vi.fn() });
-    for (const local of ["guilda", "loja", "torre", "masmorra", "arena"]) {
-      const botao = container.querySelector(`[data-local="${local}"]`);
-      expect(botao.disabled).toBe(true);
-      expect(botao.textContent).toContain("Em breve");
+    montarTelaCidade(container, {
+      jogador: jogadorDeTeste(),
+      aoExplorar: vi.fn(), aoAbrirGuilda: vi.fn(), aoAbrirLoja: vi.fn(), aoAbrirPersonagem: vi.fn(),
+    });
+    for (const local of ["torre", "masmorra", "arena"]) {
+      expect(container.querySelector(`[data-local="${local}"]`).disabled).toBe(true);
     }
+    for (const local of ["guilda", "loja", "personagem"]) {
+      expect(container.querySelector(`[data-local="${local}"]`).disabled).toBe(false);
+    }
+  });
+
+  it("chama aoAbrirGuilda, aoAbrirLoja e aoAbrirPersonagem ao clicar nos respectivos botões", () => {
+    const aoAbrirGuilda = vi.fn();
+    const aoAbrirLoja = vi.fn();
+    const aoAbrirPersonagem = vi.fn();
+    const container = document.createElement("div");
+    montarTelaCidade(container, {
+      jogador: jogadorDeTeste(), aoExplorar: vi.fn(), aoAbrirGuilda, aoAbrirLoja, aoAbrirPersonagem,
+    });
+
+    container.querySelector('[data-local="guilda"]').click();
+    container.querySelector('[data-local="loja"]').click();
+    container.querySelector('[data-local="personagem"]').click();
+
+    expect(aoAbrirGuilda).toHaveBeenCalledOnce();
+    expect(aoAbrirLoja).toHaveBeenCalledOnce();
+    expect(aoAbrirPersonagem).toHaveBeenCalledOnce();
   });
 
   it("chama aoExplorar ao clicar no botão Explorar", () => {
