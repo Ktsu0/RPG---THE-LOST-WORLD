@@ -157,3 +157,52 @@ describe("executarRodada", () => {
     ]);
   });
 });
+
+describe("executarRodada com habilidades avançadas de inimigo", () => {
+  it("paralisia: jogador perde o turno de ataque quando paralisado no início da rodada", () => {
+    const jogador = { ...jogadorBase(), status: [{ tipo: "paralisado", duracao: 1 }] };
+    const estado = { jogador, inimigo: inimigoBase(), rodada: 0 };
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    const resultado = executarRodada(estado, "atacar");
+
+    expect(resultado.eventos[0]).toEqual({ tipo: "paralisado", alvo: "jogador" });
+    // sem evento de dano do jogador para o inimigo (o ataque foi pulado)
+    expect(resultado.eventos.some((e) => e.tipo === "dano" && e.autor === "jogador")).toBe(false);
+  });
+
+  it("invulnerável: dano do jogador é ignorado enquanto o status estiver ativo", () => {
+    const inimigo = { ...inimigoBase(), status: [{ tipo: "invulneravel", duracao: 1 }] };
+    const estado = { jogador: jogadorBase(), inimigo, rodada: 0 };
+    const hpAntes = inimigo.hp;
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    const resultado = executarRodada(estado, "atacar");
+
+    expect(resultado.eventos.some((e) => e.tipo === "invulneravel_ativo")).toBe(true);
+    expect(resultado.estado.inimigo.hp).toBe(hpAntes);
+  });
+
+  it("roubo e fuga: inimigo com a habilidade rouba ouro e a batalha termina em fuga", () => {
+    const jogador = { ...jogadorBase(), ouro: 100 };
+    const inimigo = { ...inimigoBase(), habilidade: "roubo_e_fuga", hp: 30 };
+    const estado = { jogador, inimigo, rodada: 0 };
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    const resultado = executarRodada(estado, "atacar");
+
+    expect(resultado.fim).toBe("fuga");
+    expect(resultado.eventos.some((e) => e.tipo === "fuga_com_roubo")).toBe(true);
+    expect(resultado.estado.jogador.ouro).toBeLessThan(100);
+  });
+
+  it("bloquear e contra-atacar: só dispara para inimigos com a habilidade correspondente", () => {
+    const inimigo = { ...inimigoBase(), habilidade: "bloquear_e_contra_atacar" };
+    const estado = { jogador: jogadorBase(), inimigo, rodada: 0 };
+    vi.spyOn(Math, "random").mockReturnValue(0);
+
+    const resultado = executarRodada(estado, "atacar");
+
+    expect(resultado.eventos.some((e) => e.tipo === "contra_ataque")).toBe(true);
+  });
+});

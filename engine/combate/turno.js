@@ -9,6 +9,15 @@ import {
 import {
   verificarAtaqueDuplo,
   verificarEnvenenamentoAoAtacar,
+  processarInvulneravelDoTurno,
+  processarParalisiaDoTurno,
+  verificarRouboEFuga,
+  roubarOuroEFugir,
+  verificarPetrificarAoAtacar,
+  aplicarBuffPetrificar,
+  processarRegeneracao,
+  verificarBloquearEContraAtacar,
+  calcularContraAtaque,
 } from "./habilidadesInimigo.js";
 import { concederRecompensaVitoria } from "./recompensas.js";
 
@@ -55,12 +64,16 @@ export function executarRodada(estado, acao) {
   }
 
   // 2. Ação do jogador
-  if (acao === "fugir") {
+  if (processarParalisiaDoTurno(jogador)) {
+    eventos.push({ tipo: "paralisado", alvo: "jogador" });
+  } else if (acao === "fugir") {
     const sucesso = rand(1, 100) > 40;
     eventos.push({ tipo: "fuga", sucesso });
     if (sucesso) {
       return { estado: { jogador, inimigo, rodada }, eventos, fim: "fuga" };
     }
+  } else if (processarInvulneravelDoTurno(inimigo)) {
+    eventos.push({ tipo: "invulneravel_ativo", alvo: "inimigo" });
   } else {
     const ataque = resolverAtaqueJogador(jogador, inimigo);
     if (ataque.esquivou) {
@@ -95,6 +108,22 @@ export function executarRodada(estado, acao) {
   }
 
   // 3. Ação do inimigo
+  if (inimigo.habilidade === "roubo_e_fuga" && verificarRouboEFuga()) {
+    const roubado = roubarOuroEFugir(jogador);
+    eventos.push({ tipo: "fuga_com_roubo", valor: roubado });
+    return { estado: { jogador, inimigo, rodada }, eventos, fim: "fuga" };
+  }
+
+  if (verificarPetrificarAoAtacar(inimigo)) {
+    aplicarBuffPetrificar(inimigo);
+    eventos.push({ tipo: "petrificar_aplicado", defesaAtual: inimigo.defesa });
+  }
+
+  const regen = processarRegeneracao(inimigo);
+  if (regen.curou) {
+    eventos.push({ tipo: "regeneracao", valor: regen.valor });
+  }
+
   if (verificarAtaqueDuplo(inimigo)) {
     const golpe1 = resolverAtaqueInimigo(inimigo, jogador);
     const golpe2 = resolverAtaqueInimigo(inimigo, jogador);
@@ -109,6 +138,11 @@ export function executarRodada(estado, acao) {
       dano2: golpe2,
       danoTotal,
     });
+  } else if (inimigo.habilidade === "bloquear_e_contra_atacar" && verificarBloquearEContraAtacar()) {
+    const danoTentado = resolverAtaqueInimigo(inimigo, jogador).dano || 0;
+    const contraAtaque = calcularContraAtaque(inimigo, danoTentado || 10);
+    jogador.hp = Math.max(0, jogador.hp - contraAtaque);
+    eventos.push({ tipo: "contra_ataque", autor: "inimigo", dano: contraAtaque });
   } else {
     const golpe = resolverAtaqueInimigo(inimigo, jogador);
     if (golpe.resultado === "esquiva") {
