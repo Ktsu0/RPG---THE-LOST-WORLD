@@ -4,6 +4,7 @@ import "./estilos/paineis.css";
 import "./estilos/batalha.css";
 import "./estilos/criacao.css";
 import "./estilos/cidade.css";
+import "./estilos/loja.css";
 import { inicializarRoteador, registrarTela, mostrarTela } from "./rotas/roteador.js";
 import { montarTelaCriacao } from "./telas/criacao/telaCriacao.js";
 import { montarTelaCidade } from "./telas/cidade/telaCidade.js";
