@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { montarTelaBatalha, atualizarBarras, registrarNoLog } from "./telaBatalha.js";
+import { montarTelaBatalha, atualizarBarras, registrarNoLog, mostrarOverlayFim } from "./telaBatalha.js";
 
 function criarFixtures() {
   return {
@@ -63,5 +63,30 @@ describe("registrarNoLog", () => {
     const elementos = montarTelaBatalha(container, { jogador, inimigo });
     registrarNoLog(elementos, "Você causou 7 de dano.");
     expect(elementos.log.textContent).toContain("Você causou 7 de dano.");
+  });
+});
+
+describe("mostrarOverlayFim", () => {
+  it("exibe o overlay de vitória com xp/ouro", () => {
+    const container = document.createElement("div");
+    const { jogador, inimigo } = criarFixtures();
+    const elementos = montarTelaBatalha(container, { jogador, inimigo });
+
+    mostrarOverlayFim(elementos, { tipo: "vitoria", xpGanho: 15, ouroGanho: 20 });
+
+    expect(elementos.overlayFim.classList.contains("overlay-fim--oculto")).toBe(false);
+    expect(elementos.overlayFim.textContent).toContain("Vitória");
+    expect(elementos.overlayFim.textContent).toContain("15");
+    expect(elementos.overlayFim.textContent).toContain("20");
+  });
+
+  it("exibe o overlay de derrota", () => {
+    const container = document.createElement("div");
+    const { jogador, inimigo } = criarFixtures();
+    const elementos = montarTelaBatalha(container, { jogador, inimigo });
+
+    mostrarOverlayFim(elementos, { tipo: "derrota" });
+
+    expect(elementos.overlayFim.textContent).toContain("Derrota");
   });
 });

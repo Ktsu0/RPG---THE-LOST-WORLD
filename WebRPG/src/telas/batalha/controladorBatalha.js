@@ -1,5 +1,5 @@
 import { criarEstadoBatalha, executarAcaoJogador } from "@engine/combate/index.js";
-import { montarTelaBatalha, atualizarBarras, registrarNoLog } from "./telaBatalha.js";
+import { montarTelaBatalha, atualizarBarras, registrarNoLog, mostrarOverlayFim } from "./telaBatalha.js";
 import { reproduzirEventos } from "./animacoes.js";
 
 function descreverEvento(evento) {
@@ -65,8 +65,16 @@ export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim } = 
     if (!resultado.fim) {
       elementos.botaoAtacar.disabled = false;
       elementos.botaoFugir.disabled = false;
-    } else if (onFim) {
-      onFim(resultado.fim, estado);
+    } else {
+      if (resultado.fim === "vitoria" || resultado.fim === "derrota") {
+        const eventoVitoria = resultado.eventos.find((e) => e.tipo === "vitoria");
+        mostrarOverlayFim(elementos, {
+          tipo: resultado.fim,
+          xpGanho: eventoVitoria?.xpGanho,
+          ouroGanho: eventoVitoria?.ouroGanho,
+        });
+      }
+      if (onFim) onFim(resultado.fim, estado);
     }
   }
 

@@ -20,6 +20,7 @@ export function montarTelaBatalha(container, { jogador, inimigo }) {
         <button class="botao botao--destaque" data-acao="atacar">Atacar</button>
         <button class="botao" data-acao="fugir">Fugir</button>
       </div>
+      <div class="overlay-fim overlay-fim--oculto"></div>
     </div>
   `;
 
@@ -40,6 +41,7 @@ export function montarTelaBatalha(container, { jogador, inimigo }) {
     log: container.querySelector(".log-batalha"),
     botaoAtacar: container.querySelector('[data-acao="atacar"]'),
     botaoFugir: container.querySelector('[data-acao="fugir"]'),
+    overlayFim: container.querySelector(".overlay-fim"),
   };
 
   atualizarBarras(elementos, jogador, inimigo);
@@ -58,4 +60,14 @@ export function registrarNoLog(elementos, mensagem) {
   linha.textContent = mensagem;
   elementos.log.appendChild(linha);
   elementos.log.scrollTop = elementos.log.scrollHeight;
+}
+
+export function mostrarOverlayFim(elementos, { tipo, xpGanho, ouroGanho }) {
+  const titulo = tipo === "vitoria" ? "Vitória!" : "Derrota...";
+  const detalhe = tipo === "vitoria" ? `+${xpGanho} XP, +${ouroGanho} ouro` : "Tente novamente.";
+  elementos.overlayFim.innerHTML = `
+    <h1 class="texto-pixel">${titulo}</h1>
+    <p>${detalhe}</p>
+  `;
+  elementos.overlayFim.classList.remove("overlay-fim--oculto");
 }

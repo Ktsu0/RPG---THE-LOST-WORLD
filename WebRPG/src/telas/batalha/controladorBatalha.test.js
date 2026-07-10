@@ -95,6 +95,29 @@ describe("iniciarBatalha com onFim", () => {
     expect(onFim).toHaveBeenCalledWith("vitoria", expect.objectContaining({ fim: "vitoria" }));
   });
 
+  it("mostra o overlay de fim quando a batalha termina em vitória", async () => {
+    const container = document.createElement("div");
+    const { jogador, inimigo } = criarFixtures();
+    const elementos = iniciarBatalha(container, jogador, inimigo);
+
+    executarAcaoJogador.mockReturnValueOnce({
+      estado: {
+        jogador: { ...jogador, hp: 93 },
+        inimigo: { ...inimigo, hp: 0 },
+      },
+      eventos: [
+        { tipo: "dano", autor: "jogador", alvo: "inimigo", valor: 30, critico: false },
+        { tipo: "morte", alvo: "inimigo" },
+        { tipo: "vitoria", xpGanho: 15, ouroGanho: 20 },
+      ],
+      fim: "vitoria",
+    });
+
+    await elementos.executarAcao("atacar");
+
+    expect(elementos.overlayFim.classList.contains("overlay-fim--oculto")).toBe(false);
+  });
+
   it("não quebra quando onFim não é fornecido", async () => {
     const container = document.createElement("div");
     const { jogador, inimigo } = criarFixtures();
