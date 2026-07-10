@@ -89,6 +89,22 @@
   animation: flash-dano 0.25s ease-in-out;
 }
 
+/* Quando o sprite leva dano NO MEIO de uma animação de ataque/dano/morte,
+   ambas as classes ficam presentes. A regra .sprite--flash usa a propriedade
+   shorthand `animation`, que sobrescreveria as longhands de .sprite--tocando
+   (mesma especificidade, .sprite--flash vem depois no arquivo) — isso troca
+   silenciosamente a animação sprite-play por flash-dano e, pior, impede que
+   tocarAnimacao() dispare animationend em chamadas seguintes (o
+   animation-name computado deixa de mudar ao alternar só a classe
+   sprite--tocando), travando reproduzirEventos() para sempre. Esta regra
+   combinada tem especificidade maior e roda as duas animações em paralelo. */
+.sprite--tocando.sprite--flash {
+  animation-name: sprite-play, flash-dano;
+  animation-duration: var(--sprite-duration, 0.6s), 0.25s;
+  animation-timing-function: steps(var(--sprite-frames)), ease-in-out;
+  animation-iteration-count: var(--sprite-loop, 1), 1;
+}
+
 @keyframes flash-dano {
   0%,
   100% {
