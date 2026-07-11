@@ -18,7 +18,10 @@
 }
 
 .celula-mundo--parede {
-  background: var(--cor-borda);
+  background-color: var(--cor-borda);
+  background-image: url("/assets/cenarios/cidade/parede.png");
+  background-size: cover;
+  image-rendering: pixelated;
   cursor: default;
 }
 
@@ -39,4 +42,10 @@
   .celula-mundo {
     font-size: 7px;
   }
+}
+
+.celula-mundo--chao {
+  background-image: url("/assets/cenarios/cidade/chao.png");
+  background-size: cover;
+  image-rendering: pixelated;
 }
