@@ -1,3 +1,4 @@
+import "@fontsource/press-start-2p/400.css";
 import "./estilos/variaveis.css";
 import "./estilos/base.css";
 import "./estilos/paineis.css";
