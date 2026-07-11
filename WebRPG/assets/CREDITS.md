@@ -36,12 +36,20 @@ Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum 
   Fonte: https://kenney.nl/assets/pixel-ui-pack
   Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
 
+- **Kenney Impact Sounds + RPG Audio + Music Jingles**
+  Locais originais: `WebRPG/assets/audio/_pacote-kenney-impact-sounds/`, `_pacote-kenney-rpg-audio/`, `_pacote-kenney-music-jingles/`.
+  Organizado em: `WebRPG/assets/audio/efeitos/` (golpe.ogg = impactPunch_medium_000, critico.ogg = impactMetal_heavy_000, moeda.ogg = handleCoins) e `WebRPG/assets/audio/musica/` (cidade.ogg = Pizzicato jingles/jingles_PIZZI00, batalha.ogg = Steel jingles/jingles_STEEL00).
+  Fontes: https://kenney.nl/assets/impact-sounds, https://kenney.nl/assets/rpg-audio, https://kenney.nl/assets/music-jingles
+  Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
+  `WebRPG/src/audio/tocador.js` e `musica.js` tiveram a extensão trocada de `.mp3` (nunca existiu) para `.ogg` (formato real dos pacotes Kenney).
+  Limitação conhecida: o pack de música (`music-jingles`) só tem jingles curtos (stingers de poucos segundos), não faixas ambiente longas — `cidade.ogg`/`batalha.ogg` tocam em loop uma jingle curta em vez de uma música de fundo propriamente dita. Substituir por faixas mais longas fica como pendência de conteúdo futura.
+
 ## A baixar manualmente (checklist)
 
 Estes packs ainda não estão no repositório. Cada um precisa ser baixado manualmente (geralmente um `.zip` do itch.io), extraído, e ter os arquivos usados copiados para a subpasta indicada — mantendo este arquivo atualizado com o nome exato do pack e a licença declarada pelo autor.
 
 - [ ] **Cenários de fundo (parallax)** — perfil do criador ansimuz no itch.io (`https://ansimuz.itch.io/`): buscar pacotes de "platformer/adventure background". Destino: `WebRPG/assets/cenarios/`.
 - [ ] **Ícones de itens em pixel art** — buscar packs de ícones de RPG no itch.io ou OpenGameArt.org. Destino: `WebRPG/assets/ui/icones/`.
-- [ ] **Sons (golpe, crítico, moeda, level up)** — Kenney Audio (`https://kenney.itch.io/`) ou packs de áudio RPG no itch.io. Destino: `WebRPG/assets/audio/`. Necessário apenas a partir da Fase 5 (Polimento).
+- [ ] **Música ambiente de verdade (loops longos)** — o pack usado atualmente (`music-jingles`) só tem jingles curtos; buscar um pack Kenney/itch.io com faixas de vários minutos para substituir `WebRPG/assets/audio/musica/cidade.ogg` e `batalha.ogg`.
 
 Ao baixar um pack, adicione uma entrada acima com: nome exato do pack, autor, URL da página específica do pack, e a licença declarada.

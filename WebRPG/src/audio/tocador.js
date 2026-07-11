@@ -11,7 +11,7 @@ export function definirVolumeEfeitos(valor) {
 }
 
 export function tocarEfeito(nome) {
-  const audio = new Audio(`/assets/audio/efeitos/${nome}.mp3`);
+  const audio = new Audio(`/assets/audio/efeitos/${nome}.ogg`);
   audio.volume = obterVolumeEfeitos();
   audio.play()?.catch?.(() => {});
 }

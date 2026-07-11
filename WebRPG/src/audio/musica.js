@@ -15,7 +15,7 @@ export function definirVolumeMusica(valor) {
 
 export function tocarMusica(nome) {
   if (faixaAtual) faixaAtual.pause();
-  faixaAtual = new Audio(`/assets/audio/musica/${nome}.mp3`);
+  faixaAtual = new Audio(`/assets/audio/musica/${nome}.ogg`);
   faixaAtual.loop = true;
   faixaAtual.volume = obterVolumeMusica();
   faixaAtual.play()?.catch?.(() => {});

@@ -37,7 +37,7 @@ describe("tocarMusica e pararMusica", () => {
 
     tocarMusica("cidade");
 
-    expect(AudioMock).toHaveBeenCalledWith("/assets/audio/musica/cidade.mp3");
+    expect(AudioMock).toHaveBeenCalledWith("/assets/audio/musica/cidade.ogg");
     expect(playMock).toHaveBeenCalledOnce();
   });
 

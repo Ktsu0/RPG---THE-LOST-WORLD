@@ -34,7 +34,7 @@ describe("tocarEfeito", () => {
 
     tocarEfeito("golpe");
 
-    expect(AudioMock).toHaveBeenCalledWith("/assets/audio/efeitos/golpe.mp3");
+    expect(AudioMock).toHaveBeenCalledWith("/assets/audio/efeitos/golpe.ogg");
     expect(playMock).toHaveBeenCalledOnce();
   });
 
