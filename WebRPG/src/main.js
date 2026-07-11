@@ -13,6 +13,7 @@ import "./estilos/masmorra.css";
 import "./estilos/arena.css";
 import "./estilos/configuracao.css";
 import "./estilos/titulo.css";
+import "./estilos/mundo.css";
 import { inicializarRoteador, registrarTela, mostrarTela } from "./rotas/roteador.js";
 import { montarTelaCriacao } from "./telas/criacao/telaCriacao.js";
 import { montarTelaCidade } from "./telas/cidade/telaCidade.js";

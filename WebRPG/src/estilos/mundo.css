@@ -1,0 +1,42 @@
+.mundo-grade {
+  display: grid;
+  gap: 1px;
+  background: var(--cor-fundo);
+  outline: none;
+}
+
+.celula-mundo {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cor-barra-vazia);
+  font-family: var(--fonte-pixel);
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.celula-mundo--parede {
+  background: var(--cor-borda);
+  cursor: default;
+}
+
+.celula-mundo--hotspot {
+  background: var(--cor-fundo-painel);
+  border: 1px solid var(--cor-destaque);
+  color: var(--cor-destaque);
+}
+
+.jogador-mundo {
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background: var(--cor-destaque);
+}
+
+@media (max-width: 480px) {
+  .celula-mundo {
+    font-size: 7px;
+  }
+}
