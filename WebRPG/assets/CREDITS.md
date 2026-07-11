@@ -24,6 +24,12 @@ Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum 
   Nota técnica: a contagem de frames de idle/ataque desse pacote (4/8) difere da convenção soldado/orc (6/6) — `WebRPG/src/telas/batalha/sprites.js` ganhou uma tabela de exceção por personagem para isso.
   Cobertura: só 4 arquétipos pra 25 nomes de inimigo no jogo — mapeamento em `WebRPG/src/telas/batalha/mapaSprites.js`. Nomes sem arquétipo correspondente (caem no fallback "orc"): Guardião de Pedra, Sentinela de Ferro, Mago Sombrio, Lobo Alfa, Hidra das Sombras, Dragão Negro, Salamandra de Fogo, Escorpião de Magma, Senhor das Chamas.
 
+- **Roguelike/RPG Pack** (Kenney)
+  Local original: `WebRPG/assets/cenarios/roguelike-rpg-pack/`
+  Organizado em: `WebRPG/assets/cenarios/masmorra/` (chao.png = piso de interior recortado da spritesheet; oculta.png reusa o mesmo tile, escurecido via `filter: brightness(0.35)` em masmorra.css em vez de um segundo recorte — mais simples e com o mesmo resultado visual: "mesmo piso, mais escuro" para representar névoa de guerra).
+  Fonte: https://kenney.nl/assets/roguelike-rpg-pack
+  Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
+
 - **Pixel UI Pack** (Kenney)
   Local original: `WebRPG/assets/ui/pixel-ui-pack/`
   Organizado em: `WebRPG/assets/ui/base/` (painel.png = 9-Slice/Outline/blue.png, botao.png = 9-Slice/Outline/yellow.png) — usado como `border-image` em `.painel` e `.botao` (paineis.css).

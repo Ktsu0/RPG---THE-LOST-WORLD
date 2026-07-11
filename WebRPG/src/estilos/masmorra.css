@@ -16,14 +16,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--cor-barra-vazia);
+  background-color: var(--cor-barra-vazia);
+  background-image: url("/assets/cenarios/masmorra/chao.png");
+  background-size: cover;
+  image-rendering: pixelated;
   border: 1px solid var(--cor-borda);
   font-family: var(--fonte-pixel);
   font-size: 10px;
+  text-shadow: 0 0 3px #000, 0 0 3px #000;
 }
 
 .celula--oculta {
-  background: var(--cor-fundo);
+  background-color: var(--cor-fundo);
+  background-image: url("/assets/cenarios/masmorra/oculta.png");
+  filter: brightness(0.35);
   color: transparent;
 }
 
