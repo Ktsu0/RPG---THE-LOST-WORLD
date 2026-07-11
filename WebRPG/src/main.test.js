@@ -78,7 +78,7 @@ describe("bootstrap: navegação para guilda, loja e personagem", () => {
     bootstrap(container);
     criarPersonagemDeTeste(container);
 
-    container.querySelector('[data-local="loja"]').click();
+    container.querySelector('[data-hotspot="loja"]').click();
     expect(container.querySelector(".tela-loja")).not.toBeNull();
 
     container.querySelector("#botao-sair-loja").click();
@@ -90,7 +90,7 @@ describe("bootstrap: navegação para guilda, loja e personagem", () => {
     bootstrap(container);
     criarPersonagemDeTeste(container);
 
-    container.querySelector('[data-local="personagem"]').click();
+    container.querySelector('[data-hotspot="personagem"]').click();
     expect(container.querySelector(".tela-personagem")).not.toBeNull();
   });
 
@@ -99,7 +99,7 @@ describe("bootstrap: navegação para guilda, loja e personagem", () => {
     bootstrap(container);
     criarPersonagemDeTeste(container);
 
-    container.querySelector('[data-local="guilda"]').click();
+    container.querySelector('[data-hotspot="guilda"]').click();
     expect(container.querySelector(".tela-guilda")).not.toBeNull();
   });
 });

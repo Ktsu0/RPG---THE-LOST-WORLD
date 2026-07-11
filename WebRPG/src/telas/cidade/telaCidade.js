@@ -1,3 +1,6 @@
+import { criarMapaCidade, POSICAO_INICIAL_CIDADE } from "@engine/mundo/mapas/cidade.js";
+import { montarMundoTiles } from "../../mundo/rendererTiles.js";
+
 export function montarTelaCidade(container, {
   jogador, aoExplorar, aoAbrirGuilda, aoAbrirLoja, aoAbrirPersonagem,
   aoAbrirTorre, aoAbrirMasmorra, aoAbrirArena, aoAbrirConfiguracao,
@@ -10,35 +13,36 @@ export function montarTelaCidade(container, {
         <span>HP: ${jogador.hp}/${jogador.hpMax}</span>
         <span>Ouro: ${jogador.ouro}</span>
       </div>
-      <div class="grade-locais">
-        <button class="botao botao--destaque local-cidade" data-local="explorar">🌳 Explorar</button>
-        <button class="botao local-cidade" data-local="guilda">📝 Guilda</button>
-        <button class="botao local-cidade" data-local="loja">💰 Loja</button>
-        <button class="botao local-cidade" data-local="personagem">🧑 Personagem</button>
-        <button class="botao local-cidade" data-local="torre">🏰 Torre</button>
-        <button class="botao local-cidade" data-local="masmorra">🗝️ Masmorra</button>
-        <button class="botao local-cidade" data-local="arena">⚔️ Arena</button>
-        <button class="botao local-cidade" data-local="configuracao">⚙️ Configurações</button>
-      </div>
+      <div class="mundo-cidade"></div>
     </div>
   `;
 
-  const botaoExplorar = container.querySelector('[data-local="explorar"]');
-  botaoExplorar.addEventListener("click", () => aoExplorar());
+  const ACOES_POR_HOTSPOT = {
+    explorar: aoExplorar,
+    guilda: aoAbrirGuilda,
+    loja: aoAbrirLoja,
+    personagem: aoAbrirPersonagem,
+    torre: aoAbrirTorre,
+    masmorra: aoAbrirMasmorra,
+    arena: aoAbrirArena,
+    configuracao: aoAbrirConfiguracao,
+  };
 
-  container.querySelector('[data-local="guilda"]').addEventListener("click", () => aoAbrirGuilda());
-  container.querySelector('[data-local="loja"]').addEventListener("click", () => aoAbrirLoja());
-  container.querySelector('[data-local="personagem"]').addEventListener("click", () => aoAbrirPersonagem());
-  container.querySelector('[data-local="torre"]').addEventListener("click", () => aoAbrirTorre());
-  container.querySelector('[data-local="masmorra"]').addEventListener("click", () => aoAbrirMasmorra());
-  container.querySelector('[data-local="arena"]').addEventListener("click", () => aoAbrirArena());
-  container.querySelector('[data-local="configuracao"]').addEventListener("click", () => aoAbrirConfiguracao());
+  montarMundoTiles(container.querySelector(".mundo-cidade"), {
+    grade: criarMapaCidade(),
+    posicaoInicial: POSICAO_INICIAL_CIDADE,
+    aoMover: (celula) => {
+      if (celula.tipo === "hotspot") {
+        ACOES_POR_HOTSPOT[celula.conteudo.hotspot]?.();
+      }
+    },
+  });
 
   if (!localStorage.getItem("webrpg_onboarding_visto")) {
     const dica = document.createElement("div");
     dica.className = "painel dica-onboarding";
     dica.innerHTML = `
-      <p>Bem-vindo a The Lost World! Clique em Explorar para sua primeira batalha, ou visite a Guilda para aceitar uma missão.</p>
+      <p>Bem-vindo a The Lost World! Ande até um dos locais no mapa (ou clique nele) para entrar — comece pela Guilda ou saindo para Explorar.</p>
       <button class="botao botao--destaque" id="botao-onboarding-ok">Entendi</button>
     `;
     container.querySelector(".tela-cidade").prepend(dica);
@@ -48,5 +52,5 @@ export function montarTelaCidade(container, {
     });
   }
 
-  return { botaoExplorar, cabecalho: container.querySelector(".cabecalho-cidade") };
+  return { cabecalho: container.querySelector(".cabecalho-cidade") };
 }
