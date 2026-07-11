@@ -90,3 +90,24 @@ describe("mostrarOverlayFim", () => {
     expect(elementos.overlayFim.textContent).toContain("Derrota");
   });
 });
+
+describe("seleção de sprite do inimigo", () => {
+  it("usa o sprite mapeado para o nome do inimigo", () => {
+    const container = document.createElement("div");
+    const elementos = montarTelaBatalha(container, {
+      jogador: { nome: "Herói", hp: 80, hpMax: 100 },
+      inimigo: { nome: "Orc", hp: 15, hpMax: 30 },
+    });
+    expect(elementos.personagemInimigo).toBe("orc");
+    expect(elementos.combatenteInimigo.querySelector(".sprite").dataset.personagem).toBe("orc");
+  });
+
+  it("cai no sprite padrão para um inimigo sem mapeamento conhecido", () => {
+    const container = document.createElement("div");
+    const elementos = montarTelaBatalha(container, {
+      jogador: { nome: "Herói", hp: 80, hpMax: 100 },
+      inimigo: { nome: "Criatura Desconhecida", hp: 15, hpMax: 30 },
+    });
+    expect(elementos.personagemInimigo).toBe("orc");
+  });
+});

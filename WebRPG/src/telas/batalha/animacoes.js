@@ -26,6 +26,8 @@ const espera = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export async function reproduzirEventos(eventos, elementos) {
   const { spriteJogador, spriteInimigo, combatenteJogador, combatenteInimigo, palco } =
     elementos;
+  const personagemJogadorAtual = elementos.personagemJogador ?? "soldado";
+  const personagemInimigoAtual = elementos.personagemInimigo ?? "orc";
 
   for (const evento of eventos) {
     switch (evento.tipo) {
@@ -34,8 +36,8 @@ export async function reproduzirEventos(eventos, elementos) {
         const alvoCombatente =
           evento.alvo === "inimigo" ? combatenteInimigo : combatenteJogador;
         const autorSprite = evento.autor === "jogador" ? spriteJogador : spriteInimigo;
-        const personagemAutor = evento.autor === "jogador" ? "soldado" : "orc";
-        const personagemAlvo = evento.alvo === "jogador" ? "soldado" : "orc";
+        const personagemAutor = evento.autor === "jogador" ? personagemJogadorAtual : personagemInimigoAtual;
+        const personagemAlvo = evento.alvo === "jogador" ? personagemJogadorAtual : personagemInimigoAtual;
 
         await tocarAnimacao(autorSprite, personagemAutor, "ataque");
         flashDano(alvoSprite);
@@ -63,7 +65,7 @@ export async function reproduzirEventos(eventos, elementos) {
         await espera(300);
         break;
       case "morte": {
-        const personagem = evento.alvo === "jogador" ? "soldado" : "orc";
+        const personagem = evento.alvo === "jogador" ? personagemJogadorAtual : personagemInimigoAtual;
         const sprite = evento.alvo === "jogador" ? spriteJogador : spriteInimigo;
         await tocarAnimacao(sprite, personagem, "morte");
         break;

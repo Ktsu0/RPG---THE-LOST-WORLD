@@ -1,3 +1,5 @@
+import { spriteParaInimigo } from "./mapaSprites.js";
+
 function criarCombatente(nome, classeSprite) {
   const wrapper = document.createElement("div");
   wrapper.className = "combatente";
@@ -25,8 +27,9 @@ export function montarTelaBatalha(container, { jogador, inimigo }) {
   `;
 
   const palco = container.querySelector(".palco-batalha");
+  const personagemInimigo = spriteParaInimigo(inimigo.nome);
   const combatenteJogador = criarCombatente(jogador.nome || "Você", "soldado");
-  const combatenteInimigo = criarCombatente(inimigo.nome, "orc");
+  const combatenteInimigo = criarCombatente(inimigo.nome, personagemInimigo);
   palco.appendChild(combatenteJogador);
   palco.appendChild(combatenteInimigo);
 
@@ -34,6 +37,8 @@ export function montarTelaBatalha(container, { jogador, inimigo }) {
     palco,
     combatenteJogador,
     combatenteInimigo,
+    personagemJogador: "soldado",
+    personagemInimigo,
     spriteJogador: combatenteJogador.querySelector(".sprite"),
     spriteInimigo: combatenteInimigo.querySelector(".sprite"),
     barraHpJogador: combatenteJogador.querySelector(".barra__preenchimento--hp"),
