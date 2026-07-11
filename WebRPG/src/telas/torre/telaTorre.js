@@ -1,4 +1,6 @@
 import { criarEstadoTorre, avancarAndar, executarTurnoTorre } from "@engine/torre/index.js";
+import { tocarAnimacao } from "../batalha/sprites.js";
+import { spriteParaInimigo } from "../batalha/mapaSprites.js";
 
 function descreverEvento(evento) {
   switch (evento.tipo) {
@@ -21,6 +23,9 @@ export function montarTelaTorre(container, { jogador, aoSair }) {
         <span class="nome-boss"></span>
         <div class="barra"><div class="barra__preenchimento barra__preenchimento--hp barra-boss"></div></div>
       </div>
+      <div class="palco-torre">
+        <div class="sprite sprite-boss"></div>
+      </div>
       <div class="painel log-torre"></div>
       <div class="acoes-torre">
         <button class="botao botao--destaque" data-acao="atacar">Atacar</button>
@@ -37,12 +42,14 @@ export function montarTelaTorre(container, { jogador, aoSair }) {
   const nomeBoss = container.querySelector(".nome-boss");
   const log = container.querySelector(".log-torre");
   const barraBoss = container.querySelector(".barra-boss");
+  const spriteBoss = container.querySelector(".sprite-boss");
 
   function atualizarCabecalho() {
     andarAtual.textContent = `Andar ${estado.andar}`;
     nomeBoss.textContent = estado.bossAtual ? estado.bossAtual.nome : "";
     if (estado.bossAtual) {
       barraBoss.style.width = `${Math.max(0, (estado.bossAtual.hp / estado.bossAtual.hpMax) * 100)}%`;
+      tocarAnimacao(spriteBoss, spriteParaInimigo(estado.bossAtual.nome), "idle");
     }
   }
   atualizarCabecalho();

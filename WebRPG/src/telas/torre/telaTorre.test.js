@@ -38,4 +38,13 @@ describe("montarTelaTorre", () => {
     elementos.botaoSair.click();
     expect(aoSair).toHaveBeenCalledOnce();
   });
+
+  it("mostra o sprite do boss atual", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const container = document.createElement("div");
+    montarTelaTorre(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    const spriteBoss = container.querySelector(".sprite-boss");
+    expect(spriteBoss).not.toBeNull();
+    expect(spriteBoss.style.backgroundImage).toContain("/assets/personagens/");
+  });
 });

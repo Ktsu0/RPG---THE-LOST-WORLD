@@ -17,3 +17,10 @@
   gap: var(--espaco-sm);
   justify-content: center;
 }
+
+.palco-torre {
+  min-height: 160px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
