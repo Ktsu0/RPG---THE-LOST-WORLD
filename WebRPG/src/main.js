@@ -12,6 +12,7 @@ import "./estilos/torre.css";
 import "./estilos/masmorra.css";
 import "./estilos/arena.css";
 import "./estilos/configuracao.css";
+import "./estilos/titulo.css";
 import { inicializarRoteador, registrarTela, mostrarTela } from "./rotas/roteador.js";
 import { montarTelaCriacao } from "./telas/criacao/telaCriacao.js";
 import { montarTelaCidade } from "./telas/cidade/telaCidade.js";
@@ -23,6 +24,7 @@ import { montarTelaTorre } from "./telas/torre/telaTorre.js";
 import { montarTelaMasmorra } from "./telas/masmorra/telaMasmorra.js";
 import { montarTelaArena } from "./telas/arena/telaArena.js";
 import { montarTelaConfiguracoes } from "./telas/configuracao/telaConfiguracoes.js";
+import { montarTelaTitulo } from "./telas/titulo/telaTitulo.js";
 import { tocarMusica } from "@audio/musica.js";
 import { criarInimigoTreino } from "@engine/geradores/inimigoTreino.js";
 import { checarLevelUp } from "@engine/personagem/experiencia.js";
@@ -112,14 +114,25 @@ export function bootstrap(container) {
     mostrarTela("criacao");
   }
 
-  if (existeSaveNoNavegador()) {
-    const { valido, jogador } = carregarDoNavegador();
-    if (valido) {
-      irParaCidade(jogador);
-      return;
-    }
+  function iniciarTitulo() {
+    registrarTela("titulo", (el) =>
+      montarTelaTitulo(el, {
+        temSave: existeSaveNoNavegador(),
+        aoNovaJornada: () => iniciarCriacao(),
+        aoContinuar: () => {
+          const { valido, jogador } = carregarDoNavegador();
+          if (valido) {
+            irParaCidade(jogador);
+          } else {
+            iniciarCriacao();
+          }
+        },
+      })
+    );
+    mostrarTela("titulo");
   }
-  iniciarCriacao();
+
+  iniciarTitulo();
 }
 
 const app = document.getElementById("app");

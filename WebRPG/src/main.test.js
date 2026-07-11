@@ -6,15 +6,24 @@ beforeEach(() => {
 });
 
 describe("bootstrap", () => {
-  it("mostra a tela de criação quando não há save", () => {
+  it("mostra a tela de Título quando não há save, com Continuar desabilitado", () => {
     const container = document.createElement("div");
     bootstrap(container);
+    expect(container.querySelector(".tela-titulo")).not.toBeNull();
+    expect(container.querySelector("#botao-continuar").disabled).toBe(true);
+  });
+
+  it("mostra a tela de criação ao clicar em Nova Jornada", () => {
+    const container = document.createElement("div");
+    bootstrap(container);
+    container.querySelector("#botao-nova-jornada").click();
     expect(container.querySelector(".tela-criacao")).not.toBeNull();
   });
 
   it("cria personagem, salva, e mostra a cidade", () => {
     const container = document.createElement("div");
     bootstrap(container);
+    container.querySelector("#botao-nova-jornada").click();
 
     container.querySelector('[data-raca="Humano"]').click();
     container.querySelector('[data-classe="Paladino"]').click();
@@ -31,6 +40,7 @@ describe("bootstrap", () => {
   it('simula um "reload" (segunda chamada de bootstrap) continuando do save existente', () => {
     const primeiroContainer = document.createElement("div");
     bootstrap(primeiroContainer);
+    primeiroContainer.querySelector("#botao-nova-jornada").click();
     primeiroContainer.querySelector('[data-raca="Elfo"]').click();
     primeiroContainer.querySelector('[data-classe="Xamã"]').click();
     const campoNome = primeiroContainer.querySelector("#campo-nome");
@@ -42,6 +52,11 @@ describe("bootstrap", () => {
     const segundoContainer = document.createElement("div");
     bootstrap(segundoContainer);
 
+    expect(segundoContainer.querySelector(".tela-titulo")).not.toBeNull();
+    const botaoContinuar = segundoContainer.querySelector("#botao-continuar");
+    expect(botaoContinuar.disabled).toBe(false);
+    botaoContinuar.click();
+
     expect(segundoContainer.querySelector(".tela-cidade")).not.toBeNull();
     expect(segundoContainer.querySelector(".cabecalho-cidade").textContent).toContain("Aelindra");
   });
@@ -49,6 +64,7 @@ describe("bootstrap", () => {
 
 describe("bootstrap: navegação para guilda, loja e personagem", () => {
   function criarPersonagemDeTeste(container) {
+    container.querySelector("#botao-nova-jornada").click();
     container.querySelector('[data-raca="Humano"]').click();
     container.querySelector('[data-classe="Paladino"]').click();
     const campoNome = container.querySelector("#campo-nome");
