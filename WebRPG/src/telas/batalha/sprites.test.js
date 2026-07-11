@@ -18,6 +18,21 @@ describe("definirSprite", () => {
       'Animação "voar" não existe.'
     );
   });
+
+  it("usa a contagem de frames real do bestiário LuizMelo para idle/ataque (diferente do padrão soldado/orc)", () => {
+    const elemento = document.createElement("div");
+    definirSprite(elemento, "esqueleto", "idle");
+    expect(elemento.style.getPropertyValue("--sprite-frames")).toBe("4");
+
+    definirSprite(elemento, "esqueleto", "ataque");
+    expect(elemento.style.getPropertyValue("--sprite-frames")).toBe("8");
+  });
+
+  it("mantém a contagem padrão de frames para dano/morte mesmo em personagens com exceção de idle/ataque", () => {
+    const elemento = document.createElement("div");
+    definirSprite(elemento, "goblin", "dano");
+    expect(elemento.style.getPropertyValue("--sprite-frames")).toBe("4");
+  });
 });
 
 describe("tocarAnimacao", () => {
