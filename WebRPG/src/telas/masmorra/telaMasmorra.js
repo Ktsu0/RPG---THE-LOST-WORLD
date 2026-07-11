@@ -1,10 +1,14 @@
-import { criarSessaoMasmorra, mover, tentarSairMasmorra } from "@engine/masmorra/index.js";
+import { criarSessaoMasmorra, mover, tentarSairMasmorra, limparSala } from "@engine/masmorra/index.js";
 import { templatesMasmorra } from "@engine/masmorra/gerador.js";
+import { criarInimigoDaSala } from "@engine/masmorra/inimigoDaSala.js";
+import { iniciarBatalha } from "../batalha/controladorBatalha.js";
 
 const SIMBOLO_POR_TIPO = {
   entrada: "E", boss: "B", miniboss: "M", monstro: "!",
   trap: "trap", secret: "?", treasure: "$", vazio: ".",
 };
+
+const TIPOS_COM_ENCONTRO = new Set(["monstro", "miniboss", "boss"]);
 
 export function montarTelaMasmorra(container, { jogador, aoSair }) {
   container.innerHTML = `
@@ -21,12 +25,13 @@ export function montarTelaMasmorra(container, { jogador, aoSair }) {
   `;
 
   let sessao = criarSessaoMasmorra(jogador, templatesMasmorra[0].id);
+  const areaGrade = container.querySelector(".grade-masmorra");
+  const areaControles = container.querySelector(".controles-masmorra");
 
   function renderizarGrade() {
-    const grade = container.querySelector(".grade-masmorra");
-    grade.innerHTML = "";
-    grade.style.display = "grid";
-    grade.style.gridTemplateColumns = `repeat(${sessao.dungeon.size}, 1fr)`;
+    areaGrade.innerHTML = "";
+    areaGrade.style.display = "grid";
+    areaGrade.style.gridTemplateColumns = `repeat(${sessao.dungeon.size}, 1fr)`;
 
     for (const linha of sessao.dungeon.grid) {
       for (const celula of linha) {
@@ -48,17 +53,52 @@ export function montarTelaMasmorra(container, { jogador, aoSair }) {
           div.classList.add("celula--oculta");
           div.textContent = "?";
         }
-        grade.appendChild(div);
+        areaGrade.appendChild(div);
       }
     }
   }
   renderizarGrade();
+
+  function celulaAtualDaSessao() {
+    return sessao.dungeon.grid[sessao.posicao.y][sessao.posicao.x];
+  }
+
+  function verificarEncontro() {
+    const celula = celulaAtualDaSessao();
+    if (!TIPOS_COM_ENCONTRO.has(celula.roomType)) return;
+
+    const inimigo = criarInimigoDaSala(celula, jogador);
+    areaGrade.style.display = "none";
+    areaControles.style.display = "none";
+
+    const areaBatalha = document.createElement("div");
+    container.querySelector(".tela-masmorra").insertBefore(areaBatalha, areaControles);
+
+    iniciarBatalha(areaBatalha, jogador, inimigo, {
+      onFim: (fim) => {
+        areaBatalha.remove();
+        if (fim === "vitoria") {
+          limparSala(sessao);
+          areaGrade.style.display = "";
+          areaControles.style.display = "";
+          renderizarGrade();
+        } else {
+          // Derrota ou fuga: sai da masmorra em vez de deixar o jogador
+          // preso numa sala com um monstro que ele não pode mais enfrentar
+          // (não há tela de "game over" própria da masmorra — reaproveita
+          // o mesmo caminho de saída do botão "Sair da Masmorra").
+          aoSair();
+        }
+      },
+    });
+  }
 
   function moverPara(direcao) {
     const resultado = mover(sessao, direcao);
     if (!resultado.saiuDosLimites) {
       sessao = resultado.sessao;
       renderizarGrade();
+      verificarEncontro();
     }
   }
 

@@ -6,7 +6,10 @@ afterEach(() => {
 });
 
 function jogadorDeTeste() {
-  return { nivel: 3, inventario: [], itens: [], ouro: 100 };
+  return {
+    nome: "Herói", nivel: 3, hp: 200, hpMax: 200, atk: 20, defesa: 10,
+    xp: 0, ouro: 100, inventario: [], itens: [], status: [],
+  };
 }
 
 describe("montarTelaMasmorra", () => {
@@ -36,5 +39,18 @@ describe("montarTelaMasmorra", () => {
     const elementos = montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair });
     elementos.botaoSairMasmorra.click();
     expect(aoSair).toHaveBeenCalledOnce();
+  });
+
+  it("entrar numa sala de encontro (monstro/miniboss/boss) embute a tela de batalha", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const container = document.createElement("div");
+    const elementos = montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+
+    elementos.botaoMover("leste").click();
+
+    expect(container.querySelector(".tela-batalha")).not.toBeNull();
+    const nomes = [...container.querySelectorAll(".nome-combatente")].map((el) => el.textContent);
+    expect(nomes.length).toBe(2);
+    expect(container.querySelector(".grade-masmorra").style.display).toBe("none");
   });
 });
