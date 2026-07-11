@@ -16,6 +16,12 @@ Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum 
   Fonte: https://kenney.nl/assets/rpg-urban-pack
   Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
 
+- **Pixel UI Pack** (Kenney)
+  Local original: `WebRPG/assets/ui/pixel-ui-pack/`
+  Organizado em: `WebRPG/assets/ui/base/` (painel.png = 9-Slice/Outline/blue.png, botao.png = 9-Slice/Outline/yellow.png) — usado como `border-image` em `.painel` e `.botao` (paineis.css).
+  Fonte: https://kenney.nl/assets/pixel-ui-pack
+  Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
+
 ## A baixar manualmente (checklist)
 
 Estes packs ainda não estão no repositório. Cada um precisa ser baixado manualmente (geralmente um `.zip` do itch.io), extraído, e ter os arquivos usados copiados para a subpasta indicada — mantendo este arquivo atualizado com o nome exato do pack e a licença declarada pelo autor.
