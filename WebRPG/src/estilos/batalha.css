@@ -27,12 +27,24 @@
   position: relative;
   flex: 1;
   min-height: 320px;
-  background: linear-gradient(180deg, #241f33 0%, #14121a 100%);
+  background-color: #14121a;
+  background-size: cover;
+  background-position: center bottom;
+  image-rendering: pixelated;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   padding: var(--espaco-lg);
+}
+
+.palco-batalha--treino {
+  background-image: url("/assets/cenarios/parallax/floresta.png");
+}
+
+.palco-batalha--masmorra {
+  background-image: linear-gradient(180deg, rgba(20, 18, 26, 0.3) 0%, rgba(20, 18, 26, 0.7) 100%),
+    url("/assets/cenarios/parallax/cripta.png");
 }
 
 .palco-batalha--tremendo {

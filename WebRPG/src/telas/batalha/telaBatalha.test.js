@@ -111,3 +111,24 @@ describe("seleção de sprite do inimigo", () => {
     expect(elementos.personagemInimigo).toBe("orc");
   });
 });
+
+describe("cenário de fundo por local", () => {
+  it("usa a classe do local de treino por padrão", () => {
+    const container = document.createElement("div");
+    montarTelaBatalha(container, {
+      jogador: { nome: "Herói", hp: 80, hpMax: 100 },
+      inimigo: { nome: "Orc", hp: 15, hpMax: 30 },
+    });
+    expect(container.querySelector(".palco-batalha").classList.contains("palco-batalha--treino")).toBe(true);
+  });
+
+  it("usa a classe do local passado explicitamente", () => {
+    const container = document.createElement("div");
+    montarTelaBatalha(container, {
+      jogador: { nome: "Herói", hp: 80, hpMax: 100 },
+      inimigo: { nome: "Orc", hp: 15, hpMax: 30 },
+      local: "masmorra",
+    });
+    expect(container.querySelector(".palco-batalha").classList.contains("palco-batalha--masmorra")).toBe(true);
+  });
+});

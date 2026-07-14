@@ -38,11 +38,12 @@ function descreverEvento(evento) {
   }
 }
 
-export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim } = {}) {
+export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim, local } = {}) {
   let estado = criarEstadoBatalha(jogador, inimigoOriginal);
   const elementos = montarTelaBatalha(container, {
     jogador: estado.jogador,
     inimigo: estado.inimigo,
+    local,
   });
 
   let processando = false;

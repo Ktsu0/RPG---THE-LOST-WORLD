@@ -92,6 +92,7 @@ export function bootstrap(container) {
     tocarMusica("batalha");
     registrarTela("batalha", (el) =>
       iniciarBatalha(el, jogador, criarInimigoTreino(), {
+        local: "treino",
         onFim: (fim) => {
           if (fim === "vitoria") {
             checarLevelUp(jogador);

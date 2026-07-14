@@ -79,12 +79,29 @@ Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum 
   `WebRPG/src/audio/tocador.js` e `musica.js` tiveram a extensão trocada de `.mp3` (nunca existiu) para `.ogg` (formato real dos pacotes Kenney).
   Limitação conhecida: o pack de música (`music-jingles`) só tem jingles curtos (stingers de poucos segundos), não faixas ambiente longas — `cidade.ogg`/`batalha.ogg` tocam em loop uma jingle curta em vez de uma música de fundo propriamente dita. Substituir por faixas mais longas fica como pendência de conteúdo futura.
 
+- **SunnyLand - Pixel Game Art Assets Pack** (ansimuz) — Fase 9
+  Organizado em: `WebRPG/assets/cenarios/parallax/floresta.png` (composto a partir de `Assets/environment/Background/back.png` — céu e mar — com `Assets/environment/Background/middle.png` — silhueta de mata com palmeiras — ladrilhado horizontalmente por cima, via `sharp`; originais preservados em `_pacote-sunnyland/`).
+  Fonte: https://ansimuz.itch.io/sunny-land-pixel-game-art
+  Licença: Creative Commons Zero v1.0 Universal (CC0) — "can be used freely in any project, whether personal or commercial, without the need for attribution" (texto do `public-license.pdf` incluído no pack).
+  Usado para: fundo da batalha de treino (`.palco-batalha--treino`).
+
+- **Warped: Super Grotto Escape Collection** (ansimuz) — Fase 9
+  Organizado em: `WebRPG/assets/cenarios/parallax/cripta.png` (recorte de 384px de largura de `Assets/Previews/super-grotto.png`, a cena de caverna de cristal com ruínas já pronta do pack, em vez de recompor as camadas separadas — mesma decisão pragmática já usada para os ícones/tiles de fases anteriores; original preservado em `_pacote-grotto-escape/`).
+  Fonte: https://ansimuz.itch.io/super-grotto-escape-pack
+  Licença: Creative Commons Zero v1.0 Universal (CC0), mesmo texto de licença do SunnyLand.
+  Usado para: fundo da batalha de masmorra (`.palco-batalha--masmorra`), com um gradiente escuro sobreposto via CSS para manter contraste com o log/sprites.
+
+- **Gothicvania Cold Corridors** (ansimuz) — Fase 9
+  Organizado em: `WebRPG/assets/cenarios/parallax/pedra-escura.png` (cópia direta de `Assets/preview.png`, o corredor gótico já totalmente composto do pack; original preservado em `_pacote-gothicvania-cold-corridors/`).
+  Fonte: https://ansimuz.itch.io/gothicvania-cold-corridors
+  Licença: Creative Commons Zero v1.0 Universal (CC0), confirmada no `public-license.pdf` incluído no pack (o texto da página itch.io em si só menciona "name your own price", mas o PDF de licença é explícito em CC0).
+  Usado para: fundo da Torre (`.palco-torre`), com o mesmo tratamento de gradiente escuro sobreposto.
+  Nota: este pack também trouxe `top-down-fantasy-1.ogg` (faixa de música ambiente) como bônus — ver entrada de áudio abaixo.
+
 ## A baixar manualmente (checklist)
 
 Estes packs ainda não estão no repositório. Cada um precisa ser baixado manualmente (geralmente um `.zip` do itch.io), extraído, e ter os arquivos usados copiados para a subpasta indicada — mantendo este arquivo atualizado com o nome exato do pack e a licença declarada pelo autor.
 
-- [ ] **Cenários de fundo (parallax)** — perfil do criador ansimuz no itch.io (`https://ansimuz.itch.io/`): buscar pacotes de "platformer/adventure background". Destino: `WebRPG/assets/cenarios/`.
-- [ ] **Ícones de itens em pixel art** — buscar packs de ícones de RPG no itch.io ou OpenGameArt.org. Destino: `WebRPG/assets/ui/icones/`.
 - [ ] **Música ambiente de verdade (loops longos)** — o pack usado atualmente (`music-jingles`) só tem jingles curtos; buscar um pack Kenney/itch.io com faixas de vários minutos para substituir `WebRPG/assets/audio/musica/cidade.ogg` e `batalha.ogg`.
 
 Ao baixar um pack, adicione uma entrada acima com: nome exato do pack, autor, URL da página específica do pack, e a licença declarada.

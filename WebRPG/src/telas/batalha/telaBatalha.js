@@ -13,10 +13,10 @@ function criarCombatente(nome, classeSprite) {
   return wrapper;
 }
 
-export function montarTelaBatalha(container, { jogador, inimigo }) {
+export function montarTelaBatalha(container, { jogador, inimigo, local = "treino" }) {
   container.innerHTML = `
     <div class="tela-batalha">
-      <div class="palco-batalha"></div>
+      <div class="palco-batalha palco-batalha--${local}"></div>
       <div class="painel log-batalha" aria-live="polite"></div>
       <div class="barra-acoes">
         <button class="botao botao--destaque" data-acao="atacar">Atacar</button>

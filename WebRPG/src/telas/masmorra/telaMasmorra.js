@@ -75,6 +75,7 @@ export function montarTelaMasmorra(container, { jogador, aoSair }) {
     container.querySelector(".tela-masmorra").insertBefore(areaBatalha, areaControles);
 
     iniciarBatalha(areaBatalha, jogador, inimigo, {
+      local: "masmorra",
       onFim: (fim) => {
         areaBatalha.remove();
         if (fim === "vitoria") {
