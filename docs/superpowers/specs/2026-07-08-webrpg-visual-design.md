@@ -229,3 +229,151 @@ tratamento pela primeira vez.
 sem ver nenhuma caixa CSS lisa, nenhuma barra invisível, nenhum texto em
 fonte de sistema onde deveria ser pixel — e a cidade/torre/masmorra andáveis
 em tiles, não clicáveis por lista.
+
+## 11. Revisão 2026-07-11 — Fase 8 "Bestiário Completo & Conteúdo de Masmorra" e Fase 9 "Cenários Parallax & Áudio Definitivo"
+
+Fases 6 e 7 (seção 10) foram implementadas e concluídas (ver `docs/superpowers/docs.md`).
+Esta seção diagnostica o que ainda falta depois delas e define as próximas
+duas fases — ambas fecham dívidas de conteúdo já **documentadas explicitamente**
+em commits/CREDITS.md anteriores, não gaps novos.
+
+**Atualização 2026-07-14:** Fases 8 e 9 foram implementadas e concluídas (ver `docs/superpowers/docs.md`). Achados #1-#3 (bestiário completo, templates de masmorra, ícones de item) fechados na Fase 8; achados #4-#5 (cenário de fundo por local, música ambiente de verdade + Torre/Masmorra com música própria) fechados na Fase 9. Única pendência residual: Hidra das Sombras e Dragão Negro seguem no fallback visual "orc" (achado #1) por falta de pack de dragão gratuito com licença clara — documentado em `WebRPG/assets/CREDITS.md`.
+
+### 11.1 Achados
+
+| # | Achado | Onde | Origem |
+|---|---|---|---|
+| 1 | 9 dos 25 nomes de inimigo do jogo (todos já usados como boss da Torre ou mob/boss de masmorra) ainda caem no sprite padrão "orc" por falta de arquétipo baixado: Guardião de Pedra, Sentinela de Ferro, Mago Sombrio, Lobo Alfa, Hidra das Sombras, Dragão Negro, Salamandra de Fogo, Escorpião de Magma, Senhor das Chamas | `WebRPG/src/telas/batalha/mapaSprites.js` | `WebRPG/assets/CREDITS.md`, listado desde a Fase 7 |
+| 2 | Só 3 dos 10 templates de masmorra do `JogoRPG` original foram portados — decisão explícita da Fase 4 que adiou os 7 restantes para "uma iteração futura" | `engine/masmorra/gerador.js` | Fase 4, decisão documentada #4 |
+| 3 | Itens da loja/personagem são só texto colorido por raridade — nenhum ícone, mesmo com o design system (seção 4.1) prometendo "UI robusta" em toda a experiência | `WebRPG/src/telas/loja/telaLoja.js`, `WebRPG/src/telas/personagem/` | Nunca antes diagnosticado — achado nesta revisão |
+| 4 | Nenhum cenário de fundo por local de batalha — `.palco-batalha`/`.palco-torre` são gradiente/CSS lisos; a seção 4.3 pede explicitamente "cenário de fundo parallax por local (floresta/missão, pedra escura/torre, cripta/masmorra)" | `WebRPG/src/estilos/batalha.css`, `torre.css` | Seção 4.3, nunca implementado |
+| 5 | Música ainda são jingles curtos de poucos segundos em loop, não faixas ambiente de verdade; Torre/Masmorra/Arena não tocam nenhuma música própria (só cidade/batalha) | `WebRPG/assets/audio/musica/`, `WebRPG/src/telas/torre|masmorra|arena/` | CREDITS.md, limitação conhecida da Fase 7 |
+
+### 11.2 Fase 8 — Bestiário Completo & Conteúdo de Masmorra
+
+| Etapa | Entrega | Depende de |
+|---|---|---|
+| 8a | Baixar ~5 arquétipos novos de sprite e mapear os 9 nomes restantes (achado #1) | nada |
+| 8b | Adicionar os 7 templates de masmorra restantes (achado #2), reaproveitando arquétipos já mapeados sempre que possível | 8a (para os nomes novos que os templates introduzirem) |
+| 8c | Ícones de item por slot (achado #3) — 7 ícones (`head/chest/hands/legs/feet/weapon/consumable`), mesmo padrão data-driven de `spriteParaInimigo` | nada, roda em paralelo com 8a/8b |
+
+**Critério de pronto:** todo inimigo do jogo (Torre, Masmorra, treino) mostra um sprite condizente com seu nome — zero fallback silencioso para "orc" seria o ideal, mas arquétipos genuinamente ausentes no material gratuito disponível continuam documentados em CREDITS.md; a masmorra tem 10 templates jogáveis; todo item na loja/personagem mostra um ícone.
+
+### 11.3 Fase 9 — Cenários Parallax & Áudio Definitivo
+
+| Etapa | Entrega | Depende de |
+|---|---|---|
+| 9a | Cenário de fundo por local de batalha (achado #4): treino/floresta, masmorra/cripta, torre/pedra escura | nada |
+| 9b | Música própria para Torre e Masmorra + faixas de cidade/batalha substituídas por loops mais longos (achado #5) | nada, roda em paralelo com 9a |
+| 9c | Revisão visual final tela a tela contra a referência Knights of Pen & Paper (critério original da Fase 5, seção 6) | 9a/9b |
+
+**Critério de pronto:** jogar do Título a uma masmorra e à Torre com cenário de fundo condizente com o local, som ambiente tocando em todo modo de jogo com conteúdo próprio, e nenhuma tela restante parecendo "um formulário" quando comparada à referência.
+
+### 11.4 Fora de escopo (Fases 8-9)
+
+- **Tela de batalha visual (sprites/palco) para Arena e Guilda** — ambas resolvem combate só em log de texto hoje; isso é uma mudança de UI maior que uma finalização de conteúdo/asset, e não estava listada em nenhum achado anterior. Fica como possível fase futura, não parte de 8/9.
+- **Pathfinding/tile rendering para a Torre** — a Torre mantém sua UI própria de texto+sprite único (decisão já tomada na Fase 7, Task 4); não reaberta aqui.
+
+## 12. Revisão 2026-07-11 — Fases finais: Fase 10 "Combate Completo & Masmorras Selecionáveis" e Fase 11 "Save Completo & Lançamento"
+
+Última rodada de diagnóstico contra a spec inteira (seções 2, 4.1, 4.3 e 7), feita
+lendo o código real. As Fases 10-11 fecham **tudo** que a spec ainda promete e o
+jogo não entrega — depois delas, esta spec está concluída.
+
+### 12.1 Achados
+
+| # | Achado | Onde | Origem na spec |
+|---|---|---|---|
+| 1 | A barra de ações da batalha só tem **Atacar · Fugir** — a spec pede "Atacar · Habilidade · Item · Defender · Fugir". Não existe ação de defender nem de usar item no motor de turno (`executarRodada` só reconhece `"fugir"` vs. atacar) | `WebRPG/src/telas/batalha/telaBatalha.js:22-23`, `engine/combate/turno.js:69` | Seção 4.3 |
+| 2 | A **Poção de Cura é comprável mas inutilizável**: a loja vende (vai para `jogador.inventario` como objeto), missões premiam (vai para `jogador.itens` como string), a penalidade de fuga da masmorra rouba (`"pocao"`) — mas **nenhum código em lugar nenhum permite beber uma**. Bônus do achado: existem duas contabilidades de poção incompatíveis (string em `itens` vs. objeto em `inventario`) | `engine/itens/catalogo.js:50`, `engine/missoes/index.js:70-71`, `engine/masmorra/index.js:41` | Seção 4.3 ("Item") |
+| 3 | **Nenhum ícone de status com tooltip** — veneno/sangramento/paralisia/invulnerável só aparecem como texto no log; a spec pede "fileira de ícones com tooltip explicativo (nome, efeito, turnos restantes)" | `WebRPG/src/telas/batalha/` (nenhuma `.icones-status` existe) | Seção 4.1, princípio #2 |
+| 4 | **Importar save não tem UI**: `importarSave()` existe em `localStorage.js` mas nenhuma tela chama; Configurações só tem "Exportar Save". Save corrompido no "Continuar" cai silenciosamente na criação, sem avisar nem oferecer importar backup | `WebRPG/src/armazenamento/localStorage.js:31`, `WebRPG/src/telas/configuracao/telaConfiguracoes.js`, `WebRPG/src/main.js:123-129` | Seção 7 |
+| 5 | **Deploy GitHub Pages nunca foi configurado**: sem workflow (`.github/workflows/` não existe), sem `base` no `vite.config.js`, e todos os caminhos de asset são absolutos (`/assets/...`) em JS e CSS — quebram sob o subcaminho `https://<user>.github.io/<repo>/`. Suspeita adicional a confirmar na fase: `vite.config.js` não define `publicDir`, então o build de produção pode nem estar copiando `WebRPG/assets/` para `dist/` | `vite.config.js`, `WebRPG/src/audio/*.js`, `WebRPG/src/telas/batalha/sprites.js:31`, `WebRPG/src/estilos/*.css` | Seção 2 ("Deploy: site estático compatível com GitHub Pages") |
+| 6 | Os **10 templates de masmorra não são selecionáveis** — a UI sempre usa `templatesMasmorra[0]` (pendência anotada explicitamente na Fase 8, Task 2) | `WebRPG/src/telas/masmorra/telaMasmorra.js` | Seção 4.4 + Fase 8 |
+
+### 12.2 Correções de spec (documentadas, não bugs)
+
+1. **MP não existe e não vai existir.** A spec (seções 4.1/4.3) menciona barras e custo de MP, mas nem o console (`JogoRPG/`) nem o motor jamais tiveram um campo de mana — as habilidades de classe deste jogo são **passivas por chance** (esquiva do Arqueiro, bloqueio do Paladino, cura do Xamã, fúria do Bárbaro...), não magias ativas com custo. Corrigir a spec é mais honesto que inventar um sistema de MP que o jogo original nunca teve. Toda menção a MP fica lida como "HP" daqui em diante.
+2. **O botão "Habilidade" da seção 4.3 não se aplica** — pela mesma razão: as habilidades disparam sozinhas. A barra de ações final é **Atacar · Item · Defender · Fugir** (4 botões). A habilidade passiva da classe fica visível no painel de status do combatente (Fase 10, junto dos ícones de status), cumprindo o espírito de "informação sempre visível" sem inventar mecânica nova.
+
+### 12.3 Fase 10 — Combate Completo & Masmorras Selecionáveis
+
+| Etapa | Entrega | Depende de |
+|---|---|---|
+| 10a | Motor: ação `defender` (achado #1) e ação `usar_pocao` + API única de poção resolvendo a dupla contabilidade (achado #2) | nada |
+| 10b | UI: barra de ações vira Atacar · Item (N) · Defender · Fugir; fileira de ícones de status com tooltip (achado #3) | 10a |
+| 10c | Seletor de masmorra: escolher entre os 10 templates ao entrar (achado #6) | nada, paralelo a 10a/10b |
+
+**Critério de pronto:** uma batalha usa as 4 ações com efeito visível; poção comprada na loja ou ganha em missão é bebida em batalha e a contagem bate; todo status ativo aparece como ícone com tooltip de nome/efeito/turnos; a masmorra oferece os 10 temas.
+
+### 12.4 Fase 11 — Save Completo & Lançamento
+
+| Etapa | Entrega | Depende de |
+|---|---|---|
+| 11a | UI de importar save (Configurações + oferta de importar quando o save do navegador está corrompido) (achado #4) | nada |
+| 11b | Build de produção íntegro sob subcaminho: `publicDir`/`base` corretos, caminhos de asset auditados (achado #5, parte 1) | nada |
+| 11c | Workflow GitHub Actions: testes como gate → build → deploy no GitHub Pages (achado #5, parte 2) | 11b |
+| 11d | Checklist final da spec inteira (seções 4, 6 e 7, tela a tela) e encerramento do documento | 11a-11c |
+
+**Critério de pronto:** o jogo roda completo numa URL pública do GitHub Pages, sem nenhum 404 de asset; um save exportado numa máquina importa em outra; save corrompido nunca trava o jogo e oferece as duas saídas da seção 7; o checklist final da spec passa inteiro — **spec concluída**.
+
+### 12.5 Fora de escopo (definitivo)
+
+Herdado da seção 11.4 e mantido fora do encerramento da spec: tela de batalha visual para Arena/Guilda, Torre em tiles, e os itens da seção 9 (IA, backend, multiplayer, sprites por raça×classe). Se algum vier a acontecer, será uma spec nova, não uma extensão desta.
+
+## 13. Revisão 2026-07-14 — o que ainda falta depois da Fase 11
+
+Depois da Fase 11 a spec está formalmente encerrada (build publicado, save completo,
+combate completo no modo principal). Esta revisão registra o que uma leitura mais
+funda do código ainda encontra — gaps reais, verificados no código, não
+suposição — para orientar uma eventual continuação (Fase 12 em diante) sem
+reabrir o encerramento da spec em si.
+
+### 13.1 Achados
+
+| # | Achado | Onde | Evidência |
+|---|---|---|---|
+| 1 | **Salas de tesouro/armadilha/segredo da masmorra são puramente decorativas.** `SIMBOLO_POR_TIPO` desenha `trap`/`secret`/`treasure` na grade, mas `verificarEncontro()` só reage a `monstro`/`miniboss`/`boss` — pisar num `$`, `trap` ou `?` não dá loot, não causa dano, não dispara nada. O console original tinha lógica para essas salas (armadilha causa dano, segredo revela algo, tesouro dá item) que nunca foi portada para o web | `WebRPG/src/telas/masmorra/telaMasmorra.js` (`SIMBOLO_POR_TIPO`, `TIPOS_COM_ENCONTRO`) | Confirmado por leitura direta — `TIPOS_COM_ENCONTRO` é um `Set` de só 3 valores |
+| 2 | **Arena e Guilda resolvem combate só em log de texto** — nenhuma das duas usa `montarTelaBatalha`/`iniciarBatalha`; não há palco, sprite, cenário de fundo (Fase 9) nem as 4 ações da Fase 10 (Poção/Defender não existem nesses modos) | `WebRPG/src/telas/arena/telaArena.js`, `WebRPG/src/telas/guilda/telaGuilda.js` | Já registrado como fora de escopo nas seções 11.4/12.5; repetido aqui como candidato de conteúdo, não mudança de decisão |
+| 3 | **A Torre tem sprite do boss (Fase 7) mas o combate em si continua todo em texto** — mesmo problema do achado #2: sem as ações de Item/Defender da Fase 10, sem cenário de fundo por golpe, sem ícones de status | `WebRPG/src/telas/torre/telaTorre.js` | Confirmado — a tela não importa `iniciarBatalha` nem `telaBatalha.js` |
+| 4 | **Consumíveis além da Poção de Cura nunca foram portados.** O console (`JogoRPG/`) tem o Néctar da Vida Eterna (poção maior) e 5 mementos lendários únicos de masmorra (Orbe da Fênix Flamejante, Coração Flamejante, Fragmento do Sol Caído, Néctar da Vida Eterna, Bússola do Destino) — o motor web só tem a Poção de Cura (`engine/itens/catalogo.js`) | `JogoRPG/masmorra/masmorra.js:20-50` | Nomes e contexto confirmados na leitura desta revisão |
+| 5 | **Não existe UI para equipar amuleto/talismã.** O motor já suporta (`engine/itens/amuletoTalisma.js`, campo `jogador.amuletoEquipado` inclusive somado no cálculo de ataque/defesa da tela de Personagem), mas nenhuma tela em `WebRPG/src/telas/` renderiza um slot ou botão para ligar/desligar o amuleto — o único lugar que referencia `amuletoEquipado` no código web é um fixture de teste (`telaTorre.test.js`), nunca uma tela real | `engine/itens/amuletoTalisma.js`, `WebRPG/src/telas/personagem/telaPersonagem.js` | Confirmado — busca por `amuletoEquipado` em `WebRPG/src` só retorna o teste |
+| 6 | **Level up é matematicamente correto mas invisível.** `checarLevelUp(jogador)` devolve uma lista de eventos `{tipo: "level_up", nivel, hpMax}` (o mesmo padrão de evento usado em todo o resto do motor), mas o único call site do jogo (`WebRPG/src/main.js`, ao vencer uma batalha de treino) descarta o retorno sem usar — o jogador sobe de nível silenciosamente, sem nenhuma celebração visual/sonora, violando o princípio "nenhuma ação sem resposta visual" da seção 4.1 #3 | `WebRPG/src/main.js` (`checarLevelUp(jogador);`, valor de retorno ignorado), `engine/personagem/experiencia.js:20` | Confirmado — `checarLevelUp` já produz o evento certo, só falta a UI consumir |
+| 7 | **Craftar/alternar o amuleto e o Talismã da Torre não tem nenhuma UI.** O amuleto (no console, "Amuleto Supremo") é o item raro que **dá bônus permanente de status ao jogador** (+5% ataque, +10% HP máximo) e só pode ser criado se o jogador conseguir juntar um conjunto específico de itens vindos de missões e exploração — no motor web, simplificado para 5 materiais (`Pena do Corvo Sombrio`, `Pergaminho Arcano`, `Essência da Noite`, `Relíquia Brilhante`, `Gema da Escuridão`, todos já dropáveis de missões reais da Guilda). O motor tem tudo pronto — `podeCraftarAmuleto`/`craftarAmuleto`, `alternarAmuleto` (aplica/remove o bônus), `podeCraftarTalisma`/`craftarTalisma` (10 "Fragmento Antigo" + 2000 ouro) — mas **nenhuma tela chama qualquer uma dessas 5 funções**. O jogador consegue farmar todos os materiais (inclusive a missão especial de 10 ondas da Guilda e as ondas da Arena, que já dropam "Fragmento Antigo" de verdade) mas nunca consegue de fato craftar nem equipar o amuleto ou o talismã | `engine/itens/amuletoTalisma.js` (nenhuma das 5 exports é chamada em `WebRPG/src`), `engine/missoes/ondas.js`, `WebRPG/src/telas/guilda/telaGuilda.js:17-35`, `WebRPG/src/telas/arena/telaArena.js:56-62`, `JogoRPG/itens/amuletoTalisma/amuleto/menuAmuleto.js` (versão console, "Amuleto Supremo", 10 itens distintos) | Confirmado por busca — zero call sites em `WebRPG/src/telas/` |
+| 8 | **Vencer uma batalha nunca dropa item — só XP e ouro.** `concederRecompensaVitoria` (chamada em todo fim de combate, incluindo masmorra/torre) só lê `inimigo.xp`/`inimigo.ouro`; não existe nenhum evento `drop`/chance de item por matar um monstro, miniboss ou boss. Itens só entram no inventário via missão da Guilda (achado já coberto) ou compra na loja. Consequência em cascata: os bônus passivos `dropOuro`/`dropItem` do Arqueiro e do Assassino (`engine/personagem/classes.js`) são **campos de dado nunca lidos por nenhum código** — mesma categoria do achado `dano_extra`/`defesa_extra` já documentado como dado morto na Fase 4 | `engine/combate/recompensas.js` (função inteira, 10 linhas), `engine/personagem/classes.js` (`dropOuro`, `dropItem`) | Confirmado — `recompensas.js` não tem nenhum branch de item; `dropOuro`/`dropItem` não aparecem em nenhum `.js` fora de `classes.js` e seus testes |
+| 9 | **O herói sempre usa o sprite "soldado" em batalha, não importa a raça/classe escolhida.** A spec (seção 5) planejou 6 sprites (um por classe); só o par Soldado/Orc da Fase 1 existe, e `telaBatalha.js`/`telaCriacao.js` **hardcodam** `"soldado"` literalmente, sem ler `jogador.classe` — um Bárbaro e um Xamã aparecem visualmente idênticos em combate | `WebRPG/src/telas/batalha/telaBatalha.js:31` (`criarCombatente(jogador.nome \|\| "Você", "soldado")`), `WebRPG/src/telas/criacao/telaCriacao.js:9` (preview também fixo em "soldado") | Confirmado — busca por `"soldado"` no código mostra o literal fixo em ambos os pontos |
+| 10 | **O Talismã da Torre não tem nenhum efeito de jogo — mesmo se craftado, nada verifica sua posse.** No console, o Talismã é uma **chave obrigatória**: `entrarNaTorre()` bloqueia a entrada inteira se `jogador.inventario` não contiver `"Talismã da Torre"`, e o item é **consumido** ao entrar ("o amuleto brilha intensamente e se desintegra, transformando-se na chave etérea que abre os portões"). No motor web, `engine/torre/index.js` (`criarEstadoTorre`/`avancarAndar`/`executarTurnoTorre`) **não tem nenhuma verificação de posse do talismã** — a Torre está sempre aberta, sem gate nenhum, tornando o item (mesmo que o achado #7 seja resolvido) inútil na prática. **Bônus do mesmo achado:** o console também tem uma sequência de final de jogo ao derrotar o 10º boss (Lorde do Caos) que nunca foi portada — mensagem de vitória, item-troféu "Cálice da Vitória" e bônus de 10000 ouro; o motor web só emite `fim: "torre_completa"` sem nenhuma recompensa ou celebração especial | `JogoRPG/torre/entrarTorre.js:6-12` (gate), `:53-68` (final: Cálice da Vitória + 10000 ouro), `engine/torre/index.js:45` (`fim: "torre_completa"`, sem tratamento especial) | Confirmado — nenhum arquivo em `engine/torre/` ou `WebRPG/src/telas/torre/` referencia "Talismã da Torre" ou qualquer verificação de item para liberar acesso |
+
+### 13.2 Não são achados — checados e confirmados como já resolvidos
+
+Para não duplicar trabalho numa fase futura: os itens abaixo foram checados nesta
+revisão e **já têm cobertura completa**, mesmo não sendo óbvio à primeira vista.
+
+- **Inventário**: a separação de dados é real e consistente — `jogador.equipamentos` (slots `head/chest/hands/legs/feet`, um item cada), `jogador.armaEquipada` (a arma ativa), `jogador.inventario` (itens soltos, não equipados) e `jogador.itens`/`jogador.amuletoEquipado` (materiais de craft/estado do amuleto) são campos distintos e bem definidos em `criarPersonagem` (`engine/personagem/criarPersonagem.js`); a única divergência é a dupla contabilidade de poção já corrigida na Fase 10 (achado 12.1 #2).
+- **Equipar armas/armaduras**: `engine/itens/equipar.js` + `telaPersonagem.js` funcionam de ponta a ponta, com comparação de atributos (↑↓) antes de trocar — confirmado nas revisões anteriores.
+- **Habilidades únicas de inimigo**: todas as 6 (invulnerável, paralisia/teia, roubo e fuga, petrificar, regeneração, bloquear+contra-atacar) estão implementadas e testadas desde a Fase 4 (`engine/combate/habilidadesInimigo.js`, `turno.js`) — funcionando de verdade em batalha, não só como dado.
+- **Loja**: cobre os 4 conjuntos de armadura completos (20 peças), as 10 armas com efeito único cada, e tem aba de Vender além de Comprar — catálogo completo, nada faltando aqui.
+- **Torre**: os 10 bosses têm mecânica própria implementada e testada (`engine/torre/bosses.js`/`index.js`, Fase 4) e sprite (Fase 7) — mas 6 dos 10 ainda caem no fallback visual "orc" enquanto a Fase 8 (sprites restantes) não for executada; a Torre em si (a tela) ainda usa combate em texto puro, não a tela de batalha com sprite (achado #3 acima).
+- **Lógica de upar e classes**: `engine/personagem/experiencia.js`/`classes.js` corretos e testados — só a celebração visual está faltando (achado #6), não a lógica.
+- **Missões**: chance de sucesso, ouro, XP, item, poção extra e missão-bônus (`chanceMissaoExtra`) todas funcionam (`engine/missoes/index.js`); a chance de a missão levar a uma masmorra bônus (`chanceMasmorra`) existe no dado do catálogo mas **não é lida em lugar nenhum do código web** — é o mesmo padrão de dado morto do achado #8 (a ser incluído numa fase futura se confirmado necessário).
+- **Missão de 10 ondas → fragmento → Talismã da Torre**: a cadeia mecânica inteira funciona — a missão lendária "Desafio da Arena Amaldiçoada" (`tipoBatalha: "ondas"`, `engine/missoes/ondas.js`, `TOTAL_ONDAS=10`) resolve as 10 ondas e credita "Fragmento Antigo"; a Arena (modo separado, ondas infinitas) também dropa o mesmo fragmento; `craftarTalisma` (10 fragmentos + 2000 ouro) já existe. **O único elo faltando é a UI de craft (achado #7)** — o jogador consegue juntar os fragmentos hoje, só não consegue gastá-los.
+- **Drops de missão por raridade**: funcionam (`resolverResultadoMissao`, chance por raridade comum/raro/lendário + bônus do Assassino). O que não existe é drop por **matar um monstro em combate** (achado #8) — são dois sistemas de loot diferentes, e só o de missão está pronto.
+- Amuletos/talismãs no *cálculo* de combate — o bônus já entra em `calcularAtaqueJogador`/`calcularDefesaJogador`; falta só a UI de craft/equipar (achados #5 e #7), não a lógica.
+- Ícones de status, cenário por local, 4 ações de batalha — cobertos nas Fases 9-10 (quando executadas), mas **só no modo de treino e na masmorra** (ver achados #2/#3 — Arena/Guilda/Torre ficam de fora).
+
+### 13.3 Estado de execução (importante para não confundir "planejado" com "no jogo")
+
+Até esta revisão (2026-07-14), **apenas as Fases 0-7 foram de fato implementadas** (ver `docs/superpowers/docs.md`) — as Fases 8-11 (seções 11-12) **ainda são só planos escritos**, não código. Na prática isso significa que, hoje, jogando o WebRPG:
+- a masmorra ainda tem só 3 dos 10 temas (Fase 8 não executada);
+- 9 nomes de inimigo ainda caem no sprite "orc" (Fase 8 não executada);
+- a batalha ainda só tem Atacar/Fugir, sem Poção/Defender nem ícones de status (Fase 10 não executada);
+- não há seletor de masmorra, importar save, nem deploy no GitHub Pages (Fases 10-11 não executadas).
+
+Os achados #1-#10 desta seção 13 são **adicionais** a essas quatro fases já planejadas — sobrevivem mesmo depois que as Fases 8-11 forem executadas.
+
+### 13.4 Fora de escopo (mantido)
+
+Confirma o que a seção 12.5 já fechou: sprites únicos por **combinação** raça×classe (42 combos, seção 9) continuam fora de escopo. **Atenção à distinção**: isso é diferente do achado #9 acima — a seção 5 sempre planejou 6 sprites **por classe** (não por combo), e esses 6 nunca foram construídos (só existe 1, sempre "soldado"); ao contrário dos combos, os 6 sprites de classe **não estão** na lista de fora de escopo — são um gap real, é só que nunca chegou a ser feito. IA/backend/multiplayer permanecem fora de escopo sem ressalva.
+Os achados #1-#10 acima **não têm fase numerada nem plano escrito nesta revisão** —
+ficam registrados como candidatos para uma eventual Fase 12 em diante, a serem
+planejados quando/se o trabalho for retomado.
