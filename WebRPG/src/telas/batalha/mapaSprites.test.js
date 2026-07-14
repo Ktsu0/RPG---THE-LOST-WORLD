@@ -32,10 +32,21 @@ describe("spriteParaInimigo", () => {
   });
 
   it.each([
-    "Guardião de Pedra", "Sentinela de Ferro", "Mago Sombrio", "Lobo Alfa",
-    "Hidra das Sombras", "Dragão Negro", "Salamandra de Fogo", "Escorpião de Magma",
-    "Senhor das Chamas",
-  ])('cai no sprite padrão (orc) para "%s" (arquétipo não baixado)', (nome) => {
-    expect(spriteParaInimigo(nome)).toBe("orc");
+    ["Guardião de Pedra", "golem-pedra"],
+    ["Sentinela de Ferro", "golem-pedra"],
+    ["Mago Sombrio", "mago"],
+    ["Lobo Alfa", "lobo"],
+    ["Salamandra de Fogo", "elemental-fogo"],
+    ["Escorpião de Magma", "elemental-fogo"],
+    ["Senhor das Chamas", "elemental-fogo"],
+  ])('mapeia "%s" para o sprite "%s"', (nome, pasta) => {
+    expect(spriteParaInimigo(nome)).toBe(pasta);
   });
+
+  it.each(["Hidra das Sombras", "Dragão Negro"])(
+    'cai no sprite padrão (orc) para "%s" (nenhum arquétipo de dragão CC0/gratuito com animações completas foi encontrado nesta fase — documentado em CREDITS.md)',
+    (nome) => {
+      expect(spriteParaInimigo(nome)).toBe("orc");
+    }
+  );
 });

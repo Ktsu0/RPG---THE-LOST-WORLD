@@ -14,6 +14,13 @@ const EXCECOES_FRAMES_POR_PERSONAGEM = {
   cogumelo: { idle: 4, ataque: 8 },
   esqueleto: { idle: 4, ataque: 8 },
   "olho-voador": { idle: 8, ataque: 8 },
+  // Fase 8: 4 arquétipos novos, cada um de um pack diferente (LuizMelo "Evil
+  // Wizard"/"Fire Worm", Admurin "Enemy: Golem", Atari Boy "Skull Wolf") —
+  // contagens reais confirmadas nas páginas dos packs (CREDITS.md).
+  mago: { idle: 8, ataque: 8, morte: 8 },
+  "elemental-fogo": { idle: 9, ataque: 16, dano: 3, morte: 8 },
+  "golem-pedra": { idle: 4, ataque: 12, dano: 5, morte: 9 },
+  lobo: { ataque: 5, morte: 8 },
 };
 
 function obterConfigAnimacao(personagem, nomeAnimacao) {

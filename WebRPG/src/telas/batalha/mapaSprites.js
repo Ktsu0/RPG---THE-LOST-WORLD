@@ -32,6 +32,18 @@ const MAPA_SPRITE_POR_NOME = {
   "Aranha da Cripta": "olho-voador",
   "Aranha Venenosa": "olho-voador",
   "Morcego Gigante": "olho-voador",
+
+  // Fase 8: 4 arquétipos novos cobrindo 7 dos 9 nomes que faltavam.
+  // "Hidra das Sombras" e "Dragão Negro" continuam sem arquétipo (nenhum pack
+  // de dragão CC0/gratuito com animações completas foi encontrado) — caem no
+  // SPRITE_PADRAO (orc), documentado em CREDITS.md.
+  "Guardião de Pedra": "golem-pedra",
+  "Sentinela de Ferro": "golem-pedra",
+  "Mago Sombrio": "mago",
+  "Lobo Alfa": "lobo",
+  "Salamandra de Fogo": "elemental-fogo",
+  "Escorpião de Magma": "elemental-fogo",
+  "Senhor das Chamas": "elemental-fogo",
 };
 
 const SPRITE_PADRAO = "orc";
