@@ -36,6 +36,13 @@ describe("montarTelaLoja", () => {
     expect(aoSair).toHaveBeenCalledOnce();
   });
 
+  it("mostra um ícone para cada item da lista de compra", () => {
+    const container = document.createElement("div");
+    montarTelaLoja(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    const icone = container.querySelector(".item-loja .icone-item");
+    expect(icone).not.toBeNull();
+  });
+
   it("aba Vender lista os itens vendíveis do inventário e vende ao confirmar", () => {
     const jogador = { nome: "Thorin", ouro: 0, inventario: [{ nome: "Espada Longa", slot: "weapon", preco: 2500 }] };
     const container = document.createElement("div");

@@ -53,6 +53,12 @@ Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum 
 
   **Cobertura do bestiário** (mapeamento completo em `WebRPG/src/telas/batalha/mapaSprites.js`): dos 25 nomes de inimigo do jogo, só **Hidra das Sombras** e **Dragão Negro** ainda caem no fallback "orc" — nenhum pack de dragão gratuito com licença clara e as 4 animações completas (idle/ataque/dano/morte) foi encontrado na busca da Fase 8 (os candidatos encontrados eram pagos, só tinham animação idle, ou tinham preço mínimo maior que zero). Pendência de conteúdo registrada para uma fase futura.
 
+- **Kyrise's Free 16x16 RPG Icon Pack** (Kyrise) — Fase 8
+  Organizado em: `WebRPG/assets/ui/icones/` (`head.png`=helmet_01a, `chest.png`=armor_01a, `hands.png`=gloves_01a, `legs.png`=armor_01b — o pack não tem um ícone dedicado de perna/calça, reaproveitada outra variante de cor do mesmo ícone de armadura, decisão pragmática documentada aqui —, `feet.png`=boots_01a, `weapon.png`=sword_01a, `consumable.png`=potion_01a, `generico.png`=gem_01a).
+  Fonte: https://kyrise.itch.io/kyrises-free-16x16-rpg-icon-pack
+  Licença: **CC BY 4.0** (Creative Commons Atribuição — requer crédito ao autor, diferente do CC0 puro usado no resto do projeto). Crédito: "Kyrise's Free 16x16 RPG Icon Pack © 2018 by Kyrise, licensed under CC BY 4.0".
+  Uso: ícone por slot em `WebRPG/src/itens/iconePorSlot.js`, aplicado na Loja e na tela de Personagem.
+
 - **Roguelike/RPG Pack** (Kenney)
   Local original: `WebRPG/assets/cenarios/roguelike-rpg-pack/`
   Organizado em: `WebRPG/assets/cenarios/masmorra/` (chao.png = piso de interior recortado da spritesheet; oculta.png reusa o mesmo tile, escurecido via `filter: brightness(0.35)` em masmorra.css em vez de um segundo recorte — mais simples e com o mesmo resultado visual: "mesmo piso, mais escuro" para representar névoa de guerra).

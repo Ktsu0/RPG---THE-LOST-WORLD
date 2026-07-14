@@ -2,6 +2,7 @@ import { obterClasseRaridade } from "@engine/itens/raridade.js";
 import { equiparArmaduraNoSlot, equiparArma, compararAtributos } from "@engine/itens/equipar.js";
 import { xpParaProximoNivel } from "@engine/personagem/experiencia.js";
 import { calcularAtaqueJogador, calcularDefesaJogador } from "@engine/combate/calculoDano.js";
+import { iconePorSlot } from "../../itens/iconePorSlot.js";
 
 function renderizarAtributos(container, jogador) {
   const painel = container.querySelector(".painel-atributos");
@@ -46,6 +47,7 @@ function renderizarInventario(container, jogador, atualizarTudo) {
     }
 
     linha.innerHTML = `
+      <span class="icone-item icone-item--${iconePorSlot(item.slot)}"></span>
       <span class="${classeRaridade}">${item.nome}</span>
       ${diferencaHtml}
       <button class="botao" data-acao="equipar">Equipar</button>

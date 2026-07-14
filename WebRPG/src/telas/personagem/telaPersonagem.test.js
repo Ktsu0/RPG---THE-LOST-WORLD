@@ -35,6 +35,13 @@ describe("montarTelaPersonagem", () => {
     expect(linhaElmo.querySelector(".diferenca-defesa").textContent).toContain("+6");
   });
 
+  it("mostra um ícone para cada item do inventário", () => {
+    const container = document.createElement("div");
+    montarTelaPersonagem(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    const icone = container.querySelector(".item-inventario .icone-item");
+    expect(icone).not.toBeNull();
+  });
+
   it("equipa uma armadura do inventário ao clicar, e a peça anterior (se houver) volta pro inventário", () => {
     const container = document.createElement("div");
     const jogador = jogadorDeTeste();

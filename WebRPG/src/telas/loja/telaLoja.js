@@ -1,6 +1,7 @@
 import { catalogoLoja } from "@engine/itens/catalogo.js";
 import { obterClasseRaridade } from "@engine/itens/raridade.js";
 import { comprarItem, itensVendiveis, venderItens } from "@engine/loja/index.js";
+import { iconePorSlot } from "../../itens/iconePorSlot.js";
 
 function renderizarCabecalho(container, jogador) {
   const cabecalho = container.querySelector(".cabecalho-loja");
@@ -16,6 +17,7 @@ function renderizarAbaComprar(container, jogador, atualizarTudo) {
     linha.dataset.itemLoja = item.id;
     const classeRaridade = obterClasseRaridade(item.raridade);
     linha.innerHTML = `
+      <span class="icone-item icone-item--${iconePorSlot(item.slot)}"></span>
       <span class="${classeRaridade}">${item.nome}</span>
       <span>${item.preco} ouro</span>
       <button class="botao" data-acao="comprar">Comprar</button>
