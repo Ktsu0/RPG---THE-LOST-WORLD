@@ -2,7 +2,7 @@
 
 RPG de turnos no navegador, reconstrução visual do jogo de console original (`JogoRPG/`).
 
-Jogo publicado: _(preenchido após o primeiro deploy)_
+Jogo publicado: https://ktsu0.github.io/RPG---THE-LOST-WORLD/
 
 ## Desenvolvimento
 
