@@ -1,7 +1,7 @@
 # Especificação: WebRPG — Versão Visual do RPG "The Lost World"
 
-**Data:** 2026-07-08 (revisado 2026-07-10 — ver seção 10)
-**Status:** Fases 0-5 implementadas e concluídas (ver `docs/superpowers/docs.md`). Fase 6 (seção 10) aprovada e planejada, ainda não implementada.
+**Data:** 2026-07-08 (revisado 2026-07-10 — ver seção 10; encerrada 2026-07-14 — ver seção 13)
+**Status:** Concluída — todas as fases (0-11) implementadas e verificadas; jogo publicado em https://ktsu0.github.io/RPG---THE-LOST-WORLD/. Documento encerrado; trabalho futuro (seção 12.5) requer spec nova.
 
 ## 1. Objetivo
 
@@ -318,6 +318,8 @@ jogo não entrega — depois delas, esta spec está concluída.
 | 11d | Checklist final da spec inteira (seções 4, 6 e 7, tela a tela) e encerramento do documento | 11a-11c |
 
 **Critério de pronto:** o jogo roda completo numa URL pública do GitHub Pages, sem nenhum 404 de asset; um save exportado numa máquina importa em outra; save corrompido nunca trava o jogo e oferece as duas saídas da seção 7; o checklist final da spec passa inteiro — **spec concluída**.
+
+**Atualização 2026-07-14:** Fase 11 implementada e concluída (ver `docs/superpowers/docs.md`). Achado #4 fechado (importar save em Configurações + recuperação de save corrompido no Título, com as duas saídas da seção 7). Achado #5 fechado: o diagnóstico empírico (11b) confirmou o pior cenário suspeitado — `WebRPG/assets/` nunca era copiado para `dist/`, mascarado por um fallback de SPA que retornava "200 OK" servindo `index.html` no lugar do asset real, em vez de um 404 visível; corrigido movendo os assets para `WebRPG/public/assets/` (publicDir padrão do Vite) e auditando os 4 pontos de JS que montam caminho de asset dinamicamente (CSS não precisou de mudança — o Vite já reescreve `url()` absolutos com o `base` configurado, confirmado empiricamente). Deploy automático publicado e verificado sem nenhum 404/erro de console em **https://ktsu0.github.io/RPG---THE-LOST-WORLD/**. Com isso, **a spec está formalmente encerrada** — todas as fases 0-11 implementadas e verificadas na URL pública.
 
 ### 12.5 Fora de escopo (definitivo)
 
