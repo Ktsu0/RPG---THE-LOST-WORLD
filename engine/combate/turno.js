@@ -20,6 +20,7 @@ import {
   calcularContraAtaque,
 } from "./habilidadesInimigo.js";
 import { concederRecompensaVitoria } from "./recompensas.js";
+import { usarPocaoDeCura } from "@engine/itens/pocao.js";
 
 export function executarRodada(estado, acao) {
   const { jogador, inimigo } = estado;
@@ -64,8 +65,19 @@ export function executarRodada(estado, acao) {
   }
 
   // 2. Ação do jogador
+  let defendendo = false;
   if (processarParalisiaDoTurno(jogador)) {
     eventos.push({ tipo: "paralisado", alvo: "jogador" });
+  } else if (acao === "usar_pocao") {
+    const resultado = usarPocaoDeCura(jogador);
+    if (resultado.usou) {
+      eventos.push({ tipo: "pocao_usada", valor: resultado.cura });
+    } else {
+      eventos.push({ tipo: "pocao_indisponivel" });
+    }
+  } else if (acao === "defender") {
+    defendendo = true;
+    eventos.push({ tipo: "defendendo", alvo: "jogador" });
   } else if (acao === "fugir") {
     const sucesso = rand(1, 100) > 40;
     eventos.push({ tipo: "fuga", sucesso });
@@ -108,6 +120,12 @@ export function executarRodada(estado, acao) {
   }
 
   // 3. Ação do inimigo
+  const aplicarDanoAoJogador = (dano) => {
+    const danoFinal = defendendo ? Math.floor(dano / 2) : dano;
+    jogador.hp = Math.max(0, jogador.hp - danoFinal);
+    return danoFinal;
+  };
+
   if (inimigo.habilidade === "roubo_e_fuga" && verificarRouboEFuga()) {
     const roubado = roubarOuroEFugir(jogador);
     eventos.push({ tipo: "fuga_com_roubo", valor: roubado });
@@ -127,10 +145,10 @@ export function executarRodada(estado, acao) {
   if (verificarAtaqueDuplo(inimigo)) {
     const golpe1 = resolverAtaqueInimigo(inimigo, jogador);
     const golpe2 = resolverAtaqueInimigo(inimigo, jogador);
-    const danoTotal =
+    const danoTotalBruto =
       (golpe1.resultado === "dano" ? golpe1.dano : 0) +
       (golpe2.resultado === "dano" ? golpe2.dano : 0);
-    jogador.hp = Math.max(0, jogador.hp - danoTotal);
+    const danoTotal = aplicarDanoAoJogador(danoTotalBruto);
     eventos.push({
       tipo: "ataque_duplo",
       autor: "inimigo",
@@ -140,8 +158,8 @@ export function executarRodada(estado, acao) {
     });
   } else if (inimigo.habilidade === "bloquear_e_contra_atacar" && verificarBloquearEContraAtacar()) {
     const danoTentado = resolverAtaqueInimigo(inimigo, jogador).dano || 0;
-    const contraAtaque = calcularContraAtaque(inimigo, danoTentado || 10);
-    jogador.hp = Math.max(0, jogador.hp - contraAtaque);
+    const contraAtaqueBruto = calcularContraAtaque(inimigo, danoTentado || 10);
+    const contraAtaque = aplicarDanoAoJogador(contraAtaqueBruto);
     eventos.push({ tipo: "contra_ataque", autor: "inimigo", dano: contraAtaque });
   } else {
     const golpe = resolverAtaqueInimigo(inimigo, jogador);
@@ -150,12 +168,12 @@ export function executarRodada(estado, acao) {
     } else if (golpe.resultado === "bloqueio") {
       eventos.push({ tipo: "bloqueio", autor: "jogador" });
     } else {
-      jogador.hp = Math.max(0, jogador.hp - golpe.dano);
+      const danoAplicado = aplicarDanoAoJogador(golpe.dano);
       eventos.push({
         tipo: "dano",
         autor: "inimigo",
         alvo: "jogador",
-        valor: golpe.dano,
+        valor: danoAplicado,
         critico: false,
       });
       if (verificarEnvenenamentoAoAtacar(inimigo, jogador)) {

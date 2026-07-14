@@ -206,3 +206,58 @@ describe("executarRodada com habilidades avançadas de inimigo", () => {
     expect(resultado.eventos.some((e) => e.tipo === "contra_ataque")).toBe(true);
   });
 });
+
+describe("executarRodada com ação usar_pocao", () => {
+  it("bebe a poção, cura, não ataca, e o inimigo revida normalmente", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const jogador = { ...jogadorBase(), hp: 40, hpMax: 100, itens: ["Poção de Cura"], inventario: [] };
+    const estado = { jogador, inimigo: inimigoBase(), rodada: 0 };
+
+    const resultado = executarRodada(estado, "usar_pocao");
+
+    const eventoPocao = resultado.eventos.find((e) => e.tipo === "pocao_usada");
+    expect(eventoPocao).toBeDefined();
+    expect(eventoPocao.valor).toBeGreaterThanOrEqual(20);
+    expect(eventoPocao.valor).toBeLessThanOrEqual(30);
+    expect(jogador.itens).toEqual([]);
+    // o jogador não atacou
+    expect(resultado.eventos.some((e) => e.tipo === "dano" && e.autor === "jogador")).toBe(false);
+    // o inimigo agiu normalmente
+    expect(resultado.eventos.some((e) => e.autor === "inimigo" || e.alvo === "jogador")).toBe(true);
+  });
+
+  it("sem poção: emite pocao_indisponivel e não consome/cura nada (mas o inimigo revida normalmente)", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const jogador = { ...jogadorBase(), hp: 40, hpMax: 100, itens: [], inventario: [] };
+    const estado = { jogador, inimigo: inimigoBase(), rodada: 0 };
+
+    const resultado = executarRodada(estado, "usar_pocao");
+
+    expect(resultado.eventos.some((e) => e.tipo === "pocao_indisponivel")).toBe(true);
+    expect(resultado.eventos.some((e) => e.tipo === "pocao_usada")).toBe(false);
+    expect(jogador.itens).toEqual([]);
+    expect(jogador.inventario).toEqual([]);
+  });
+});
+
+describe("executarRodada com ação defender", () => {
+  it("emite defendendo, o jogador não ataca, e o dano do inimigo cai pela metade", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const estadoNormal = { jogador: { ...jogadorBase(), hp: 500, hpMax: 500 }, inimigo: inimigoBase(), rodada: 0 };
+    const resultadoNormal = executarRodada(estadoNormal, "atacar");
+    const danoNormal = resultadoNormal.eventos.find((e) => e.tipo === "dano" && e.autor === "inimigo")?.valor;
+    expect(danoNormal).toBeGreaterThan(0);
+
+    vi.restoreAllMocks();
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const jogador = { ...jogadorBase(), hp: 500, hpMax: 500 };
+    const estado = { jogador, inimigo: inimigoBase(), rodada: 0 };
+
+    const resultado = executarRodada(estado, "defender");
+
+    expect(resultado.eventos.some((e) => e.tipo === "defendendo")).toBe(true);
+    expect(resultado.eventos.some((e) => e.tipo === "dano" && e.autor === "jogador")).toBe(false);
+    const danoDefendido = resultado.eventos.find((e) => e.tipo === "dano" && e.autor === "inimigo")?.valor;
+    expect(danoDefendido).toBe(Math.floor(danoNormal / 2));
+  });
+});
