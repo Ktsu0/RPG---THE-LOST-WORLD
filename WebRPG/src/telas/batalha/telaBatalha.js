@@ -9,6 +9,7 @@ function criarCombatente(nome, classeSprite) {
     <div class="painel-status">
       <strong class="nome-combatente">${nome}</strong>
       <div class="barra"><div class="barra__preenchimento barra__preenchimento--hp"></div></div>
+      <div class="icones-status"></div>
     </div>
   `;
   return wrapper;
@@ -46,6 +47,8 @@ export function montarTelaBatalha(container, { jogador, inimigo, local = "treino
     spriteInimigo: combatenteInimigo.querySelector(".sprite"),
     barraHpJogador: combatenteJogador.querySelector(".barra__preenchimento--hp"),
     barraHpInimigo: combatenteInimigo.querySelector(".barra__preenchimento--hp"),
+    iconesStatusJogador: combatenteJogador.querySelector(".icones-status"),
+    iconesStatusInimigo: combatenteInimigo.querySelector(".icones-status"),
     log: container.querySelector(".log-batalha"),
     botaoAtacar: container.querySelector('[data-acao="atacar"]'),
     botaoItem: container.querySelector('[data-acao="usar_pocao"]'),

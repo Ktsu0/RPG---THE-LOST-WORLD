@@ -1,6 +1,7 @@
 import { criarEstadoBatalha, executarAcaoJogador } from "@engine/combate/index.js";
 import { montarTelaBatalha, atualizarBarras, atualizarBotaoItem, registrarNoLog, mostrarOverlayFim } from "./telaBatalha.js";
 import { reproduzirEventos } from "./animacoes.js";
+import { renderizarIconesStatus } from "./iconesStatus.js";
 
 const PAUSA_OVERLAY_FIM_MS = 1500;
 const espera = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -67,6 +68,8 @@ export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim, loc
 
     await reproduzirEventos(resultado.eventos, elementos);
     atualizarBarras(elementos, estado.jogador, estado.inimigo);
+    renderizarIconesStatus(elementos.iconesStatusJogador, estado.jogador);
+    renderizarIconesStatus(elementos.iconesStatusInimigo, estado.inimigo);
 
     for (const evento of resultado.eventos) {
       const mensagem = descreverEvento(evento);
