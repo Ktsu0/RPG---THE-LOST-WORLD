@@ -6,8 +6,8 @@ afterEach(() => {
 });
 
 describe("templatesMasmorra", () => {
-  it("tem 3 templates com os campos esperados", () => {
-    expect(templatesMasmorra).toHaveLength(3);
+  it("tem 10 templates com os campos esperados", () => {
+    expect(templatesMasmorra).toHaveLength(10);
     for (const t of templatesMasmorra) {
       expect(t).toHaveProperty("id");
       expect(t).toHaveProperty("nome");
@@ -15,6 +15,26 @@ describe("templatesMasmorra", () => {
       expect(t).toHaveProperty("boss");
       expect(t).toHaveProperty("trapChance");
       expect(t).toHaveProperty("secretChance");
+    }
+  });
+
+  it("tem os 10 ids esperados, sem duplicatas", () => {
+    const ids = templatesMasmorra.map((t) => t.id);
+    expect(ids).toHaveLength(10);
+    expect(new Set(ids).size).toBe(10);
+  });
+
+  it("cada um dos 7 templates novos tem os mesmos campos dos 3 originais", () => {
+    const idsNovos = [
+      "floresta-amaldicoada", "caverna-congelada", "biblioteca-arcana",
+      "mina-abandonada", "pantano-podre", "templo-das-sombras", "forja-elemental",
+    ];
+    for (const id of idsNovos) {
+      const t = templatesMasmorra.find((tpl) => tpl.id === id);
+      expect(t).toBeDefined();
+      expect(t.mobs.length).toBeGreaterThan(0);
+      expect(t.minibosses.length).toBeGreaterThan(0);
+      expect(t.boss.nome).toBeTruthy();
     }
   });
 });
