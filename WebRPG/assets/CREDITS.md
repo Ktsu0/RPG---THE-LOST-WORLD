@@ -71,13 +71,20 @@ Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum 
   Fonte: https://kenney.nl/assets/pixel-ui-pack
   Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
 
-- **Kenney Impact Sounds + RPG Audio + Music Jingles**
-  Locais originais: `WebRPG/assets/audio/_pacote-kenney-impact-sounds/`, `_pacote-kenney-rpg-audio/`, `_pacote-kenney-music-jingles/`.
-  Organizado em: `WebRPG/assets/audio/efeitos/` (golpe.ogg = impactPunch_medium_000, critico.ogg = impactMetal_heavy_000, moeda.ogg = handleCoins) e `WebRPG/assets/audio/musica/` (cidade.ogg = Pizzicato jingles/jingles_PIZZI00, batalha.ogg = Steel jingles/jingles_STEEL00).
-  Fontes: https://kenney.nl/assets/impact-sounds, https://kenney.nl/assets/rpg-audio, https://kenney.nl/assets/music-jingles
+- **Kenney Impact Sounds + RPG Audio**
+  Locais originais: `WebRPG/assets/audio/_pacote-kenney-impact-sounds/`, `_pacote-kenney-rpg-audio/`.
+  Organizado em: `WebRPG/assets/audio/efeitos/` (golpe.ogg = impactPunch_medium_000, critico.ogg = impactMetal_heavy_000, moeda.ogg = handleCoins).
+  Fontes: https://kenney.nl/assets/impact-sounds, https://kenney.nl/assets/rpg-audio
   Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
-  `WebRPG/src/audio/tocador.js` e `musica.js` tiveram a extensão trocada de `.mp3` (nunca existiu) para `.ogg` (formato real dos pacotes Kenney).
-  Limitação conhecida: o pack de música (`music-jingles`) só tem jingles curtos (stingers de poucos segundos), não faixas ambiente longas — `cidade.ogg`/`batalha.ogg` tocam em loop uma jingle curta em vez de uma música de fundo propriamente dita. Substituir por faixas mais longas fica como pendência de conteúdo futura.
+  `WebRPG/src/audio/tocador.js` teve a extensão trocada de `.mp3` (nunca existiu) para `.ogg` (formato real dos pacotes Kenney).
+  Nota: o pack `music-jingles` (usado até a Fase 8 para `cidade.ogg`/`batalha.ogg`) foi substituído na Fase 9 pelas faixas da AlkaKrab abaixo — só tinha jingles curtos (stingers de poucos segundos), não faixas ambiente longas. `_pacote-kenney-music-jingles/` removido do repositório.
+
+- **Fantasy RPG Music Vol. 2 (Free 25 Tracks, No Copyright)** (AlkaKrab) — Fase 9
+  Organizado em: `WebRPG/assets/audio/musica/` (cidade.ogg = "Light Ambient 1 (Loop).ogg", batalha.ogg = "Action 1 (Loop).ogg", torre.ogg = "Night Ambient 1.ogg", masmorra.ogg = "Night Ambient 3 (Loop).ogg"); PDF de licença preservado em `_pacote-alkakrab-fantasy-rpg-vol2/`.
+  Fonte: https://alkakrab.itch.io/free-25-fantasy-rpg-game-tracks-no-copyright-vol-2
+  Licença: "Absolutely Free For Commercial use" — sem exigência de atribuição (crédito é bem-vindo mas opcional, segundo a página do pack e o PDF de licença incluído).
+  Substitui os jingles curtos do Kenney `music-jingles` em `cidade.ogg`/`batalha.ogg` (agora faixas de vários minutos, com versões "(Loop)" já preparadas para tocar em loop sem corte perceptível) e dá a Torre e a Masmorra música própria pela primeira vez (antes tocavam com o silêncio, ou a música da cidade se o jogador tivesse entrado vindo de lá).
+  Torre e Masmorra usam faixas "Night Ambient" diferentes entre si (sombria/épica vs. tensa/misteriosa) — variedade real, não uma faixa compartilhada.
 
 - **SunnyLand - Pixel Game Art Assets Pack** (ansimuz) — Fase 9
   Organizado em: `WebRPG/assets/cenarios/parallax/floresta.png` (composto a partir de `Assets/environment/Background/back.png` — céu e mar — com `Assets/environment/Background/middle.png` — silhueta de mata com palmeiras — ladrilhado horizontalmente por cima, via `sharp`; originais preservados em `_pacote-sunnyland/`).

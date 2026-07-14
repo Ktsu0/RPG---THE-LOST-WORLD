@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { montarTelaMasmorra } from "./telaMasmorra.js";
 
+vi.mock("@audio/musica.js", () => ({ tocarMusica: vi.fn() }));
+import { tocarMusica } from "@audio/musica.js";
+
 afterEach(() => {
   vi.restoreAllMocks();
 });
@@ -52,5 +55,12 @@ describe("montarTelaMasmorra", () => {
     const nomes = [...container.querySelectorAll(".nome-combatente")].map((el) => el.textContent);
     expect(nomes.length).toBe(2);
     expect(container.querySelector(".grade-masmorra").style.display).toBe("none");
+  });
+
+  it("toca a música da masmorra ao montar a tela", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const container = document.createElement("div");
+    montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    expect(tocarMusica).toHaveBeenCalledWith("masmorra");
   });
 });

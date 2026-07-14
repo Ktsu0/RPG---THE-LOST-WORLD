@@ -1,6 +1,9 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { montarTelaTorre } from "./telaTorre.js";
 
+vi.mock("@audio/musica.js", () => ({ tocarMusica: vi.fn() }));
+import { tocarMusica } from "@audio/musica.js";
+
 afterEach(() => {
   vi.restoreAllMocks();
 });
@@ -46,5 +49,12 @@ describe("montarTelaTorre", () => {
     const spriteBoss = container.querySelector(".sprite-boss");
     expect(spriteBoss).not.toBeNull();
     expect(spriteBoss.style.backgroundImage).toContain("/assets/personagens/");
+  });
+
+  it("toca a música da torre ao montar a tela", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const container = document.createElement("div");
+    montarTelaTorre(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    expect(tocarMusica).toHaveBeenCalledWith("torre");
   });
 });

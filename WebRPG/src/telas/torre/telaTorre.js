@@ -1,6 +1,7 @@
 import { criarEstadoTorre, avancarAndar, executarTurnoTorre } from "@engine/torre/index.js";
 import { tocarAnimacao } from "../batalha/sprites.js";
 import { spriteParaInimigo } from "../batalha/mapaSprites.js";
+import { tocarMusica } from "@audio/musica.js";
 
 function descreverEvento(evento) {
   switch (evento.tipo) {
@@ -16,6 +17,7 @@ function descreverEvento(evento) {
 }
 
 export function montarTelaTorre(container, { jogador, aoSair }) {
+  tocarMusica("torre");
   container.innerHTML = `
     <div class="tela-torre">
       <div class="painel cabecalho-torre">

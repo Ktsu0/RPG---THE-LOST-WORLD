@@ -2,6 +2,7 @@ import { criarSessaoMasmorra, mover, tentarSairMasmorra, limparSala } from "@eng
 import { templatesMasmorra } from "@engine/masmorra/gerador.js";
 import { criarInimigoDaSala } from "@engine/masmorra/inimigoDaSala.js";
 import { iniciarBatalha } from "../batalha/controladorBatalha.js";
+import { tocarMusica } from "@audio/musica.js";
 
 const SIMBOLO_POR_TIPO = {
   entrada: "E", boss: "B", miniboss: "M", monstro: "!",
@@ -11,6 +12,7 @@ const SIMBOLO_POR_TIPO = {
 const TIPOS_COM_ENCONTRO = new Set(["monstro", "miniboss", "boss"]);
 
 export function montarTelaMasmorra(container, { jogador, aoSair }) {
+  tocarMusica("masmorra");
   container.innerHTML = `
     <div class="tela-masmorra">
       <div class="painel grade-masmorra"></div>
