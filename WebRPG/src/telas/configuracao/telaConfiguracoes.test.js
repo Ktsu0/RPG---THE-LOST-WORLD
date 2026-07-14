@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { montarTelaConfiguracoes } from "./telaConfiguracoes.js";
+import { serializarSave } from "@engine/save/index.js";
 
 beforeEach(() => {
   localStorage.clear();
@@ -45,5 +46,32 @@ describe("montarTelaConfiguracoes", () => {
     const elementos = montarTelaConfiguracoes(container, { jogador: jogadorDeTeste(), aoSair });
     elementos.botaoSair.click();
     expect(aoSair).toHaveBeenCalledOnce();
+  });
+
+  it("importa um save válido de arquivo e chama aoImportar com o jogador", () => {
+    const aoImportar = vi.fn();
+    const container = document.createElement("div");
+    const { processarTextoImportado } = montarTelaConfiguracoes(container, {
+      jogador: jogadorDeTeste(), aoSair: vi.fn(), aoImportar,
+    });
+
+    const input = container.querySelector("#input-importar-save");
+    expect(input).not.toBeNull();
+    expect(input.accept).toBe("application/json");
+
+    const textoValido = serializarSave(jogadorDeTeste());
+    processarTextoImportado(textoValido);
+    expect(aoImportar).toHaveBeenCalled();
+  });
+
+  it("mostra erro visível (e não chama aoImportar) para um arquivo inválido", () => {
+    const aoImportar = vi.fn();
+    const container = document.createElement("div");
+    const { processarTextoImportado } = montarTelaConfiguracoes(container, {
+      jogador: jogadorDeTeste(), aoSair: vi.fn(), aoImportar,
+    });
+    processarTextoImportado("{isso não é um save}");
+    expect(aoImportar).not.toHaveBeenCalled();
+    expect(container.querySelector(".erro-importacao").textContent.length).toBeGreaterThan(0);
   });
 });

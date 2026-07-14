@@ -10,3 +10,11 @@
 .tela-configuracao input[type="range"] {
   width: 100%;
 }
+
+.erro-importacao {
+  color: var(--cor-perigo);
+}
+
+.erro-importacao:empty {
+  display: none;
+}

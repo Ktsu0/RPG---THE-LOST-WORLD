@@ -31,4 +31,21 @@ describe("montarTelaTitulo", () => {
     container.querySelector("#botao-nova-jornada").click();
     expect(aoNovaJornada).toHaveBeenCalledOnce();
   });
+
+  it("modoSaveCorrompido mostra o aviso e o botão de importar backup", () => {
+    const container = document.createElement("div");
+    montarTelaTitulo(container, {
+      aoNovaJornada: vi.fn(), aoContinuar: vi.fn(), temSave: false,
+      modoSaveCorrompido: true, aoImportar: vi.fn(),
+    });
+    expect(container.querySelector(".aviso-save-corrompido")).not.toBeNull();
+    expect(container.querySelector("#input-importar-titulo")).not.toBeNull();
+  });
+
+  it("sem modoSaveCorrompido não mostra o aviso nem o botão de importar", () => {
+    const container = document.createElement("div");
+    montarTelaTitulo(container, { aoNovaJornada: vi.fn(), aoContinuar: vi.fn(), temSave: false });
+    expect(container.querySelector(".aviso-save-corrompido")).toBeNull();
+    expect(container.querySelector("#input-importar-titulo")).toBeNull();
+  });
 });

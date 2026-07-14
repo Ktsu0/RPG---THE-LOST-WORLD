@@ -23,3 +23,8 @@
   gap: var(--espaco-sm);
   width: min(280px, 90vw);
 }
+
+.aviso-save-corrompido {
+  color: var(--cor-perigo);
+  max-width: min(400px, 90vw);
+}

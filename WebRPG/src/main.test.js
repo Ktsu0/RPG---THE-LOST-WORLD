@@ -60,6 +60,19 @@ describe("bootstrap", () => {
     expect(segundoContainer.querySelector(".tela-cidade")).not.toBeNull();
     expect(segundoContainer.querySelector(".cabecalho-cidade").textContent).toContain("Aelindra");
   });
+
+  it("save corrompido: Continuar mostra o aviso e a opção de importar backup, em vez de cair na criação silenciosamente", () => {
+    localStorage.setItem("webrpg_save", "lixo{{{");
+    const container = document.createElement("div");
+    bootstrap(container);
+
+    const botaoContinuar = container.querySelector("#botao-continuar");
+    expect(botaoContinuar.disabled).toBe(false); // a chave existe (existeSaveNoNavegador só checa presença, não valida conteúdo)
+    botaoContinuar.click();
+
+    expect(container.querySelector(".aviso-save-corrompido")).not.toBeNull();
+    expect(container.querySelector("#input-importar-titulo")).not.toBeNull();
+  });
 });
 
 describe("bootstrap: navegação para guilda, loja e personagem", () => {

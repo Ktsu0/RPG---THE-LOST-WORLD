@@ -79,7 +79,11 @@ export function bootstrap(container) {
         },
         aoAbrirConfiguracao: () => {
           registrarTela("configuracao", (el2) =>
-            montarTelaConfiguracoes(el2, { jogador, aoSair: () => irParaCidade(jogador) })
+            montarTelaConfiguracoes(el2, {
+              jogador,
+              aoSair: () => irParaCidade(jogador),
+              aoImportar: (jogadorImportado) => irParaCidade(jogadorImportado),
+            })
           );
           mostrarTela("configuracao");
         },
@@ -127,7 +131,20 @@ export function bootstrap(container) {
           if (valido) {
             irParaCidade(jogador);
           } else {
-            iniciarCriacao();
+            // Spec seção 7: save corrompido nunca trava e oferece novo jogo OU importar backup
+            registrarTela("titulo", (el2) =>
+              montarTelaTitulo(el2, {
+                temSave: false,
+                modoSaveCorrompido: true,
+                aoNovaJornada: () => iniciarCriacao(),
+                aoContinuar: () => {},
+                aoImportar: (jogadorImportado) => {
+                  salvarNoNavegador(jogadorImportado);
+                  irParaCidade(jogadorImportado);
+                },
+              })
+            );
+            mostrarTela("titulo");
           }
         },
       })
