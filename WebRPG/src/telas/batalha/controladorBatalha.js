@@ -1,5 +1,5 @@
 import { criarEstadoBatalha, executarAcaoJogador } from "@engine/combate/index.js";
-import { montarTelaBatalha, atualizarBarras, registrarNoLog, mostrarOverlayFim } from "./telaBatalha.js";
+import { montarTelaBatalha, atualizarBarras, atualizarBotaoItem, registrarNoLog, mostrarOverlayFim } from "./telaBatalha.js";
 import { reproduzirEventos } from "./animacoes.js";
 
 const PAUSA_OVERLAY_FIM_MS = 1500;
@@ -27,6 +27,12 @@ function descreverEvento(evento) {
       return "O ataque do inimigo te envenenou!";
     case "cura_xama":
       return evento.valor > 0 ? `Sua conexão Xamã restaurou ${evento.valor} HP!` : null;
+    case "pocao_usada":
+      return `🧪 Você bebeu uma Poção de Cura e recuperou ${evento.valor} HP!`;
+    case "pocao_indisponivel":
+      return "Você não tem nenhuma Poção de Cura!";
+    case "defendendo":
+      return "Você se põe em guarda — o próximo golpe causará metade do dano.";
     case "fuga":
       return evento.sucesso ? "Você fugiu com sucesso!" : "A fuga falhou!";
     case "vitoria":
@@ -52,6 +58,8 @@ export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim, loc
     if (processando || estado.fim) return;
     processando = true;
     elementos.botaoAtacar.disabled = true;
+    elementos.botaoItem.disabled = true;
+    elementos.botaoDefender.disabled = true;
     elementos.botaoFugir.disabled = true;
 
     const resultado = executarAcaoJogador(estado, acao);
@@ -68,6 +76,8 @@ export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim, loc
     processando = false;
     if (!resultado.fim) {
       elementos.botaoAtacar.disabled = false;
+      atualizarBotaoItem(elementos, estado.jogador);
+      elementos.botaoDefender.disabled = false;
       elementos.botaoFugir.disabled = false;
     } else {
       if (resultado.fim === "vitoria" || resultado.fim === "derrota") {
@@ -89,6 +99,8 @@ export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim, loc
   }
 
   elementos.botaoAtacar.addEventListener("click", () => executar("atacar"));
+  elementos.botaoItem.addEventListener("click", () => executar("usar_pocao"));
+  elementos.botaoDefender.addEventListener("click", () => executar("defender"));
   elementos.botaoFugir.addEventListener("click", () => executar("fugir"));
 
   return { ...elementos, executarAcao: executar };

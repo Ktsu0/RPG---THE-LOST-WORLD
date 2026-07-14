@@ -1,4 +1,5 @@
 import { spriteParaInimigo } from "./mapaSprites.js";
+import { contarPocoes } from "@engine/itens/pocao.js";
 
 function criarCombatente(nome, classeSprite) {
   const wrapper = document.createElement("div");
@@ -20,6 +21,8 @@ export function montarTelaBatalha(container, { jogador, inimigo, local = "treino
       <div class="painel log-batalha" aria-live="polite"></div>
       <div class="barra-acoes">
         <button class="botao botao--destaque" data-acao="atacar">Atacar</button>
+        <button class="botao" data-acao="usar_pocao">🧪 Poção (0)</button>
+        <button class="botao" data-acao="defender">Defender</button>
         <button class="botao" data-acao="fugir">Fugir</button>
       </div>
       <div class="overlay-fim overlay-fim--oculto"></div>
@@ -45,12 +48,21 @@ export function montarTelaBatalha(container, { jogador, inimigo, local = "treino
     barraHpInimigo: combatenteInimigo.querySelector(".barra__preenchimento--hp"),
     log: container.querySelector(".log-batalha"),
     botaoAtacar: container.querySelector('[data-acao="atacar"]'),
+    botaoItem: container.querySelector('[data-acao="usar_pocao"]'),
+    botaoDefender: container.querySelector('[data-acao="defender"]'),
     botaoFugir: container.querySelector('[data-acao="fugir"]'),
     overlayFim: container.querySelector(".overlay-fim"),
   };
 
   atualizarBarras(elementos, jogador, inimigo);
+  atualizarBotaoItem(elementos, jogador);
   return elementos;
+}
+
+export function atualizarBotaoItem(elementos, jogador) {
+  const quantidade = contarPocoes(jogador);
+  elementos.botaoItem.textContent = `🧪 Poção (${quantidade})`;
+  elementos.botaoItem.disabled = quantidade === 0;
 }
 
 export function atualizarBarras(elementos, jogador, inimigo) {

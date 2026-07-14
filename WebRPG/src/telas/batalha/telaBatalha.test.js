@@ -132,3 +132,26 @@ describe("cenário de fundo por local", () => {
     expect(container.querySelector(".palco-batalha").classList.contains("palco-batalha--masmorra")).toBe(true);
   });
 });
+
+describe("barra de ações completa", () => {
+  it("tem os 4 botões: atacar, item, defender, fugir", () => {
+    const container = document.createElement("div");
+    montarTelaBatalha(container, {
+      jogador: { nome: "Herói", hp: 80, hpMax: 100, itens: ["Poção de Cura"], inventario: [] },
+      inimigo: { nome: "Orc", hp: 15, hpMax: 30 },
+    });
+    for (const acao of ["atacar", "usar_pocao", "defender", "fugir"]) {
+      expect(container.querySelector(`[data-acao="${acao}"]`)).not.toBeNull();
+    }
+  });
+
+  it("o botão de item mostra a contagem de poções e desabilita com 0", () => {
+    const container = document.createElement("div");
+    const elementos = montarTelaBatalha(container, {
+      jogador: { nome: "Herói", hp: 80, hpMax: 100, itens: [], inventario: [] },
+      inimigo: { nome: "Orc", hp: 15, hpMax: 30 },
+    });
+    expect(elementos.botaoItem.textContent).toContain("0");
+    expect(elementos.botaoItem.disabled).toBe(true);
+  });
+});
