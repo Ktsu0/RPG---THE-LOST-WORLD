@@ -280,6 +280,8 @@ em commits/CREDITS.md anteriores, não gaps novos.
 lendo o código real. As Fases 10-11 fecham **tudo** que a spec ainda promete e o
 jogo não entrega — depois delas, esta spec está concluída.
 
+**Atualização 2026-07-14:** Fase 10 implementada e concluída (ver `docs/superpowers/docs.md`). Achados #1, #2, #3 e #6 fechados: barra de ações completa (Atacar · Item · Defender · Fugir), poção finalmente bebível com a dupla contabilidade unificada (verificado end-to-end: poção ganha em missão da guilda aparece corretamente na contagem do botão de item na batalha seguinte), ícones de status com tooltip, e os 10 templates de masmorra selecionáveis. Achados #4-#5 (Fase 11) seguem pendentes.
+
 ### 12.1 Achados
 
 | # | Achado | Onde | Origem na spec |
