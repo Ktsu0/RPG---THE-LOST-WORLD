@@ -44,8 +44,18 @@
   gap: var(--espaco-sm);
 }
 
+.controles-masmorra .botao {
+  min-width: 0;
+  padding: var(--espaco-sm) var(--espaco-xs, 4px);
+}
+
 @media (max-width: 480px) {
   .celula-masmorra {
     font-size: 8px;
+  }
+
+  .controles-masmorra .botao {
+    font-size: 0.8em;
+    padding: var(--espaco-sm) 2px;
   }
 }
