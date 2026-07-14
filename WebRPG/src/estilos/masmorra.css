@@ -7,6 +7,24 @@
   margin: 0 auto;
 }
 
+.selecao-masmorra {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--espaco-sm);
+  padding: var(--espaco-md);
+}
+
+.card-template {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.titulo-masmorra {
+  text-align: center;
+}
+
 .grade-masmorra {
   gap: 2px;
 }

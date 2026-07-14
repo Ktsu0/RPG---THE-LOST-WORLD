@@ -15,11 +15,32 @@ function jogadorDeTeste() {
   };
 }
 
+function entrarNaPrimeiraMasmorra(container) {
+  container.querySelector("[data-template]").click();
+}
+
 describe("montarTelaMasmorra", () => {
+  it("mostra a lista dos 10 templates antes de criar a sessão", () => {
+    const container = document.createElement("div");
+    montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    expect(container.querySelectorAll("[data-template]")).toHaveLength(10);
+    expect(container.querySelector(".grade-masmorra")).toBeNull();
+  });
+
+  it("escolher um template cria a sessão daquele template", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    const container = document.createElement("div");
+    montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    container.querySelector('[data-template="covil-vulcanico"]').click();
+    expect(container.querySelector(".grade-masmorra")).not.toBeNull();
+    expect(container.textContent).toContain("Covil Vulcânico");
+  });
+
   it("renderiza a grade com células ocultas (não visitadas) e a entrada visível", () => {
     vi.spyOn(Math, "random").mockReturnValue(0.5);
     const container = document.createElement("div");
     montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    entrarNaPrimeiraMasmorra(container);
     const celulas = container.querySelectorAll("[data-celula]");
     expect(celulas.length).toBeGreaterThan(0);
     const ocultas = [...celulas].filter((c) => c.classList.contains("celula--oculta"));
@@ -30,6 +51,7 @@ describe("montarTelaMasmorra", () => {
     vi.spyOn(Math, "random").mockReturnValue(0.5);
     const container = document.createElement("div");
     const elementos = montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    entrarNaPrimeiraMasmorra(container);
     elementos.botaoMover("norte").click();
     const celulasVisitadas = container.querySelectorAll(".celula--visitada");
     expect(celulasVisitadas.length).toBeGreaterThanOrEqual(2); // entrada + nova célula
@@ -40,7 +62,8 @@ describe("montarTelaMasmorra", () => {
     const aoSair = vi.fn();
     const container = document.createElement("div");
     const elementos = montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair });
-    elementos.botaoSairMasmorra.click();
+    entrarNaPrimeiraMasmorra(container);
+    elementos.botaoSairMasmorra().click();
     expect(aoSair).toHaveBeenCalledOnce();
   });
 
@@ -48,6 +71,7 @@ describe("montarTelaMasmorra", () => {
     vi.spyOn(Math, "random").mockReturnValue(0.5);
     const container = document.createElement("div");
     const elementos = montarTelaMasmorra(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    entrarNaPrimeiraMasmorra(container);
 
     elementos.botaoMover("leste").click();
 
