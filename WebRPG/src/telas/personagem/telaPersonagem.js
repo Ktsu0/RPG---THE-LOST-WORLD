@@ -2,6 +2,10 @@ import { obterClasseRaridade } from "@engine/itens/raridade.js";
 import { equiparArmaduraNoSlot, equiparArma, compararAtributos } from "@engine/itens/equipar.js";
 import { xpParaProximoNivel } from "@engine/personagem/experiencia.js";
 import { calcularAtaqueJogador, calcularDefesaJogador } from "@engine/combate/calculoDano.js";
+import {
+  REQUISITOS_AMULETO, podeCraftarAmuleto, craftarAmuleto, alternarAmuleto,
+  PRECO_TALISMA, podeCraftarTalisma, craftarTalisma,
+} from "@engine/itens/amuletoTalisma.js";
 import { iconePorSlot } from "../../itens/iconePorSlot.js";
 
 function renderizarAtributos(container, jogador) {
@@ -71,10 +75,70 @@ function renderizarInventario(container, jogador, atualizarTudo) {
   }
 }
 
+function renderizarPainelAmuleto(container, jogador, atualizarTudo) {
+  const painel = container.querySelector(".painel-amuleto");
+  const progresso = REQUISITOS_AMULETO.map((req) => {
+    const qtd = jogador.inventario.filter((item) => item === req.nome).length;
+    return `<li>${req.nome}: ${qtd}/${req.quantidade}</li>`;
+  }).join("");
+
+  if (!jogador.amuletoCraftado) {
+    const podeCraftar = podeCraftarAmuleto(jogador.inventario);
+    painel.innerHTML = `
+      <h3>Amuleto Supremo</h3>
+      <p>+5% Ataque, +10% HP máximo quando equipado.</p>
+      <ul>${progresso}</ul>
+      <button class="botao" id="botao-craftar-amuleto" ${podeCraftar ? "" : "disabled"}>Craftar Amuleto</button>
+    `;
+    painel.querySelector("#botao-craftar-amuleto").addEventListener("click", () => {
+      craftarAmuleto(jogador);
+      atualizarTudo();
+    });
+  } else {
+    painel.innerHTML = `
+      <h3>Amuleto Supremo</h3>
+      <p>Status: ${jogador.amuletoEquipado ? "Equipado" : "Guardado"}</p>
+      <button class="botao" id="botao-alternar-amuleto">${jogador.amuletoEquipado ? "Desequipar" : "Equipar"}</button>
+    `;
+    painel.querySelector("#botao-alternar-amuleto").addEventListener("click", () => {
+      alternarAmuleto(jogador);
+      atualizarTudo();
+    });
+  }
+}
+
+function renderizarPainelTalisma(container, jogador, atualizarTudo) {
+  const painel = container.querySelector(".painel-talisma");
+  const jaTemTalisma = jogador.inventario.includes("Talismã da Torre");
+  const fragmentos = jogador.inventario.filter((i) => i === "Fragmento Antigo").length;
+
+  if (jaTemTalisma) {
+    painel.innerHTML = `<h3>Talismã da Torre</h3><p>Você tem um Talismã pronto para uso — leve-o à Torre.</p>`;
+    return;
+  }
+
+  const podeCraftar = podeCraftarTalisma(jogador);
+  painel.innerHTML = `
+    <h3>Talismã da Torre</h3>
+    <p>A chave que abre os portões da Torre dos bosses finais — é consumida ao entrar.</p>
+    <ul>
+      <li>Fragmento Antigo: ${fragmentos}/${PRECO_TALISMA.fragmentos}</li>
+      <li>Ouro: ${jogador.ouro}/${PRECO_TALISMA.ouro}</li>
+    </ul>
+    <button class="botao" id="botao-craftar-talisma" ${podeCraftar ? "" : "disabled"}>Craftar Talismã</button>
+  `;
+  painel.querySelector("#botao-craftar-talisma").addEventListener("click", () => {
+    craftarTalisma(jogador);
+    atualizarTudo();
+  });
+}
+
 export function montarTelaPersonagem(container, { jogador, aoSair }) {
   container.innerHTML = `
     <div class="tela-personagem">
       <div class="painel painel-atributos"></div>
+      <div class="painel painel-amuleto"></div>
+      <div class="painel painel-talisma"></div>
       <div class="painel painel-inventario">
         <h3>Inventário</h3>
         <div class="lista-inventario-equipavel"></div>
@@ -86,6 +150,8 @@ export function montarTelaPersonagem(container, { jogador, aoSair }) {
   function atualizarTudo() {
     renderizarAtributos(container, jogador);
     renderizarInventario(container, jogador, atualizarTudo);
+    renderizarPainelAmuleto(container, jogador, atualizarTudo);
+    renderizarPainelTalisma(container, jogador, atualizarTudo);
   }
   atualizarTudo();
 

@@ -33,6 +33,13 @@ describe("craftarAmuleto", () => {
       expect(contarItem(jogador.inventario, req.nome)).toBe(0);
     }
   });
+
+  it("marca amuletoCraftado como true além de consumir os materiais", () => {
+    const inventario = REQUISITOS_AMULETO.flatMap((r) => Array(r.quantidade).fill(r.nome));
+    const jogador = { inventario, amuletoEquipado: false, amuletoCraftado: false };
+    craftarAmuleto(jogador);
+    expect(jogador.amuletoCraftado).toBe(true);
+  });
 });
 
 describe("alternarAmuleto", () => {

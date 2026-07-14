@@ -61,7 +61,7 @@ Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum 
 
 - **Roguelike/RPG Pack** (Kenney)
   Local original: `WebRPG/assets/cenarios/roguelike-rpg-pack/`
-  Organizado em: `WebRPG/assets/cenarios/masmorra/` (chao.png = piso de interior recortado da spritesheet; oculta.png reusa o mesmo tile, escurecido via `filter: brightness(0.35)` em masmorra.css em vez de um segundo recorte — mais simples e com o mesmo resultado visual: "mesmo piso, mais escuro" para representar névoa de guerra).
+  Organizado em: `WebRPG/assets/cenarios/masmorra/` (chao.png = piso de interior recortado da spritesheet; oculta.png reusa o mesmo tile, escurecido via `filter: brightness(0.35)` em masmorra.css em vez de um segundo recorte — mais simples e com o mesmo resultado visual: "mesmo piso, mais escuro" para representar névoa de guerra); e `WebRPG/assets/cenarios/mundo/grama.png` (tile de grama com textura pontilhada, recortado de `Spritesheet/roguelikeSheet_transparent.png` na coluna 5, linha 0 da grade de 17px — usado como piso do mundo aberto e da cidade em `faseExploracao.js`/`faseCidade.js`, Fase "Mundo Vivo").
   Fonte: https://kenney.nl/assets/roguelike-rpg-pack
   Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
 

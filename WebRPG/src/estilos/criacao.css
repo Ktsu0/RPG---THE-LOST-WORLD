@@ -1,32 +1,101 @@
 .tela-criacao {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(240px, 300px) 1fr;
+  align-items: start;
   gap: var(--espaco-md);
-  padding: var(--espaco-lg);
-  max-width: 900px;
+  padding: var(--espaco-md) var(--espaco-lg);
+  max-width: 960px;
+  width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
-.sprite-preview {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: center;
-  padding: var(--espaco-md);
-}
-
-.sprite-preview .sprite {
-  width: 100px;
-  height: 100px;
-  background-repeat: no-repeat;
-  background-size: auto 100%;
-  transform: scale(2);
-  animation: sprite-play 1.2s steps(6) infinite;
-}
-
-.lista-opcoes {
+.coluna-ficha {
   display: flex;
   flex-direction: column;
   gap: var(--espaco-sm);
+  position: sticky;
+  top: var(--espaco-md);
+}
+
+.coluna-opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-sm);
+  min-width: 0;
+}
+
+.painel-retrato {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espaco-sm);
+}
+
+.sprite-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  overflow: hidden;
+}
+
+.sprite-preview .sprite {
+  /* Largura/altura ficam em 100px nativos (igual à batalha, ver batalha.css) —
+     a keyframe sprite-play desloca o background em passos fixos de -100px por
+     frame, então encolher a caixa aqui e não só o "transform: scale" desalinha
+     a animação e deixa o sprite invisível. */
+  transform: scale(1.8);
+  animation-name: sprite-play;
+  animation-duration: 1.2s;
+  animation-timing-function: steps(var(--sprite-frames, 6));
+  animation-iteration-count: infinite;
+}
+
+.retrato-legenda {
+  font-size: 0.85rem;
+  color: var(--cor-texto-fraco);
+  text-align: center;
+}
+
+.painel h2 {
+  font-size: 0.85rem;
+  margin-bottom: var(--espaco-sm);
+}
+
+.lista-opcoes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--espaco-sm);
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.opcao {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  padding: var(--espaco-sm);
+  font-weight: 400;
+  min-height: 0;
+}
+
+.opcao strong {
+  font-size: 0.85rem;
+}
+
+.opcao span {
+  font-size: 0.75rem;
+  color: var(--cor-texto-fraco);
+  font-weight: 400;
+}
+
+.opcao--selecionada span {
+  color: inherit;
+  opacity: 0.85;
 }
 
 .opcao--selecionada {
@@ -34,12 +103,11 @@
   color: var(--cor-destaque);
 }
 
-.painel-preview {
-  grid-column: 1 / -1;
+.painel-preview p {
+  font-size: 0.9rem;
 }
 
 .campo-nome-painel {
-  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   gap: var(--espaco-sm);
@@ -52,14 +120,21 @@
   border: 2px solid var(--cor-borda);
   border-radius: var(--raio-painel);
   color: var(--cor-texto);
+  width: 100%;
 }
 
-#botao-confirmar {
-  grid-column: 1 / -1;
-}
-
-@media (max-width: 480px) {
+@media (max-width: 720px) {
   .tela-criacao {
     grid-template-columns: 1fr;
+    padding: var(--espaco-md);
+  }
+
+  .coluna-ficha {
+    position: static;
+  }
+
+  .lista-opcoes {
+    grid-template-columns: 1fr;
+    max-height: none;
   }
 }

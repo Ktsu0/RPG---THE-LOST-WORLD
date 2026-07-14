@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { criarEstadoTorre, avancarAndar, executarTurnoTorre } from "./index.js";
+import { criarEstadoTorre, avancarAndar, executarTurnoTorre, podeAcessarTorre, consumirTalismaDaTorre } from "./index.js";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -10,6 +10,7 @@ function jogadorBase() {
     nivel: 3, ataque: 15, defesa: 10, hp: 200, hpMax: 200,
     equipamentos: {}, bonusAtk: 0, bonusDef: 0, amuletoEquipado: false, armaEquipada: null,
     bonusClasse: {}, bonusRaca: {}, bonusCritico: 0, classe: "Guerreiro", xp: 0, ouro: 0,
+    inventario: [],
   };
 }
 
@@ -67,5 +68,35 @@ describe("executarTurnoTorre", () => {
     const resultado = executarTurnoTorre(estado, "atacar");
 
     expect(resultado.fim).toBe("derrota");
+  });
+
+  it("ao vencer o 10º boss, aplica o bonus final e emite o evento torre_completa", () => {
+    let { estado } = avancarAndar(criarEstadoTorre(jogadorBase()));
+    estado = { ...estado, andar: 10 };
+    estado.bossAtual.hp = 1;
+    vi.spyOn(Math, "random").mockReturnValueOnce(0).mockReturnValueOnce(0.5);
+
+    const resultado = executarTurnoTorre(estado, "atacar");
+
+    expect(resultado.fim).toBe("torre_completa");
+    expect(resultado.estado.jogador.ouro).toBeGreaterThanOrEqual(10000);
+    expect(resultado.estado.jogador.inventario).toContain("Cálice da Vitória");
+    expect(resultado.eventos.some((e) => e.tipo === "torre_completa")).toBe(true);
+  });
+});
+
+describe("podeAcessarTorre e consumirTalismaDaTorre", () => {
+  it("bloqueia sem o Talismã da Torre no inventário", () => {
+    expect(podeAcessarTorre({ inventario: [] })).toBe(false);
+  });
+
+  it("libera com o Talismã da Torre no inventário", () => {
+    expect(podeAcessarTorre({ inventario: ["Talismã da Torre"] })).toBe(true);
+  });
+
+  it("consumirTalismaDaTorre remove uma unidade do inventário", () => {
+    const jogador = { inventario: ["Talismã da Torre", "Poção de Cura"] };
+    consumirTalismaDaTorre(jogador);
+    expect(jogador.inventario).toEqual(["Poção de Cura"]);
   });
 });

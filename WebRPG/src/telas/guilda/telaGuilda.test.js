@@ -37,6 +37,20 @@ describe("montarTelaGuilda", () => {
     expect(container.querySelector(".resultado-missao")).not.toBeNull();
   });
 
+  it("mostra a celebração de level up quando a missão dá XP suficiente pra upar", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const container = document.createElement("div");
+    // nivel 1 precisa de 50 XP pro próximo nível (floor(50 * 1^1.4)) — qualquer
+    // missão comum elegível no nível 1 dá XP suficiente pra cruzar a partir de 49.
+    const jogador = { ...jogadorDeTeste(), nivel: 1, xp: 49, ataque: 10, defesa: 10, hpMax: 100 };
+    const elementos = montarTelaGuilda(container, { jogador, aoSair: vi.fn() });
+
+    elementos.botaoAceitar.click();
+
+    expect(jogador.nivel).toBeGreaterThan(1);
+    expect(container.querySelector(".resultado-missao").textContent).toContain("Nível");
+  });
+
   it("chama aoSair ao clicar em Voltar", () => {
     const aoSair = vi.fn();
     const container = document.createElement("div");

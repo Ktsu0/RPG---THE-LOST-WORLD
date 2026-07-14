@@ -4,6 +4,7 @@ import {
   registrarTela,
   mostrarTela,
   telaAtualNome,
+  telaAtualInstancia,
 } from "./roteador.js";
 
 describe("roteador", () => {
@@ -54,6 +55,12 @@ describe("roteador", () => {
     registrarTela("titulo", () => {});
     mostrarTela("titulo");
     expect(telaAtualNome()).toBe("titulo");
+  });
+
+  it("guarda o que a função de montagem retornou", () => {
+    registrarTela("titulo", () => ({ marcador: 42 }));
+    mostrarTela("titulo");
+    expect(telaAtualInstancia()).toEqual({ marcador: 42 });
   });
 
   describe("transição de fade", () => {

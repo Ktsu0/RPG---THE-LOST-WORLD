@@ -89,6 +89,48 @@ describe("mostrarOverlayFim", () => {
 
     expect(elementos.overlayFim.textContent).toContain("Derrota");
   });
+
+  it("mostra uma linha extra quando eventosLevelUp não está vazio", () => {
+    const container = document.createElement("div");
+    const { jogador, inimigo } = criarFixtures();
+    const elementos = montarTelaBatalha(container, { jogador, inimigo });
+
+    mostrarOverlayFim(elementos, {
+      tipo: "vitoria", xpGanho: 10, ouroGanho: 5,
+      eventosLevelUp: [{ tipo: "level_up", nivel: 4, hpMax: 145 }],
+    });
+
+    expect(elementos.overlayFim.textContent).toContain("Nível 4");
+    expect(elementos.overlayFim.textContent).toContain("145");
+  });
+
+  it("não mostra nada extra quando eventosLevelUp está vazio ou ausente", () => {
+    const container = document.createElement("div");
+    const { jogador, inimigo } = criarFixtures();
+    const elementos = montarTelaBatalha(container, { jogador, inimigo });
+
+    mostrarOverlayFim(elementos, { tipo: "vitoria", xpGanho: 10, ouroGanho: 5 });
+
+    expect(elementos.overlayFim.textContent).not.toContain("Nível");
+  });
+});
+
+describe("sprite inicial e orientação", () => {
+  it("já mostra o sprite (idle) de ambos os combatentes assim que a tela monta, sem esperar uma ação", () => {
+    const container = document.createElement("div");
+    const { jogador, inimigo } = criarFixtures();
+    const elementos = montarTelaBatalha(container, { jogador, inimigo });
+    expect(elementos.spriteJogador.style.backgroundImage).toContain("/assets/personagens/");
+    expect(elementos.spriteInimigo.style.backgroundImage).toContain("/assets/personagens/");
+  });
+
+  it("o sprite do inimigo é espelhado pra ficar de frente pro jogador", () => {
+    const container = document.createElement("div");
+    const { jogador, inimigo } = criarFixtures();
+    const elementos = montarTelaBatalha(container, { jogador, inimigo });
+    expect(elementos.spriteInimigo.classList.contains("sprite--espelhado")).toBe(true);
+    expect(elementos.spriteJogador.classList.contains("sprite--espelhado")).toBe(false);
+  });
 });
 
 describe("seleção de sprite do inimigo", () => {

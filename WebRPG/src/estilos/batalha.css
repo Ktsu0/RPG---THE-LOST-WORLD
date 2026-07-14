@@ -109,13 +109,40 @@
   cursor: help;
 }
 
+.sprite-ancora {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.sombra-combatente {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 75%);
+  z-index: 0;
+}
+
 .sprite {
+  position: relative;
+  z-index: 1;
   width: 100px;
   height: 100px;
   background-repeat: no-repeat;
   background-size: auto 100%;
   transform: scale(2.4);
   transform-origin: bottom center;
+}
+
+/* O inimigo fica à direita do jogador (palco-batalha usa justify-content:
+   space-between) — os sprites da Tiny RPG/LuizMelo olham pra direita por
+   padrão, então sem isso o inimigo fica de costas pro jogador em vez de
+   virado pra ele. */
+.sprite--espelhado {
+  transform: scale(2.4) scaleX(-1);
 }
 
 @keyframes sprite-play {
@@ -211,6 +238,9 @@
 @media (max-width: 480px) {
   .sprite {
     transform: scale(1.6);
+  }
+  .sprite--espelhado {
+    transform: scale(1.6) scaleX(-1);
   }
   .barra-acoes {
     flex-wrap: wrap;

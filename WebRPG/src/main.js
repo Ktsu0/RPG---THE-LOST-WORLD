@@ -15,6 +15,7 @@ import "./estilos/arena.css";
 import "./estilos/configuracao.css";
 import "./estilos/titulo.css";
 import "./estilos/mundo.css";
+import "./estilos/mundoAberto.css";
 import { inicializarRoteador, registrarTela, mostrarTela } from "./rotas/roteador.js";
 import { montarTelaCriacao } from "./telas/criacao/telaCriacao.js";
 import { montarTelaCidade } from "./telas/cidade/telaCidade.js";
@@ -27,9 +28,9 @@ import { montarTelaMasmorra } from "./telas/masmorra/telaMasmorra.js";
 import { montarTelaArena } from "./telas/arena/telaArena.js";
 import { montarTelaConfiguracoes } from "./telas/configuracao/telaConfiguracoes.js";
 import { montarTelaTitulo } from "./telas/titulo/telaTitulo.js";
+import { montarTelaMundoAberto } from "./telas/mundoAberto/telaMundoAberto.js";
 import { tocarMusica } from "@audio/musica.js";
-import { criarInimigoTreino } from "@engine/geradores/inimigoTreino.js";
-import { checarLevelUp } from "@engine/personagem/experiencia.js";
+import { criarInimigoSelvagem } from "@engine/mundo/monstrosSelvagens.js";
 import { salvarNoNavegador, carregarDoNavegador, existeSaveNoNavegador } from "./armazenamento/localStorage.js";
 
 export function bootstrap(container) {
@@ -40,7 +41,7 @@ export function bootstrap(container) {
     registrarTela("cidade", (el) =>
       montarTelaCidade(el, {
         jogador,
-        aoExplorar: () => irParaBatalhaDeTreino(jogador),
+        aoExplorar: () => irParaMundoAberto(jogador),
         aoAbrirGuilda: () => {
           registrarTela("guilda", (el2) =>
             montarTelaGuilda(el2, { jogador, aoSair: () => { salvarNoNavegador(jogador); irParaCidade(jogador); } })
@@ -92,15 +93,24 @@ export function bootstrap(container) {
     mostrarTela("cidade");
   }
 
-  function irParaBatalhaDeTreino(jogador) {
+  function irParaMundoAberto(jogador) {
+    tocarMusica("cidade");
+    registrarTela("mundoAberto", (el) =>
+      montarTelaMundoAberto(el, {
+        jogador,
+        aoEncontrarMonstro: (especieId) => irParaBatalhaSelvagem(jogador, especieId),
+        aoSair: () => irParaCidade(jogador),
+      })
+    );
+    mostrarTela("mundoAberto");
+  }
+
+  function irParaBatalhaSelvagem(jogador, especieId) {
     tocarMusica("batalha");
     registrarTela("batalha", (el) =>
-      iniciarBatalha(el, jogador, criarInimigoTreino(), {
+      iniciarBatalha(el, jogador, criarInimigoSelvagem(especieId, jogador.nivel), {
         local: "treino",
-        onFim: (fim) => {
-          if (fim === "vitoria") {
-            checarLevelUp(jogador);
-          }
+        onFim: () => {
           salvarNoNavegador(jogador);
           irParaCidade(jogador);
         },

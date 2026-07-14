@@ -2,6 +2,7 @@ import { criarEstadoBatalha, executarAcaoJogador } from "@engine/combate/index.j
 import { montarTelaBatalha, atualizarBarras, atualizarBotaoItem, registrarNoLog, mostrarOverlayFim } from "./telaBatalha.js";
 import { reproduzirEventos } from "./animacoes.js";
 import { renderizarIconesStatus } from "./iconesStatus.js";
+import { checarLevelUp } from "@engine/personagem/experiencia.js";
 
 const PAUSA_OVERLAY_FIM_MS = 1500;
 const espera = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -85,10 +86,12 @@ export function iniciarBatalha(container, jogador, inimigoOriginal, { onFim, loc
     } else {
       if (resultado.fim === "vitoria" || resultado.fim === "derrota") {
         const eventoVitoria = resultado.eventos.find((e) => e.tipo === "vitoria");
+        const eventosLevelUp = resultado.fim === "vitoria" ? checarLevelUp(estado.jogador) : [];
         mostrarOverlayFim(elementos, {
           tipo: resultado.fim,
           xpGanho: eventoVitoria?.xpGanho,
           ouroGanho: eventoVitoria?.ouroGanho,
+          eventosLevelUp,
         });
         // Sem essa pausa, onFim() troca de tela (roteador limpa o container)
         // antes do navegador sequer pintar o overlay — ele nunca chega a ser

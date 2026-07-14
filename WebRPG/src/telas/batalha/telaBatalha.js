@@ -1,11 +1,15 @@
 import { spriteParaInimigo } from "./mapaSprites.js";
+import { tocarAnimacao } from "./sprites.js";
 import { contarPocoes } from "@engine/itens/pocao.js";
 
-function criarCombatente(nome, classeSprite) {
+function criarCombatente(nome, classeSprite, { espelhado = false } = {}) {
   const wrapper = document.createElement("div");
   wrapper.className = "combatente";
   wrapper.innerHTML = `
-    <div class="sprite" data-personagem="${classeSprite}"></div>
+    <div class="sprite-ancora">
+      <div class="sombra-combatente"></div>
+      <div class="sprite${espelhado ? " sprite--espelhado" : ""}" data-personagem="${classeSprite}"></div>
+    </div>
     <div class="painel-status">
       <strong class="nome-combatente">${nome}</strong>
       <div class="barra"><div class="barra__preenchimento barra__preenchimento--hp"></div></div>
@@ -33,7 +37,7 @@ export function montarTelaBatalha(container, { jogador, inimigo, local = "treino
   const palco = container.querySelector(".palco-batalha");
   const personagemInimigo = spriteParaInimigo(inimigo.nome);
   const combatenteJogador = criarCombatente(jogador.nome || "Você", "soldado");
-  const combatenteInimigo = criarCombatente(inimigo.nome, personagemInimigo);
+  const combatenteInimigo = criarCombatente(inimigo.nome, personagemInimigo, { espelhado: true });
   palco.appendChild(combatenteJogador);
   palco.appendChild(combatenteInimigo);
 
@@ -56,6 +60,13 @@ export function montarTelaBatalha(container, { jogador, inimigo, local = "treino
     botaoFugir: container.querySelector('[data-acao="fugir"]'),
     overlayFim: container.querySelector(".overlay-fim"),
   };
+
+  // Sem isso, os dois sprites ficam com nenhum background-image definido até o
+  // primeiro evento de dano da batalha — tocarAnimacao("ataque"/"dano") só é
+  // chamado reativamente a partir de reproduzirEventos (animacoes.js), então o
+  // palco começa completamente vazio (achado ao verificar no navegador).
+  tocarAnimacao(elementos.spriteJogador, elementos.personagemJogador, "idle");
+  tocarAnimacao(elementos.spriteInimigo, elementos.personagemInimigo, "idle");
 
   atualizarBarras(elementos, jogador, inimigo);
   atualizarBotaoItem(elementos, jogador);
@@ -82,12 +93,17 @@ export function registrarNoLog(elementos, mensagem) {
   elementos.log.scrollTop = elementos.log.scrollHeight;
 }
 
-export function mostrarOverlayFim(elementos, { tipo, xpGanho, ouroGanho }) {
+export function mostrarOverlayFim(elementos, { tipo, xpGanho, ouroGanho, eventosLevelUp = [] }) {
   const titulo = tipo === "vitoria" ? "Vitória!" : "Derrota...";
   const detalhe = tipo === "vitoria" ? `+${xpGanho} XP, +${ouroGanho} ouro` : "Tente novamente.";
+  const ultimoLevelUp = eventosLevelUp[eventosLevelUp.length - 1];
+  const linhaLevelUp = ultimoLevelUp
+    ? `<p class="texto-level-up">🎉 Nível ${ultimoLevelUp.nivel}! HP máximo: ${ultimoLevelUp.hpMax}</p>`
+    : "";
   elementos.overlayFim.innerHTML = `
     <h1 class="texto-pixel">${titulo}</h1>
     <p>${detalhe}</p>
+    ${linhaLevelUp}
   `;
   elementos.overlayFim.classList.remove("overlay-fim--oculto");
 }

@@ -45,6 +45,7 @@ export function criarPersonagem({ nome, racaNome, classeNome }) {
     armas: [],
     armaEquipada: null,
     amuletoEquipado: false,
+    amuletoCraftado: false,
     status: [],
     ativarHistoria: true,
   };

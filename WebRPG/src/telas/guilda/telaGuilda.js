@@ -1,13 +1,16 @@
 import { filtroMissao, resolverResultadoMissao } from "@engine/missoes/index.js";
 import { criarEstadoOndas, avancarOnda, TOTAL_ONDAS } from "@engine/missoes/ondas.js";
+import { checarLevelUp } from "@engine/personagem/experiencia.js";
 
 function renderizarResultado(container, resultado) {
   const painel = container.querySelector(".resultado-missao");
   if (resultado.sucesso) {
+    const ultimoLevelUp = resultado.eventosLevelUp?.[resultado.eventosLevelUp.length - 1];
     painel.innerHTML = `
       <p>Missão completada com sucesso! +${resultado.xpGanho} XP, +${resultado.ouroGanho} ouro.</p>
       ${resultado.itemGanho ? `<p>Você obteve: ${resultado.itemGanho}</p>` : ""}
       ${resultado.pocaoGanha ? "<p>Você também encontrou uma Poção de Cura!</p>" : ""}
+      ${ultimoLevelUp ? `<p>🎉 Nível ${ultimoLevelUp.nivel}! HP máximo: ${ultimoLevelUp.hpMax}</p>` : ""}
     `;
   } else {
     painel.innerHTML = `<p>A missão falhou. ${resultado.penalidade.mensagem}</p>`;
@@ -25,12 +28,14 @@ function resolverMissaoDeOndas(container, jogador, missao) {
   for (let i = 0; i < estadoOndas.fragmentosGanhos; i++) {
     jogador.inventario.push("Fragmento Antigo");
   }
+  const eventosLevelUp = checarLevelUp(jogador);
   renderizarResultado(container, {
     sucesso: true,
     xpGanho: Math.round(missao.xp(jogador.nivel)),
     ouroGanho: Math.round(missao.ouro(jogador.nivel)),
     itemGanho: estadoOndas.fragmentosGanhos > 0 ? `${estadoOndas.fragmentosGanhos}x Fragmento Antigo` : null,
     pocaoGanha: false,
+    eventosLevelUp,
   });
 }
 

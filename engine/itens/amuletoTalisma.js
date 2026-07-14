@@ -23,6 +23,7 @@ export function craftarAmuleto(jogador) {
       return true;
     });
   }
+  jogador.amuletoCraftado = true;
 }
 
 export function alternarAmuleto(jogador) {

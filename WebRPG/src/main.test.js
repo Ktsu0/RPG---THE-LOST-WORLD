@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { bootstrap } from "./main.js";
+import { telaAtualInstancia } from "./rotas/roteador.js";
 
 beforeEach(() => {
   localStorage.clear();
@@ -86,12 +87,21 @@ describe("bootstrap: navegação para guilda, loja e personagem", () => {
     container.querySelector("#botao-confirmar").click();
   }
 
+  // O mapa da cidade é renderizado com Phaser (canvas), que não roda sob jsdom
+  // (ver comentário em WebRPG/src/mundo/faseCidade.js) — a navegação abaixo
+  // aciona o hotspot via telaAtualInstancia() (o que montarTelaCidade
+  // retornou), em vez de simular "andar até o prédio" num canvas que não
+  // chega a renderizar no ambiente de teste.
+  function acionarHotspotNaCidade(hotspot) {
+    telaAtualInstancia().acionarHotspot(hotspot);
+  }
+
   it("abre a tela de loja a partir da cidade e volta ao sair", () => {
     const container = document.createElement("div");
     bootstrap(container);
     criarPersonagemDeTeste(container);
 
-    container.querySelector('[data-hotspot="loja"]').click();
+    acionarHotspotNaCidade("loja");
     expect(container.querySelector(".tela-loja")).not.toBeNull();
 
     container.querySelector("#botao-sair-loja").click();
@@ -103,7 +113,7 @@ describe("bootstrap: navegação para guilda, loja e personagem", () => {
     bootstrap(container);
     criarPersonagemDeTeste(container);
 
-    container.querySelector('[data-hotspot="personagem"]').click();
+    acionarHotspotNaCidade("personagem");
     expect(container.querySelector(".tela-personagem")).not.toBeNull();
   });
 
@@ -112,7 +122,7 @@ describe("bootstrap: navegação para guilda, loja e personagem", () => {
     bootstrap(container);
     criarPersonagemDeTeste(container);
 
-    container.querySelector('[data-hotspot="guilda"]').click();
+    acionarHotspotNaCidade("guilda");
     expect(container.querySelector(".tela-guilda")).not.toBeNull();
   });
 });

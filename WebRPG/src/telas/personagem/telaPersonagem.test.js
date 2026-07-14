@@ -89,3 +89,97 @@ describe("montarTelaPersonagem", () => {
     expect(aoSair).toHaveBeenCalledOnce();
   });
 });
+
+describe("painel do Amuleto Supremo", () => {
+  function jogadorComMateriaisCompletos() {
+    return {
+      ...jogadorDeTeste(),
+      inventario: [
+        ...jogadorDeTeste().inventario,
+        "Pena do Corvo Sombrio", "Pena do Corvo Sombrio", "Pena do Corvo Sombrio", "Pena do Corvo Sombrio", "Pena do Corvo Sombrio",
+        "Pergaminho Arcano", "Pergaminho Arcano", "Pergaminho Arcano", "Pergaminho Arcano", "Pergaminho Arcano",
+        "Essência da Noite", "Essência da Noite",
+        "Relíquia Brilhante", "Relíquia Brilhante",
+        "Gema da Escuridão",
+      ],
+      amuletoCraftado: false, amuletoEquipado: false,
+    };
+  }
+
+  it("mostra o progresso de cada material necessário", () => {
+    const container = document.createElement("div");
+    montarTelaPersonagem(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    const texto = container.querySelector(".painel-amuleto").textContent;
+    expect(texto).toContain("Pena do Corvo Sombrio");
+    expect(texto).toContain("0/5");
+  });
+
+  it("habilita Craftar só quando todos os materiais estão completos", () => {
+    const container = document.createElement("div");
+    montarTelaPersonagem(container, { jogador: jogadorDeTeste(), aoSair: vi.fn() });
+    expect(container.querySelector("#botao-craftar-amuleto").disabled).toBe(true);
+
+    const container2 = document.createElement("div");
+    montarTelaPersonagem(container2, { jogador: jogadorComMateriaisCompletos(), aoSair: vi.fn() });
+    expect(container2.querySelector("#botao-craftar-amuleto").disabled).toBe(false);
+  });
+
+  it("craftar consome os materiais e troca o botão por Equipar/Desequipar", () => {
+    const container = document.createElement("div");
+    const jogador = jogadorComMateriaisCompletos();
+    montarTelaPersonagem(container, { jogador, aoSair: vi.fn() });
+    container.querySelector("#botao-craftar-amuleto").click();
+    expect(jogador.amuletoCraftado).toBe(true);
+    expect(container.querySelector("#botao-alternar-amuleto")).not.toBeNull();
+    expect(container.querySelector("#botao-craftar-amuleto")).toBeNull();
+  });
+
+  it("equipar aplica o bônus e desequipar reverte", () => {
+    const container = document.createElement("div");
+    // ataque alto o bastante pra +5% arredondar pra cima de forma visível
+    // (o fixture padrão tem ataque: 12, onde floor(12*1.05) === 12).
+    const jogador = { ...jogadorComMateriaisCompletos(), ataque: 100, amuletoCraftado: true };
+    montarTelaPersonagem(container, { jogador, aoSair: vi.fn() });
+    const botao = container.querySelector("#botao-alternar-amuleto");
+    const ataqueAntes = jogador.ataque;
+    botao.click();
+    expect(jogador.amuletoEquipado).toBe(true);
+    expect(jogador.ataque).toBeGreaterThan(ataqueAntes);
+
+    container.querySelector("#botao-alternar-amuleto").click();
+    expect(jogador.amuletoEquipado).toBe(false);
+    expect(jogador.ataque).toBe(ataqueAntes);
+  });
+});
+
+describe("painel do Talismã da Torre", () => {
+  it("mostra o progresso de fragmentos e ouro", () => {
+    const container = document.createElement("div");
+    const jogador = { ...jogadorDeTeste(), inventario: [...jogadorDeTeste().inventario, "Fragmento Antigo", "Fragmento Antigo"], ouro: 500 };
+    montarTelaPersonagem(container, { jogador, aoSair: vi.fn() });
+    const texto = container.querySelector(".painel-talisma").textContent;
+    expect(texto).toContain("2/10");
+    expect(texto).toContain("500/2000");
+  });
+
+  it("craftar consome fragmentos e ouro, e some o botao (o item vai pro inventario)", () => {
+    const container = document.createElement("div");
+    const jogador = {
+      ...jogadorDeTeste(),
+      inventario: [...jogadorDeTeste().inventario, ...Array(10).fill("Fragmento Antigo")],
+      ouro: 2000,
+    };
+    montarTelaPersonagem(container, { jogador, aoSair: vi.fn() });
+    container.querySelector("#botao-craftar-talisma").click();
+    expect(jogador.inventario.filter((i) => i === "Talismã da Torre")).toHaveLength(1);
+    expect(jogador.ouro).toBe(0);
+  });
+
+  it("mostra que ja possui um talisma pronto, sem oferecer craftar de novo", () => {
+    const container = document.createElement("div");
+    const jogador = { ...jogadorDeTeste(), inventario: [...jogadorDeTeste().inventario, "Talismã da Torre"] };
+    montarTelaPersonagem(container, { jogador, aoSair: vi.fn() });
+    expect(container.querySelector(".painel-talisma").textContent).toContain("pronto");
+    expect(container.querySelector("#botao-craftar-talisma")).toBeNull();
+  });
+});

@@ -43,6 +43,12 @@ export function executarTurnoTorre(estado, acao) {
       jogador.xp += boss.xp;
       jogador.ouro += boss.ouro;
       const fim = estado.andar >= torreBosses.length ? "torre_completa" : "venceu_andar";
+      if (fim === "torre_completa") {
+        const ouroBonus = 10000;
+        jogador.ouro += ouroBonus;
+        jogador.inventario.push("Cálice da Vitória");
+        eventos.push({ tipo: "torre_completa", ouroBonus, item: "Cálice da Vitória" });
+      }
       return { estado: { jogador, andar: estado.andar, bossAtual: null }, eventos, fim };
     }
   }
@@ -88,4 +94,13 @@ export function executarTurnoTorre(estado, acao) {
   }
 
   return { estado: { jogador, andar: estado.andar, bossAtual: boss }, eventos, fim: null };
+}
+
+export function podeAcessarTorre(jogador) {
+  return jogador.inventario.includes("Talismã da Torre");
+}
+
+export function consumirTalismaDaTorre(jogador) {
+  const indice = jogador.inventario.indexOf("Talismã da Torre");
+  if (indice !== -1) jogador.inventario.splice(indice, 1);
 }

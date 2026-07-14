@@ -54,7 +54,7 @@ describe("criarPersonagem", () => {
       restricoes: {},
       equipamentos: { head: null, chest: null, hands: null, legs: null, feet: null },
       itens: [], inventario: [], armas: [],
-      armaEquipada: null, amuletoEquipado: false, status: [],
+      armaEquipada: null, amuletoEquipado: false, amuletoCraftado: false, status: [],
       ativarHistoria: true,
     });
   });

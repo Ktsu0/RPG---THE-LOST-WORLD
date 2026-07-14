@@ -125,4 +125,29 @@ describe("iniciarBatalha com onFim", () => {
 
     await expect(elementos.executarAcao("atacar")).resolves.toBeUndefined();
   });
+
+  it("ao vencer com XP suficiente pra upar, o overlay mostra a celebração de level up", async () => {
+    const container = document.createElement("div");
+    // nivel 1 precisa de 50 XP (floor(50 * 1^1.4)) — xp:999 garante upar.
+    const jogador = { nome: "Herói", nivel: 1, xp: 999, hp: 100, hpMax: 100, ataque: 10, defesa: 5 };
+    const inimigo = { nome: "Orc", hp: 30, hpMax: 30 };
+    const elementos = iniciarBatalha(container, jogador, inimigo);
+
+    executarAcaoJogador.mockReturnValueOnce({
+      estado: {
+        jogador: { ...jogador, hp: 93 },
+        inimigo: { ...inimigo, hp: 0 },
+      },
+      eventos: [
+        { tipo: "dano", autor: "jogador", alvo: "inimigo", valor: 30, critico: false },
+        { tipo: "morte", alvo: "inimigo" },
+        { tipo: "vitoria", xpGanho: 15, ouroGanho: 20 },
+      ],
+      fim: "vitoria",
+    });
+
+    await elementos.executarAcao("atacar");
+
+    expect(elementos.overlayFim.textContent).toContain("Nível");
+  });
 });

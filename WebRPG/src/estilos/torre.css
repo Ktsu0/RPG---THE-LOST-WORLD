@@ -1,10 +1,28 @@
 .tela-torre {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--espaco-md);
   padding: var(--espaco-lg);
   max-width: 700px;
   margin: 0 auto;
+}
+
+.overlay-fim-torre {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 18, 26, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espaco-md);
+  text-align: center;
+  z-index: 10;
+}
+
+.overlay-fim-torre--oculto {
+  display: none;
 }
 
 .log-torre {

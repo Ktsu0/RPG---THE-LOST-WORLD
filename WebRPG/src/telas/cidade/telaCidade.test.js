@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { montarTelaCidade } from "./telaCidade.js";
 
 function jogadorDeTeste() {
-  return { nome: "Thorin", nivel: 3, hp: 80, hpMax: 100, ouro: 120 };
+  return { nome: "Thorin", nivel: 3, hp: 80, hpMax: 100, ouro: 120, classe: "Paladino" };
 }
 
 function callbacksDeTeste(overrides = {}) {
@@ -24,14 +24,10 @@ describe("montarTelaCidade", () => {
     expect(texto).toContain("120");
   });
 
-  it("renderiza um hotspot para cada destino da cidade", () => {
-    const container = document.createElement("div");
-    montarTelaCidade(container, { jogador: jogadorDeTeste(), ...callbacksDeTeste() });
-    for (const local of ["explorar", "guilda", "loja", "personagem", "torre", "masmorra", "arena", "configuracao"]) {
-      expect(container.querySelector(`[data-hotspot="${local}"]`)).not.toBeNull();
-    }
-  });
-
+  // O mapa da cidade agora é renderizado com Phaser (canvas), que não roda sob
+  // jsdom (ver comentário em WebRPG/src/mundo/faseCidade.js) — por isso a
+  // navegação é testada chamando o `acionarHotspot` exposto por montarTelaCidade,
+  // em vez de simular clique num elemento do DOM que não existe mais.
   it.each([
     ["explorar", "aoExplorar"],
     ["guilda", "aoAbrirGuilda"],
@@ -41,12 +37,12 @@ describe("montarTelaCidade", () => {
     ["masmorra", "aoAbrirMasmorra"],
     ["arena", "aoAbrirArena"],
     ["configuracao", "aoAbrirConfiguracao"],
-  ])('clicar no hotspot "%s" chama %s', (hotspot, nomeCallback) => {
+  ])('acionar o hotspot "%s" chama %s', (hotspot, nomeCallback) => {
     const container = document.createElement("div");
     const callbacks = callbacksDeTeste();
-    montarTelaCidade(container, { jogador: jogadorDeTeste(), ...callbacks });
+    const elementos = montarTelaCidade(container, { jogador: jogadorDeTeste(), ...callbacks });
 
-    container.querySelector(`[data-hotspot="${hotspot}"]`).click();
+    elementos.acionarHotspot(hotspot);
 
     expect(callbacks[nomeCallback]).toHaveBeenCalledOnce();
   });

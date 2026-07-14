@@ -44,6 +44,17 @@ const MAPA_SPRITE_POR_NOME = {
   "Salamandra de Fogo": "elemental-fogo",
   "Escorpião de Magma": "elemental-fogo",
   "Senhor das Chamas": "elemental-fogo",
+
+  // Mundo aberto (engine/mundo/monstrosSelvagens.js) — monstros encontrados
+  // andando pelo mapa de exploração, fora das masmorras/torre.
+  "Goblin Selvagem": "goblin",
+  "Orc Selvagem": "orc",
+  "Esqueleto Solto": "esqueleto",
+  "Lobo Selvagem": "lobo",
+  "Cogumelo Venenoso": "cogumelo",
+  "Elemental de Fogo Selvagem": "elemental-fogo",
+  "Golem de Pedra Selvagem": "golem-pedra",
+  "Olho Voador Selvagem": "olho-voador",
 };
 
 const SPRITE_PADRAO = "orc";
