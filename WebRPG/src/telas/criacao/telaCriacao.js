@@ -1,12 +1,13 @@
 import { listarRacas } from "@engine/personagem/racas.js";
 import { listarClasses } from "@engine/personagem/classes.js";
 import { calcularAtributosIniciais, criarPersonagem } from "@engine/personagem/criarPersonagem.js";
+import { caminhoAsset } from "../../caminhos.js";
 
 export function montarTelaCriacao(container, { aoConfirmar }) {
   container.innerHTML = `
     <div class="tela-criacao">
       <div class="sprite-preview">
-        <div class="sprite" data-personagem="soldado" style="background-image: url(/assets/personagens/soldado/idle.png); --sprite-frames: 6;"></div>
+        <div class="sprite" data-personagem="soldado" style="background-image: url(${caminhoAsset("assets/personagens/soldado/idle.png")}); --sprite-frames: 6;"></div>
       </div>
       <div class="painel selecao-raca">
         <h2>Raça</h2>

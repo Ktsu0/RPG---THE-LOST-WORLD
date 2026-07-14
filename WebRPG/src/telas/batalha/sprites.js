@@ -1,3 +1,5 @@
+import { caminhoAsset } from "../../caminhos.js";
+
 const ANIMACOES = {
   idle: { frames: 6, duracao: 1.2, loop: "infinite" },
   ataque: { frames: 6, duracao: 0.6, loop: "1" },
@@ -35,7 +37,7 @@ export function definirSprite(elemento, personagem, nomeAnimacao) {
   if (!config) {
     throw new Error(`Animação "${nomeAnimacao}" não existe.`);
   }
-  elemento.style.backgroundImage = `url(/assets/personagens/${personagem}/${nomeAnimacao}.png)`;
+  elemento.style.backgroundImage = `url(${caminhoAsset(`assets/personagens/${personagem}/${nomeAnimacao}.png`)})`;
   elemento.style.setProperty("--sprite-frames", config.frames);
   elemento.style.setProperty("--sprite-duration", `${config.duracao}s`);
   elemento.style.setProperty("--sprite-loop", config.loop);

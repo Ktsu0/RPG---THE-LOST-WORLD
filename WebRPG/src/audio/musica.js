@@ -1,3 +1,5 @@
+import { caminhoAsset } from "../caminhos.js";
+
 const CHAVE_VOLUME_MUSICA = "webrpg_volume_musica";
 const VOLUME_PADRAO = 0.4;
 
@@ -15,7 +17,7 @@ export function definirVolumeMusica(valor) {
 
 export function tocarMusica(nome) {
   if (faixaAtual) faixaAtual.pause();
-  faixaAtual = new Audio(`/assets/audio/musica/${nome}.ogg`);
+  faixaAtual = new Audio(caminhoAsset(`assets/audio/musica/${nome}.ogg`));
   faixaAtual.loop = true;
   faixaAtual.volume = obterVolumeMusica();
   faixaAtual.play()?.catch?.(() => {});

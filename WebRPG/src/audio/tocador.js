@@ -1,3 +1,5 @@
+import { caminhoAsset } from "../caminhos.js";
+
 const CHAVE_VOLUME_EFEITOS = "webrpg_volume_efeitos";
 const VOLUME_PADRAO = 0.6;
 
@@ -11,7 +13,7 @@ export function definirVolumeEfeitos(valor) {
 }
 
 export function tocarEfeito(nome) {
-  const audio = new Audio(`/assets/audio/efeitos/${nome}.ogg`);
+  const audio = new Audio(caminhoAsset(`assets/audio/efeitos/${nome}.ogg`));
   audio.volume = obterVolumeEfeitos();
   audio.play()?.catch?.(() => {});
 }
