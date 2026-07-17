@@ -1,7 +1,9 @@
 # Especificação: WebRPG — Versão Visual do RPG "The Lost World"
 
-**Data:** 2026-07-08 (revisado 2026-07-10 — ver seção 10; encerrada 2026-07-14 — ver seção 13)
+**Data:** 2026-07-08 (revisado 2026-07-10 — ver seção 10; encerrada 2026-07-14 — ver seção 13; migração decidida 2026-07-17)
 **Status:** Concluída — todas as fases (0-11) implementadas e verificadas; jogo publicado em https://ktsu0.github.io/RPG---THE-LOST-WORLD/. Documento encerrado; trabalho futuro (seção 12.5) requer spec nova.
+
+**Atualização 2026-07-17:** decisão do usuário de migrar a camada visual para Godot Engine — ver [`specs/2026-07-17-godot-visual-design.md`](./2026-07-17-godot-visual-design.md). O projeto `WebRPG/` descrito por esta spec deixa de receber fases novas (Fases 12-14, planejadas e nunca executadas — ver seção 13 — não serão implementadas aqui; seu design é reaproveitado pela spec Godot). `WebRPG/` será removido do repositório na Fase 0 do plano Godot, após a cópia dos assets.
 
 ## 1. Objetivo
 

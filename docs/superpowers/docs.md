@@ -1,4 +1,40 @@
-# WebRPG — Controle de Fases
+# GodotRPG — Controle de Fases
+
+Checklist de progresso das fases de construção definidas em
+[`specs/2026-07-17-godot-visual-design.md`](./specs/2026-07-17-godot-visual-design.md) (seção 6).
+Decisão de 2026-07-17: a camada visual do jogo migra de `WebRPG/` (Vite/Phaser, ver seção
+histórica abaixo) para um projeto Godot Engine novo, reaproveitando a lógica de `engine/` e os
+assets já baixados em `WebRPG/public/assets/`. Cada fase tem um plano de implementação
+detalhado em `plans/` (criado just-in-time, ao iniciar cada fase).
+
+| Fase | Entrega | Plano | Status |
+|---|---|---|---|
+| 0 — Fundação Godot | Projeto Godot, assets migrados, estrutura de pastas, tela de Título; remove `WebRPG/` do repo | — | ❌ Planejada |
+| 1 — Motor portado | `engine/` (JS) → `scripts/engine/` (GDScript) módulo por módulo, suíte GUT espelhando os 33 testes | — | ❌ Planejada |
+| 2 — Batalha | Cena de batalha por turnos (Atacar/Item/Defender/Fugir), ícones de status, log, drops | — | ❌ Planejada |
+| 3 — Identidade | Wizard de criação, save/load `user://`, tela de Personagem | — | ❌ Planejada |
+| 4 — Mundo Aberto & Cidade | TileMap navegável, monstros vagando por distância, hotspots da cidade | — | ❌ Planejada |
+| 5 — Loja, Guilda & Ferreiro | Conjuntos de arma/armadura com efeito especial, missões, forjar/melhorar artefato | — | ❌ Planejada |
+| 6 — Masmorras | Grade com névoa de guerra, 10 temas, salas de armadilha/tesouro/segredo, masmorras secretas | — | ❌ Planejada |
+| 7 — Castelo Final | Talismã como chave obrigatória, 10 monstros, resgate da princesa | — | ❌ Planejada |
+| 8 — Bestiário & Itens Lendários | Sprites restantes, relíquias com efeito passivo | — | ❌ Planejada |
+| 9 — Polimento & Áudio | Música por zona, SFX, transições, telas de vitória/derrota | — | ❌ Planejada |
+| 10 — Build & Lançamento | Export Web (HTML5/WASM) no GitHub Pages, export Desktop opcional | — | ❌ Planejada |
+
+**Critério de pronto de cada fase:** ver a coluna "Depende de"/tabela de fases na spec
+(seção 6) — jogável no editor Godot até aquele ponto, com os testes GUT do motor portado até
+ali passando.
+
+---
+
+# WebRPG — Controle de Fases (histórico, congelado em 2026-07-17)
+
+**Este projeto não recebe mais fases novas** — decisão de 2026-07-17 de migrar a camada
+visual para Godot Engine (ver seção acima e
+[`specs/2026-07-17-godot-visual-design.md`](./specs/2026-07-17-godot-visual-design.md)). A
+pasta `WebRPG/` é removida do repositório na Fase 0 do GodotRPG, depois que os assets forem
+copiados. `engine/` (lógica JS pura) é mantido temporariamente como referência de porte para
+GDScript. Tabela abaixo preservada como registro do que foi de fato construído e verificado.
 
 Checklist de progresso das fases de construção definidas em
 [`specs/2026-07-08-webrpg-visual-design.md`](./specs/2026-07-08-webrpg-visual-design.md) (seção 6).
