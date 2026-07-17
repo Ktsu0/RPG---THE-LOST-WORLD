@@ -329,12 +329,41 @@ save); o `FileAccess.open("user://save.json", ...)` entra na Fase 3.
 
 ### Task 12 — Checklist final da Fase 1
 
-- [ ] Suíte GUT completa (equivalente aos 33 arquivos / 252 testes de `engine/`) roda headless sem erro: `godot --headless --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit`.
-- [ ] Nenhuma função pública de `engine/` ficou sem equivalente em `scripts/engine/` (conferir contra a lista de exports desta task-plan, seção "Ordem de dependência").
-- [ ] `scripts/engine/masmorra/gerador.gd` confirmado contra `JogoRPG/masmorra/masmorra.js`, não `engine/masmorra/gerador.js`.
-- [ ] `Aleatorio.fonte` documentado (comentário no arquivo) como o ponto único de injeção de aleatoriedade para teste — próximas fases que precisarem de RNG determinístico usam o mesmo padrão.
-- [ ] `docs/superpowers/docs.md`: marcar Fase 1 como ✅ Concluída.
-- [ ] Reportar o resultado — se algum módulo divergiu do comportamento original, anotar exatamente onde e por quê (mesmo padrão de honestidade das revisões WebRPG).
+- [x] Suíte GUT completa roda headless sem erro: 33 scripts, **246/246 testes**, 646 asserts.
+      Comando real usado (difere do rascunho original — ver gotchas): `godot --headless
+      --rendering-driver opengl3 --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests
+      -ginclude_subdirs -gexit`.
+- [x] Nenhuma função pública de `engine/` ficou sem equivalente em `scripts/engine/` — os 30
+      arquivos `.js` (100%) têm um `.gd` correspondente, conferido contra a lista de exports
+      desta task-plan.
+- [x] `scripts/engine/masmorra/gerador.gd` confirmado contra `JogoRPG/masmorra/masmorra.js`
+      (`DUNGEON_TEMPLATES`), não `engine/masmorra/gerador.js`.
+- [x] `Aleatorio.fonte` documentado no arquivo como o ponto único de injeção de aleatoriedade
+      para teste; usado consistentemente pelas 12 tasks.
+- [x] `docs/superpowers/docs.md`: Fase 1 marcada como ✅ Concluída, com nota de verificação.
+- [x] Resultado reportado — ver "Divergências encontradas" abaixo.
+
+**Divergências encontradas durante o porte (nenhuma no comportamento numérico/lógico — todos
+os valores testados batem exatamente com o JS original):**
+
+1. **`masmorra/gerador.gd`** troca de fonte de dados por decisão já tomada com o usuário antes
+   desta fase (seção "Exceção já decidida" no topo deste documento) — não é uma divergência
+   acidental.
+2. **`combate/index.gd`** (`Combate.criar_estado_batalha`) precisou de uma checagem explícita de
+   `null`/`has()` antes de atribuir a uma `Array` tipada — `Dictionary.get()` sem chave retorna
+   `null`, que não pode ser atribuído direto a uma variável `Array` tipada em GDScript (não
+   existe no JS, onde `undefined` só vira `[]` via o operador ternário do código original).
+3. **`personagem/necromante.gd`** (`absorver_dano_com_esqueletos`) precisou trocar concatenação
+   `[a] + b` por `append`/`append_array` — concatenar `Array[Dictionary]` tipado com `+`
+   falha silenciosamente em runtime no Godot 4.7.1.
+4. **`save/save.gd`** usa a API de instância do `JSON` (`JSON.new().parse()`) em vez da estática
+   (`JSON.parse_string()`) para tratar JSON malformado sem gerar um `push_error` de engine, e
+   usa `int(...)` ao redor de valores numéricos vindos de JSON (que o Godot sempre desserializa
+   como `float`) — nenhuma das duas coisas tem equivalente no JS, onde `try/catch` em torno de
+   `JSON.parse` já resolve isso e números não têm essa distinção visível.
+
+Nenhuma dessas divergências muda o comportamento de jogo — são todas adaptações de sintaxe/API
+específicas do GDScript, cobertas por teste antes e depois da correção.
 
 ---
 

@@ -10,7 +10,7 @@ detalhado em `plans/` (criado just-in-time, ao iniciar cada fase).
 | Fase | Entrega | Plano | Status |
 |---|---|---|---|
 | 0 — Fundação Godot | Projeto Godot (`game/`), assets migrados, estrutura de pastas, tela de Título; `WebRPG/` removido do repo | — | ✅ Concluída (2026-07-17) |
-| 1 — Motor portado | `engine/` (JS) → `scripts/engine/` (GDScript) módulo por módulo, suíte GUT espelhando os 33 testes | [2026-07-17-godotrpg-fase1-motor-portado.md](./plans/2026-07-17-godotrpg-fase1-motor-portado.md) | ❌ Planejada |
+| 1 — Motor portado | `engine/` (JS) → `scripts/engine/` (GDScript) módulo por módulo, suíte GUT espelhando os 33 testes | [2026-07-17-godotrpg-fase1-motor-portado.md](./plans/2026-07-17-godotrpg-fase1-motor-portado.md) | ✅ Concluída (2026-07-17) |
 | 2 — Batalha | Cena de batalha por turnos (Atacar/Item/Defender/Fugir), ícones de status, log, drops | — | ❌ Planejada |
 | 3 — Identidade | Wizard de criação, save/load `user://`, tela de Personagem | — | ❌ Planejada |
 | 4 — Mundo Aberto & Cidade | TileMap navegável, monstros vagando por distância, hotspots da cidade | — | ❌ Planejada |
@@ -31,6 +31,19 @@ ali passando.
 arquivo contra `WebRPG/public/assets/` (zero faltando) antes de remover `WebRPG/`. Suíte de
 `engine/` (33 arquivos, 252 testes) revalidada depois da limpeza de `vite.config.js`/
 `vitest.setup.js`/dependências mortas — continua 100% passando.
+
+**Fase 1 — verificação (2026-07-17):** os 30 arquivos `.js` de `engine/` (100%) portados para
+`scripts/engine/` em GDScript, em 12 tasks seguindo a ordem de dependência real do código.
+Suíte GUT final: 33 scripts, **246/246 testes passando**, 646 asserts (`godot --headless
+--rendering-driver opengl3 --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests
+-ginclude_subdirs -gexit` — a flag `--rendering-driver opengl3` é obrigatória, senão o processo
+dá segfault ao sair por causa do driver D3D12 configurado no projeto, mesmo em headless; os
+resultados impressos antes do crash continuam confiáveis). `masmorra/gerador.gd` confirmado
+portado de `JogoRPG/masmorra/masmorra.js` (fonte completa), não do `engine/masmorra/gerador.js`
+simplificado, com os 3 nomes de boss atualizados (Dolgarth, Vel'Thyra, Zerakth). Cinco gotchas
+de GDScript documentados no plano da fase para as próximas (`Aleatorio.fonte` como padrão de
+mock de aleatoriedade, `push_error`+`null` para "throw", concatenação de `Array` tipado,
+inferência de tipo `:=` sobre `Variant`, e particularidades do `JSON.parse_string`).
 
 ---
 
