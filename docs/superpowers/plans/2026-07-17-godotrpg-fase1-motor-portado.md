@@ -91,12 +91,27 @@ exatamente como o Vitest troca `Math.random`.
 
 ### GUT — instalação (parte da Task 1)
 
-O addon GUT (`bitwes/Gut`) não está no projeto — precisa ser baixado (~500KB, GitHub releases,
+O addon GUT (`bitwes/Gut`) não está no projeto — precisa ser baixado (~1MB, GitHub releases,
 licença MIT). **Pedir confirmação ao usuário antes de baixar**, mesmo padrão já usado para a
-fonte Press Start 2P na Fase 0. Instalado em `game/addons/gut/`; rodado headless via:
+fonte Press Start 2P na Fase 0.
+
+**Instalado em `game/addons/gut/` (v9.7.1 — a v9.6.1 tem um segfault confirmado ao sair em
+Godot 4.7.1, mesmo com todos os testes passando; a própria ferramenta avisa disso no output).**
+Depois de criar/editar qualquer script novo com `class_name`, rodar `--import` de novo antes
+dos testes — o cache de classes globais só é reindexado nesse passo, não automaticamente:
 
 ```
-godot --headless --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
+godot --headless --path game --import
+```
+
+Comando de verificação (headless, sem crash de saída — **sempre usar exatamente estas
+flags**; sem `-ginclude_subdirs` o GUT não desce em `tests/<pasta>/`, e sem
+`--rendering-driver opengl3` o processo dá segfault ao sair porque tenta inicializar o driver
+D3D12 configurado no projeto mesmo em modo headless — o resultado dos testes aparece certo
+antes do crash, mas o exit code fica errado e pode mascarar falha real em CI):
+
+```
+godot --headless --rendering-driver opengl3 --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit
 ```
 
 ### Verificação de cada task

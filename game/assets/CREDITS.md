@@ -122,3 +122,10 @@ Ao baixar um pack, adicione uma entrada acima com: nome exato do pack, autor, UR
   Nota: no WebRPG este arquivo nunca existiu de fato (só era referenciado em CSS e caía
   silenciosamente para a fonte do sistema) — baixado pela primeira vez nesta migração
   (Fase 0 do GodotRPG, 2026-07-17).
+
+- **GUT — Godot Unit Test** (bitwes/Gut) — ferramenta de desenvolvimento, não asset visual
+  Local: `game/addons/gut/`
+  Fonte: https://github.com/bitwes/Gut (v9.7.1)
+  Licença: MIT.
+  Uso: framework de testes para `scripts/engine/` (Fase 1 em diante) — equivalente ao Vitest
+  usado em `engine/` (JS). Não é empacotado no jogo final, só usado durante o desenvolvimento.

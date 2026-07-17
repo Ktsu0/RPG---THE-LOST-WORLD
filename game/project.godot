@@ -24,6 +24,10 @@ Paleta="*res://scripts/tema/Paleta.gd"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+
 [gui]
 
 theme/custom="res://assets/temas/tema_principal.tres"
