@@ -9,7 +9,7 @@ detalhado em `plans/` (criado just-in-time, ao iniciar cada fase).
 
 | Fase | Entrega | Plano | Status |
 |---|---|---|---|
-| 0 — Fundação Godot | Projeto Godot, assets migrados, estrutura de pastas, tela de Título; remove `WebRPG/` do repo | — | ❌ Planejada |
+| 0 — Fundação Godot | Projeto Godot (`game/`), assets migrados, estrutura de pastas, tela de Título; `WebRPG/` removido do repo | — | ✅ Concluída (2026-07-17) |
 | 1 — Motor portado | `engine/` (JS) → `scripts/engine/` (GDScript) módulo por módulo, suíte GUT espelhando os 33 testes | — | ❌ Planejada |
 | 2 — Batalha | Cena de batalha por turnos (Atacar/Item/Defender/Fugir), ícones de status, log, drops | — | ❌ Planejada |
 | 3 — Identidade | Wizard de criação, save/load `user://`, tela de Personagem | — | ❌ Planejada |
@@ -24,6 +24,13 @@ detalhado em `plans/` (criado just-in-time, ao iniciar cada fase).
 **Critério de pronto de cada fase:** ver a coluna "Depende de"/tabela de fases na spec
 (seção 6) — jogável no editor Godot até aquele ponto, com os testes GUT do motor portado até
 ali passando.
+
+**Fase 0 — verificação (2026-07-17):** projeto em `game/project.godot`, Godot 4.7.1 (Steam).
+`godot --headless --path game --import` reimportou os 858 assets sem erro; execução headless
+(`--quit-after 30`) saiu com código 0, sem warning/erro. Cópia de assets conferida arquivo por
+arquivo contra `WebRPG/public/assets/` (zero faltando) antes de remover `WebRPG/`. Suíte de
+`engine/` (33 arquivos, 252 testes) revalidada depois da limpeza de `vite.config.js`/
+`vitest.setup.js`/dependências mortas — continua 100% passando.
 
 ---
 
