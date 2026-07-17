@@ -114,6 +114,18 @@ antes do crash, mas o exit code fica errado e pode mascarar falha real em CI):
 godot --headless --rendering-driver opengl3 --path game -s addons/gut/gut_cmdln.gd -gdir=res://tests -ginclude_subdirs -gexit
 ```
 
+### Gotchas de GDScript encontrados durante o porte (não existem no JS original)
+
+- **Concatenar `Array[Dictionary]` tipado com `+`** falha em runtime ("Trying to assign an
+  array of type Array to a variable of type Array[Dictionary]"). Usar `append`/`append_array`
+  em vez de `a + b` ao montar uma nova lista tipada.
+- **`var x := funcao_que_retorna_variant()`** (funções que devolvem `Variant` — o padrão
+  "throw→null" desta fase) dispara "The variable type is being inferred from a Variant value"
+  como **erro** sob o GUT (warnings tratados como erro) e derruba o arquivo de teste inteiro
+  silenciosamente ("Ignoring script ... because it does not extend GutTest" é o sintoma
+  enganoso). Correção: usar `var x = funcao(...)` (sem `:=`) sempre que a função do lado
+  direito retornar `Variant`.
+
 ### Verificação de cada task
 
 1. Escrever o `.gd` + o `.gut.gd` de teste espelhando o `.test.js` correspondente (mesmos
