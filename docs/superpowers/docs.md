@@ -10,7 +10,7 @@ detalhado em `plans/` (criado just-in-time, ao iniciar cada fase).
 | Fase | Entrega | Plano | Status |
 |---|---|---|---|
 | 0 — Fundação Godot | Projeto Godot (`game/`), assets migrados, estrutura de pastas, tela de Título; `WebRPG/` removido do repo | — | ✅ Concluída (2026-07-17) |
-| 1 — Motor portado | `engine/` (JS) → `scripts/engine/` (GDScript) módulo por módulo, suíte GUT espelhando os 33 testes | — | ❌ Planejada |
+| 1 — Motor portado | `engine/` (JS) → `scripts/engine/` (GDScript) módulo por módulo, suíte GUT espelhando os 33 testes | [2026-07-17-godotrpg-fase1-motor-portado.md](./plans/2026-07-17-godotrpg-fase1-motor-portado.md) | ❌ Planejada |
 | 2 — Batalha | Cena de batalha por turnos (Atacar/Item/Defender/Fugir), ícones de status, log, drops | — | ❌ Planejada |
 | 3 — Identidade | Wizard de criação, save/load `user://`, tela de Personagem | — | ❌ Planejada |
 | 4 — Mundo Aberto & Cidade | TileMap navegável, monstros vagando por distância, hotspots da cidade | — | ❌ Planejada |
