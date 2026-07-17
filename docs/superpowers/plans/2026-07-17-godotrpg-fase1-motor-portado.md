@@ -119,6 +119,14 @@ godot --headless --rendering-driver opengl3 --path game -s addons/gut/gut_cmdln.
 - **Concatenar `Array[Dictionary]` tipado com `+`** falha em runtime ("Trying to assign an
   array of type Array to a variable of type Array[Dictionary]"). Usar `append`/`append_array`
   em vez de `a + b` ao montar uma nova lista tipada.
+- **`JSON.parse_string(texto)`** (estático) empurra um `push_error` de engine
+  visível no console para JSON malformado, em vez de só devolver `null`
+  silenciosamente — GUT trata isso como "Unexpected Error" e falha o teste
+  mesmo quando o código trata o `null` corretamente. Usar a API de instância
+  (`JSON.new(); json.parse(texto)`, checando o `Error` devolvido) para um
+  tratamento silencioso equivalente ao `try/catch` do JS. Além disso, o parser
+  do Godot sempre devolve números como `float` (`99` vira `99.0`) — usar
+  `int(...)` ao comparar/formatar valores numéricos vindos de JSON.
 - **`var x := funcao_que_retorna_variant()`** (funções que devolvem `Variant` — o padrão
   "throw→null" desta fase) dispara "The variable type is being inferred from a Variant value"
   como **erro** sob o GUT (warnings tratados como erro) e derruba o arquivo de teste inteiro
