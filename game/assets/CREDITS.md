@@ -1,0 +1,124 @@
+# Créditos de Assets — WebRPG
+
+Registro de origem e licença de cada asset visual/sonoro usado no jogo. Nenhum asset é referenciado por hotlink — todos são copiados para dentro de `WebRPG/assets/`.
+
+## Já no repositório
+
+- **Tiny RPG Character Asset Pack v1.03 — Free Soldier & Orc**
+  Local original: `WebRPG/assets/Tiny RPG Character Asset Pack v1.03 -Free Soldier&Orc/`
+  Organizado em: `WebRPG/assets/personagens/soldado/` (idle, ataque, dano, morte) e `WebRPG/assets/personagens/orc/` (idle, ataque, dano, morte) — concluído na Task 13.
+  Uso: sprites de batalha do herói (classe base) e do inimigo Orc.
+  Licença: conferir o arquivo de licença original dentro da pasta do pack antes de redistribuir o jogo publicamente.
+
+- **RPG Urban Pack** (Kenney)
+  Local original: `WebRPG/assets/cenarios/rpg-urban-pack/`
+  Organizado em: `WebRPG/assets/cenarios/cidade/` (chao.png, parede.png) — usado pelo mapa de tiles da cidade.
+  Fonte: https://kenney.nl/assets/rpg-urban-pack
+  Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
+
+- **Monsters Creatures Fantasy** (LuizMelo)
+  Local original: `WebRPG/assets/personagens/_pacote-luizmelo-base/` (o add-on de ataque "v1.3" baixado à parte não foi mantido — o pacote base já tinha os 4 estados de animação completos para os 4 arquétipos usados).
+  Organizado em: `WebRPG/assets/personagens/goblin/`, `cogumelo/`, `esqueleto/`, `olho-voador/` (idle, ataque, dano, morte cada).
+  Fonte: https://luizmelo.itch.io/monsters-creatures-fantasy
+  Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório).
+  Nota técnica: a contagem de frames de idle/ataque desse pacote (4/8) difere da convenção soldado/orc (6/6) — `WebRPG/src/telas/batalha/sprites.js` ganhou uma tabela de exceção por personagem para isso.
+
+- **Evil Wizard** (LuizMelo) — Fase 8
+  Organizado em: `WebRPG/assets/personagens/mago/` (idle, ataque, dano [Take Hit], morte).
+  Fonte: https://luizmelo.itch.io/evil-wizard
+  Licença: Creative Commons CC0 1.0 ("This package can be used freely and commercially - CC0(creative commons zero)").
+  Nota técnica: frames reais (idle:8, ataque:8, dano:4, morte:8) diferem do padrão soldado/orc — exceção em `sprites.js`.
+  Usado para: Mago Sombrio.
+
+- **Fire Worm** (LuizMelo) — Fase 8
+  Organizado em: `WebRPG/assets/personagens/elemental-fogo/` (idle, ataque, dano [Get Hit], morte — pasta `Worm/` do pacote; a pasta `Fire Ball/` do mesmo pacote não foi usada).
+  Fonte: https://luizmelo.itch.io/fire-worm
+  Licença: Creative Commons CC0 1.0 ("Credits are not required but I would appreciate it").
+  Nota técnica: frames reais (idle:9, ataque:16, dano:3, morte:8) diferem do padrão soldado/orc — exceção em `sprites.js`.
+  Usado para: Salamandra de Fogo, Escorpião de Magma, Senhor das Chamas.
+
+- **FREE Enemy: Golem** (Admurin) — Fase 8
+  Organizado em: `WebRPG/assets/personagens/golem-pedra/` (variante "A" de cada animação: IdleA→idle, AttackA→ataque, HitA→dano, DeathA→morte; variantes "B" e os arquivos `_FX`/`Upgrade`/`Run`/`Reset`/`Full` do pacote não foram usados).
+  Fonte: https://admurin.itch.io/enemy-golem
+  Licença: "name your own price" (gratuito), uso comercial e não-comercial permitido; proibida revenda/redistribuição do asset em si, uso para treinar IA, ou uso em NFT. Crédito apreciado, não obrigatório. (Licença mais restrita que CC0 puro — registrado aqui com precisão em vez de rotulado CC0.)
+  Nota técnica: frames reais (idle:4, ataque:12, dano:5, morte:9) diferem do padrão soldado/orc — exceção em `sprites.js`.
+  Usado para: Guardião de Pedra, Sentinela de Ferro.
+
+- **Skull Wolf Pixel Art** (Atari Boy) — Fase 8
+  Organizado em: `WebRPG/assets/personagens/lobo/` (recortado de uma única spritesheet "Massacre Sprite Sheet.png" com 4 linhas de 64px — linha 1 idle, linha 2 ataque, linha 3 dano, linha 4 morte — usando `sharp` para o recorte, mesma técnica já usada na Fase 7 para os tiles da masmorra).
+  Fonte: https://atari-boy.itch.io/skull-wolf-pixel-art
+  Licença: Creative Commons CC0 1.0 ("You can use this asset for personal and commercial purpose... Credit is not required").
+  Nota técnica: frames reais (idle:6, ataque:5, dano:4, morte:8) — só ataque e morte divergem do padrão soldado/orc — exceção em `sprites.js`.
+  Usado para: Lobo Alfa.
+
+  **Cobertura do bestiário** (mapeamento completo em `WebRPG/src/telas/batalha/mapaSprites.js`): dos 25 nomes de inimigo do jogo, só **Hidra das Sombras** e **Dragão Negro** ainda caem no fallback "orc" — nenhum pack de dragão gratuito com licença clara e as 4 animações completas (idle/ataque/dano/morte) foi encontrado na busca da Fase 8 (os candidatos encontrados eram pagos, só tinham animação idle, ou tinham preço mínimo maior que zero). Pendência de conteúdo registrada para uma fase futura.
+
+- **Kyrise's Free 16x16 RPG Icon Pack** (Kyrise) — Fase 8
+  Organizado em: `WebRPG/assets/ui/icones/` (`head.png`=helmet_01a, `chest.png`=armor_01a, `hands.png`=gloves_01a, `legs.png`=armor_01b — o pack não tem um ícone dedicado de perna/calça, reaproveitada outra variante de cor do mesmo ícone de armadura, decisão pragmática documentada aqui —, `feet.png`=boots_01a, `weapon.png`=sword_01a, `consumable.png`=potion_01a, `generico.png`=gem_01a).
+  Fonte: https://kyrise.itch.io/kyrises-free-16x16-rpg-icon-pack
+  Licença: **CC BY 4.0** (Creative Commons Atribuição — requer crédito ao autor, diferente do CC0 puro usado no resto do projeto). Crédito: "Kyrise's Free 16x16 RPG Icon Pack © 2018 by Kyrise, licensed under CC BY 4.0".
+  Uso: ícone por slot em `WebRPG/src/itens/iconePorSlot.js`, aplicado na Loja e na tela de Personagem.
+
+- **Roguelike/RPG Pack** (Kenney)
+  Local original: `WebRPG/assets/cenarios/roguelike-rpg-pack/`
+  Organizado em: `WebRPG/assets/cenarios/masmorra/` (chao.png = piso de interior recortado da spritesheet; oculta.png reusa o mesmo tile, escurecido via `filter: brightness(0.35)` em masmorra.css em vez de um segundo recorte — mais simples e com o mesmo resultado visual: "mesmo piso, mais escuro" para representar névoa de guerra); e `WebRPG/assets/cenarios/mundo/grama.png` (tile de grama com textura pontilhada, recortado de `Spritesheet/roguelikeSheet_transparent.png` na coluna 5, linha 0 da grade de 17px — usado como piso do mundo aberto e da cidade em `faseExploracao.js`/`faseCidade.js`, Fase "Mundo Vivo").
+  Fonte: https://kenney.nl/assets/roguelike-rpg-pack
+  Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
+
+- **Pixel UI Pack** (Kenney)
+  Local original: `WebRPG/assets/ui/pixel-ui-pack/`
+  Organizado em: `WebRPG/assets/ui/base/` (painel.png = 9-Slice/Outline/blue.png, botao.png = 9-Slice/Outline/yellow.png) — usado como `border-image` em `.painel` e `.botao` (paineis.css).
+  Fonte: https://kenney.nl/assets/pixel-ui-pack
+  Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
+
+- **Kenney Impact Sounds + RPG Audio**
+  Locais originais: `WebRPG/assets/audio/_pacote-kenney-impact-sounds/`, `_pacote-kenney-rpg-audio/`.
+  Organizado em: `WebRPG/assets/audio/efeitos/` (golpe.ogg = impactPunch_medium_000, critico.ogg = impactMetal_heavy_000, moeda.ogg = handleCoins).
+  Fontes: https://kenney.nl/assets/impact-sounds, https://kenney.nl/assets/rpg-audio
+  Licença: Creative Commons CC0 1.0 (domínio público, uso comercial permitido, crédito não obrigatório mas incentivado).
+  `WebRPG/src/audio/tocador.js` teve a extensão trocada de `.mp3` (nunca existiu) para `.ogg` (formato real dos pacotes Kenney).
+  Nota: o pack `music-jingles` (usado até a Fase 8 para `cidade.ogg`/`batalha.ogg`) foi substituído na Fase 9 pelas faixas da AlkaKrab abaixo — só tinha jingles curtos (stingers de poucos segundos), não faixas ambiente longas. `_pacote-kenney-music-jingles/` removido do repositório.
+
+- **Fantasy RPG Music Vol. 2 (Free 25 Tracks, No Copyright)** (AlkaKrab) — Fase 9
+  Organizado em: `WebRPG/assets/audio/musica/` (cidade.ogg = "Light Ambient 1 (Loop).ogg", batalha.ogg = "Action 1 (Loop).ogg", torre.ogg = "Night Ambient 1.ogg", masmorra.ogg = "Night Ambient 3 (Loop).ogg"); PDF de licença preservado em `_pacote-alkakrab-fantasy-rpg-vol2/`.
+  Fonte: https://alkakrab.itch.io/free-25-fantasy-rpg-game-tracks-no-copyright-vol-2
+  Licença: "Absolutely Free For Commercial use" — sem exigência de atribuição (crédito é bem-vindo mas opcional, segundo a página do pack e o PDF de licença incluído).
+  Substitui os jingles curtos do Kenney `music-jingles` em `cidade.ogg`/`batalha.ogg` (agora faixas de vários minutos, com versões "(Loop)" já preparadas para tocar em loop sem corte perceptível) e dá a Torre e a Masmorra música própria pela primeira vez (antes tocavam com o silêncio, ou a música da cidade se o jogador tivesse entrado vindo de lá).
+  Torre e Masmorra usam faixas "Night Ambient" diferentes entre si (sombria/épica vs. tensa/misteriosa) — variedade real, não uma faixa compartilhada.
+
+- **SunnyLand - Pixel Game Art Assets Pack** (ansimuz) — Fase 9
+  Organizado em: `WebRPG/assets/cenarios/parallax/floresta.png` (composto a partir de `Assets/environment/Background/back.png` — céu e mar — com `Assets/environment/Background/middle.png` — silhueta de mata com palmeiras — ladrilhado horizontalmente por cima, via `sharp`; originais preservados em `_pacote-sunnyland/`).
+  Fonte: https://ansimuz.itch.io/sunny-land-pixel-game-art
+  Licença: Creative Commons Zero v1.0 Universal (CC0) — "can be used freely in any project, whether personal or commercial, without the need for attribution" (texto do `public-license.pdf` incluído no pack).
+  Usado para: fundo da batalha de treino (`.palco-batalha--treino`).
+
+- **Warped: Super Grotto Escape Collection** (ansimuz) — Fase 9
+  Organizado em: `WebRPG/assets/cenarios/parallax/cripta.png` (recorte de 384px de largura de `Assets/Previews/super-grotto.png`, a cena de caverna de cristal com ruínas já pronta do pack, em vez de recompor as camadas separadas — mesma decisão pragmática já usada para os ícones/tiles de fases anteriores; original preservado em `_pacote-grotto-escape/`).
+  Fonte: https://ansimuz.itch.io/super-grotto-escape-pack
+  Licença: Creative Commons Zero v1.0 Universal (CC0), mesmo texto de licença do SunnyLand.
+  Usado para: fundo da batalha de masmorra (`.palco-batalha--masmorra`), com um gradiente escuro sobreposto via CSS para manter contraste com o log/sprites.
+
+- **Gothicvania Cold Corridors** (ansimuz) — Fase 9
+  Organizado em: `WebRPG/assets/cenarios/parallax/pedra-escura.png` (cópia direta de `Assets/preview.png`, o corredor gótico já totalmente composto do pack; original preservado em `_pacote-gothicvania-cold-corridors/`).
+  Fonte: https://ansimuz.itch.io/gothicvania-cold-corridors
+  Licença: Creative Commons Zero v1.0 Universal (CC0), confirmada no `public-license.pdf` incluído no pack (o texto da página itch.io em si só menciona "name your own price", mas o PDF de licença é explícito em CC0).
+  Usado para: fundo da Torre (`.palco-torre`), com o mesmo tratamento de gradiente escuro sobreposto.
+  Nota: este pack também trouxe `top-down-fantasy-1.ogg` (faixa de música ambiente) como bônus — ver entrada de áudio abaixo.
+
+## A baixar manualmente (checklist)
+
+Estes packs ainda não estão no repositório. Cada um precisa ser baixado manualmente (geralmente um `.zip` do itch.io), extraído, e ter os arquivos usados copiados para a subpasta indicada — mantendo este arquivo atualizado com o nome exato do pack e a licença declarada pelo autor.
+
+- [ ] **Música ambiente de verdade (loops longos)** — o pack usado atualmente (`music-jingles`) só tem jingles curtos; buscar um pack Kenney/itch.io com faixas de vários minutos para substituir `WebRPG/assets/audio/musica/cidade.ogg` e `batalha.ogg`.
+
+Ao baixar um pack, adicione uma entrada acima com: nome exato do pack, autor, URL da página específica do pack, e a licença declarada.
+
+## Godot — assets adicionados nesta migração
+
+- **Press Start 2P** (Google Fonts)
+  Local: `assets/fontes/PressStart2P.ttf`
+  Fonte: https://fonts.google.com/specimen/Press+Start+2P
+  Licença: SIL Open Font License 1.1 (gratuita, uso comercial permitido).
+  Nota: no WebRPG este arquivo nunca existiu de fato (só era referenciado em CSS e caía
+  silenciosamente para a fonte do sistema) — baixado pela primeira vez nesta migração
+  (Fase 0 do GodotRPG, 2026-07-17).

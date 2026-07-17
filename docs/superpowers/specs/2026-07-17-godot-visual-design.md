@@ -40,7 +40,7 @@ exatamente o problema que a spec web nunca conseguiu resolver — a parte visual
 
 | Decisão | Escolha | Por quê |
 |---|---|---|
-| Motor | **Godot 4.x** (recomendado: a versão estável mais recente no início da Fase 0 — 4.3 ou superior) | Motor de jogo dedicado, editor de tilemap/animação nativo, exporta para Web (HTML5/WASM) e Desktop a partir do mesmo projeto. |
+| Motor | **Godot 4.7.1 (stable)**, instalado via Steam em `C:\Program Files (x86)\Steam\steamapps\common\Godot Engine\godot.windows.opt.tools.64.exe` — confirmado 2026-07-17 | Motor de jogo dedicado, editor de tilemap/animação nativo, exporta para Web (HTML5/WASM) e Desktop a partir do mesmo projeto. Projeto é manipulável por arquivo texto (`project.godot`, `.tscn`, `.gd`) e por CLI `--headless`, sem depender da janela do editor. |
 | Estilo de combate | **Turnos** (Atacar · Item · Defender · Fugir), como o jogo atual — **não** tempo real | Decisão do usuário (2026-07-17): reaproveita 100% da lógica de combate já pronta e testada (`engine/combate/`), só portando para GDScript. "Estilo Rucoy" fica na referência de mundo/exploração, não na mecânica de batalha. |
 | Multiplayer | **Single-player**, sem servidor | Decisão do usuário (2026-07-17): "estilo Rucoy" descreve o gameplay (mundo aberto, cidade, monstros vagando), não a arquitetura online. Sem backend, sem sincronização de estado. |
 | Linguagem de script | **GDScript** | Nativa do Godot, mais simples que C# para portar as ~33 suítes de teste e ~30 módulos de `engine/`, que já são JS simples orientado a função pura + dado (sem classes complexas nem tipos que dependam de recursos exclusivos de outra linguagem). |

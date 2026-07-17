@@ -3,3 +3,8 @@ dist/
 graphify-out/
 .env
 .env.*
+
+# Godot (game/) — cache/geradores do editor, nunca versionados
+game/.godot/
+game/*.translation
+game/export_presets.cfg
